@@ -1,0 +1,28 @@
+.tagcloud .tagcloud-title {
+  padding: 1em;
+  font-size: 1.5rem;
+  text-align: center;
+}
+.tagcloud a {
+  padding: 0.5em;
+  border: none;
+  word-break: keep-all;
+}
+.tagcloud a:hover {
+  border: none;
+}
+.category-all-page .category-all-title {
+  padding: 1em;
+  font-size: 1.5rem;
+  text-align: center;
+}
+.category-all-page ul {
+  margin: 0;
+}
+.category-all-page ul li {
+  padding: 0.3em;
+}
+.category-all-page a {
+  word-break: keep-all;
+  margin-right: 0.5em;
+}
