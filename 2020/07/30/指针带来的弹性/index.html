@@ -6,13 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives | SetoNaikai&#39;s Blogs</title>
+  <title>Essential C++学习笔记之指针的弹性 | SetoNaikai&#39;s Blogs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="SetoNaikai&#39;s Blogs">
-<meta property="og:url" content="http://yoursite.com/archives/index.html">
+  <meta name="description" content="Essential C++学习笔记之指针的弹性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Essential C++学习笔记之指针的弹性">
+<meta property="og:url" content="http://yoursite.com/2020/07/30/%E6%8C%87%E9%92%88%E5%B8%A6%E6%9D%A5%E7%9A%84%E5%BC%B9%E6%80%A7/index.html">
 <meta property="og:site_name" content="SetoNaikai&#39;s Blogs">
+<meta property="og:description" content="Essential C++学习笔记之指针的弹性">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-07-30T15:37:42.000Z">
+<meta property="article:modified_time" content="2020-07-30T16:07:51.151Z">
 <meta property="article:author" content="SetoNaikai">
 <meta name="twitter:card" content="summary">
   
@@ -169,168 +173,199 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-指针带来的弹性" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      Essential C++学习笔记之指针的弹性
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/07/30/%E6%8C%87%E9%92%88%E5%B8%A6%E6%9D%A5%E7%9A%84%E5%BC%B9%E6%80%A7/" class="archive-article-date">
+
+        
+        <a href="/2020/07/30/%E6%8C%87%E9%92%88%E5%B8%A6%E6%9D%A5%E7%9A%84%E5%BC%B9%E6%80%A7/" class="archive-article-date">
   	<time datetime="2020-07-30T15:37:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-30</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/30/%E6%8C%87%E9%92%88%E5%B8%A6%E6%9D%A5%E7%9A%84%E5%BC%B9%E6%80%A7/">Essential C++学习笔记之指针的弹性</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Essential-C-学习笔记之指针的弹性"><a href="#Essential-C-学习笔记之指针的弹性" class="headerlink" title="Essential C++学习笔记之指针的弹性"></a>Essential C++学习笔记之指针的弹性</h1><a id="more"></a>
+<h2 id="1、指针-Pointer"><a href="#1、指针-Pointer" class="headerlink" title="1、指针(Pointer)"></a>1、指针(Pointer)</h2><h3 id="1-1、在程序中，指针通常主要用来做两件事："><a href="#1-1、在程序中，指针通常主要用来做两件事：" class="headerlink" title="1.1、在程序中，指针通常主要用来做两件事："></a>1.1、在程序中，指针通常主要用来做两件事：</h3><ul>
+<li>增加程序本身的弹性</li>
+<li>增加了直接操作对象时所没有的复杂度</li>
+</ul>
+<h3 id="1-2、指针内含某特定类型对象的内存地址，必须在类型名称前加-号"><a href="#1-2、指针内含某特定类型对象的内存地址，必须在类型名称前加-号" class="headerlink" title="1.2、指针内含某特定类型对象的内存地址，必须在类型名称前加*号"></a>1.2、指针内含某特定类型对象的内存地址，必须在类型名称前加*号</h3><p>或者可以理解为int——&gt;int*</p>
+<p>示例如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> ival = <span class="number">1024</span>;</span><br><span class="line"><span class="keyword">int</span> a = ival;</span><br><span class="line"><span class="keyword">int</span>* p = &amp;ival;<span class="comment">//指针</span></span><br><span class="line"><span class="comment">//  int p = &amp;ival 是错误的</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; *p &lt;&lt; a &lt;&lt; <span class="built_in">endl</span>;<span class="comment">//可以发现*p和a的值是相等的；</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; p &lt;&lt; &amp;a &lt;&lt; <span class="built_in">endl</span>;<span class="comment">//两者地址也是相等的；</span></span><br></pre></td></tr></table></figure>
+<h3 id="1-3、指针注意事项"><a href="#1-3、指针注意事项" class="headerlink" title="1.3、指针注意事项"></a>1.3、指针注意事项</h3><p>如果指针未指向任何对象，地址值为0，或者称为NULL指针，任何指针都可以被初始化，或者令其值为0.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *pi = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">double</span> *pd = <span class="number">0</span>;</span><br><span class="line"><span class="built_in">string</span> *ps = <span class="number">0</span>;</span><br></pre></td></tr></table></figure>
+<p>为了防止对NULL指针进行提领操作（或者就是提取出指针指向的对象的值），可以检验所持有的地址是否为0，例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( pi &amp;&amp; *pi!=<span class="number">1024</span> )&#123;</span><br><span class="line">    *pi = <span class="number">1024</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="2、随机数种子"><a href="#2、随机数种子" class="headerlink" title="2、随机数种子"></a>2、随机数种子</h2><blockquote>
+<p>本节我暂时跳过，感觉没啥用…（坐等日后打脸）</p>
+</blockquote>
+<h2 id="3、成员运算符"><a href="#3、成员运算符" class="headerlink" title="3、成员运算符"></a>3、成员运算符</h2><p>dot运算符，即”.”，可以对相应的对象进行操作，例如定义了一个vector容器;<br>然后对其进行赋值。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v1;</span><br><span class="line">v1.push_back(<span class="number">1</span>);<span class="comment">//在v1这个vector数组的末尾插入1...</span></span><br></pre></td></tr></table></figure>
+<p>但是，对于指针，不能用dot成员选择运算符，而是改为arrow成员选择运算符”-&gt;”。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; *v1;</span><br><span class="line">v1-&gt;push_back(<span class="number">1</span>);<span class="comment">//在v1这个vector数组的末尾插入1...</span></span><br><span class="line"><span class="comment">//这个语法是没问题，但是我有疑问，存入的是1，还是1的地址...</span></span><br></pre></td></tr></table></figure>
+<hr>
+<p>就写这么多吧，碎觉了，以上！</p>
 
-        <div class="article-info info-on-right">
-          
-          
+      
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃💩<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/wepay.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/07/30/%E6%8C%87%E9%92%88%E5%B8%A6%E6%9D%A5%E7%9A%84%E5%BC%B9%E6%80%A7/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/07/29/sklearn%E6%B1%82%E8%A7%A3SVM/" class="archive-article-date">
-  	<time datetime="2020-07-29T11:00:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-29</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2020/07/29/sklearn%E6%B1%82%E8%A7%A3SVM/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">sklearn的SVM模块的使用</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/29/sklearn%E6%B1%82%E8%A7%A3SVM/">sklearn的SVM模块的使用</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Essential-C-学习笔记之指针的弹性"><span class="toc-number">1.</span> <span class="toc-text">Essential C++学习笔记之指针的弹性</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、指针-Pointer"><span class="toc-number">1.1.</span> <span class="toc-text">1、指针(Pointer)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1、在程序中，指针通常主要用来做两件事："><span class="toc-number">1.1.1.</span> <span class="toc-text">1.1、在程序中，指针通常主要用来做两件事：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2、指针内含某特定类型对象的内存地址，必须在类型名称前加-号"><span class="toc-number">1.1.2.</span> <span class="toc-text">1.2、指针内含某特定类型对象的内存地址，必须在类型名称前加*号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3、指针注意事项"><span class="toc-number">1.1.3.</span> <span class="toc-text">1.3、指针注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、随机数种子"><span class="toc-number">1.2.</span> <span class="toc-text">2、随机数种子</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、成员运算符"><span class="toc-number">1.3.</span> <span class="toc-text">3、成员运算符</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/07/22/C++%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B/" class="archive-article-date">
-  	<time datetime="2020-07-22T12:21:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-22</time>
-</a>
-        </div>
-    	 
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/22/C++%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B/">C++核心编程</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/07/22/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/" class="archive-article-date">
-  	<time datetime="2020-07-22T03:51:42.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-22</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/22/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/">我的第一篇博客</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/07/21/hello-world/" class="archive-article-date">
-  	<time datetime="2020-07-21T09:55:19.065Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-21</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/07/21/hello-world/">Hello World</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
-  
-    </div></section>
-  
-
-    
 
 
           </div>
@@ -361,8 +396,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

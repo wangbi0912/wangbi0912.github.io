@@ -8,16 +8,16 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>sklearn的SVM模块的使用 | SetoNaikai&#39;s Blogs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="sklearn求解SVM小实例sklearn (scikit-learn) 是基于 Python 语言的机器学习工具。里面对一些常用的机器学习方法进行了封装，在进行机器学习任务时，并不需要每个人都实现所有的算法，只需要简单的调用sklearn里的模块就可以实现大多数机器学习任务。机器学习任务通常包括分类（Classification）和回归（Regression），常用的分类器包括SVM、KNN、">
+  <meta name="description" content="sklearn求解SVM小实例">
 <meta property="og:type" content="article">
 <meta property="og:title" content="sklearn的SVM模块的使用">
 <meta property="og:url" content="http://yoursite.com/2020/07/29/sklearn%E6%B1%82%E8%A7%A3SVM/index.html">
 <meta property="og:site_name" content="SetoNaikai&#39;s Blogs">
-<meta property="og:description" content="sklearn求解SVM小实例sklearn (scikit-learn) 是基于 Python 语言的机器学习工具。里面对一些常用的机器学习方法进行了封装，在进行机器学习任务时，并不需要每个人都实现所有的算法，只需要简单的调用sklearn里的模块就可以实现大多数机器学习任务。机器学习任务通常包括分类（Classification）和回归（Regression），常用的分类器包括SVM、KNN、">
+<meta property="og:description" content="sklearn求解SVM小实例">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://yoursite.com/2020/07/29/sklearn%E6%B1%82%E8%A7%A3SVM/assets/sklearn%E9%9A%8F%E6%9C%BA%E7%94%9F%E6%88%90%E6%95%B0%E6%8D%AE.png">
 <meta property="article:published_time" content="2020-07-29T11:00:06.000Z">
-<meta property="article:modified_time" content="2020-07-29T14:20:46.740Z">
+<meta property="article:modified_time" content="2020-07-30T13:38:11.058Z">
 <meta property="article:author" content="SetoNaikai">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/2020/07/29/sklearn%E6%B1%82%E8%A7%A3SVM/assets/sklearn%E9%9A%8F%E6%9C%BA%E7%94%9F%E6%88%90%E6%95%B0%E6%8D%AE.png">
@@ -195,8 +195,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="sklearn求解SVM小实例"><a href="#sklearn求解SVM小实例" class="headerlink" title="sklearn求解SVM小实例"></a>sklearn求解SVM小实例</h1><p>sklearn (scikit-learn) 是基于 Python 语言的机器学习工具。里面对一些常用的机器学习方法进行了封装，在进行机器学习任务时，并不需要每个人都实现所有的算法，只需要简单的调用sklearn里的模块就可以实现大多数机器学习任务。机器学习任务通常包括分类（Classification）和回归（Regression），常用的分类器包括SVM、KNN、贝叶斯、线性回归、逻辑回归、决策树、随机森林、xgboost、GBDT、boosting、神经网络DNN。常见的降维方法包括TF-IDF、主题模型LDA、主成分分析PCA等等。</p>
-<a id="more"></a>
+        <h1 id="sklearn求解SVM小实例"><a href="#sklearn求解SVM小实例" class="headerlink" title="sklearn求解SVM小实例"></a>sklearn求解SVM小实例</h1><a id="more"></a>
+<p>sklearn (scikit-learn) 是基于 Python 语言的机器学习工具。里面对一些常用的机器学习方法进行了封装，在进行机器学习任务时，并不需要每个人都实现所有的算法，只需要简单的调用sklearn里的模块就可以实现大多数机器学习任务。机器学习任务通常包括分类（Classification）和回归（Regression），常用的分类器包括SVM、KNN、贝叶斯、线性回归、逻辑回归、决策树、随机森林、xgboost、GBDT、boosting、神经网络DNN。常见的降维方法包括TF-IDF、主题模型LDA、主成分分析PCA等等。</p>
 <h2 id="1、首先利用sklearn生成随机数据"><a href="#1、首先利用sklearn生成随机数据" class="headerlink" title="1、首先利用sklearn生成随机数据"></a>1、首先利用sklearn生成随机数据</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">from</span> scipy <span class="keyword">import</span> stats</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 利用sklearn 随机生成数据</span></span><br><span class="line"><span class="keyword">from</span> sklearn.datasets.samples_generator <span class="keyword">import</span> make_blobs</span><br><span class="line"></span><br><span class="line">x,y = make_blobs(n_samples=<span class="number">50</span>,centers=<span class="number">2</span>,random_state=<span class="number">0</span>,cluster_std=<span class="number">0.6</span>)</span><br><span class="line">plt.scatter(x[:,<span class="number">0</span>],x[:,<span class="number">1</span>],c=y,cmap=<span class="string">'autumn'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
 <p>结果如下：</p>
 <p><img src="assets/sklearn%E9%9A%8F%E6%9C%BA%E7%94%9F%E6%88%90%E6%95%B0%E6%8D%AE.png" alt="sklearn随机生成数据"></p>
@@ -310,6 +310,15 @@
 
   
 <nav id="article-nav">
+  
+    <a href="/2020/07/30/%E6%8C%87%E9%92%88%E5%B8%A6%E6%9D%A5%E7%9A%84%E5%BC%B9%E6%80%A7/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Essential C++学习笔记之指针的弹性
+        
+      </div>
+    </a>
   
   
     <a href="/2020/07/22/C++%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
