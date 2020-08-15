@@ -15,13 +15,13 @@
 <meta property="og:site_name" content="SetoNaikai&#39;s Blogs">
 <meta property="og:description" content="sklearn求解SVM小实例2">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://yoursite.com/2020/08/15/SVM%E5%BA%94%E7%94%A8/assets/SVM%E7%BA%BF%E6%80%A7%E6%A0%B8%E5%87%BD%E6%95%B0.png">
-<meta property="og:image" content="http://yoursite.com/2020/08/15/SVM%E5%BA%94%E7%94%A8/assets/SVM%E4%B8%89%E7%A7%8D%E6%A0%B8%E5%87%BD%E6%95%B0.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/15/SVM%E5%BA%94%E7%94%A8/SVM%E7%BA%BF%E6%80%A7%E6%A0%B8%E5%87%BD%E6%95%B0.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/15/SVM%E5%BA%94%E7%94%A8/SVM%E4%B8%89%E7%A7%8D%E6%A0%B8%E5%87%BD%E6%95%B0.png">
 <meta property="article:published_time" content="2020-08-15T15:10:30.000Z">
-<meta property="article:modified_time" content="2020-08-15T16:02:00.666Z">
+<meta property="article:modified_time" content="2020-08-15T16:14:43.361Z">
 <meta property="article:author" content="SetoNaikai">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2020/08/15/SVM%E5%BA%94%E7%94%A8/assets/SVM%E7%BA%BF%E6%80%A7%E6%A0%B8%E5%87%BD%E6%95%B0.png">
+<meta name="twitter:image" content="http://yoursite.com/2020/08/15/SVM%E5%BA%94%E7%94%A8/SVM%E7%BA%BF%E6%80%A7%E6%A0%B8%E5%87%BD%E6%95%B0.png">
   
     <link rel="alternative" href="/atom.xml" title="SetoNaikai&#39;s Blogs" type="application/atom+xml">
   
@@ -206,7 +206,7 @@
 
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#可视化操作</span></span><br><span class="line">plt.pcolormesh(xx, yy, z, cmap=plt.cm.Paired)</span><br><span class="line">plt.scatter(x[:, <span class="number">0</span>], x[:, <span class="number">1</span>], c=y, cmap=plt.cm.Paired, edgecolors=<span class="string">'k'</span>)</span><br><span class="line">plt.title(<span class="string">'3-Class classification using Support Vector Machine with custom'</span></span><br><span class="line">          <span class="string">' kernel'</span>)</span><br><span class="line">plt.axis(<span class="string">'tight'</span>)</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
 <p>结果如下：</p>
-<p><img src="assets/SVM%E7%BA%BF%E6%80%A7%E6%A0%B8%E5%87%BD%E6%95%B0.png" alt="sklearn中鸢尾花线性分类"></p>
+<p><img src="/2020/08/15/SVM%E5%BA%94%E7%94%A8/SVM%E7%BA%BF%E6%80%A7%E6%A0%B8%E5%87%BD%E6%95%B0.png" alt="sklearn中鸢尾花线性分类"></p>
 <h2 id="SVM求解非线性问题"><a href="#SVM求解非线性问题" class="headerlink" title="SVM求解非线性问题"></a>SVM求解非线性问题</h2><p>对于线性可分情况，在二维平面中非常容易能够找到一条直线进行区分，但如果线性不可分，就需要将二维向量的映射到高维，这样就容易找到一个超平面进行(Hyper Plane)区分。</p>
 <p>从理论上来说，如果将向量映射到无限维，样本可分的概率将为1，但是无限维向量的转置乘以无限维向量是很难做到的，这时候就需要利用核函数K(xi,xj)，一般都线性核函数，多项式核函数，高斯核函数，Sigmoid核函数。</p>
 <p>对于上面的鸢尾花数据集，除了Sigmoid核函数之外，利用其它三种核函数得到的结果差距不大。所以接下来利用sklearn中的make_moons函数来创建数据集。具体用法可以参考下面链接。</p>
@@ -219,7 +219,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">poly_kernel_svm_clf = Pipeline([ ( <span class="string">"scaler"</span>, StandardScaler()),</span><br><span class="line">                                 (<span class="string">"svm_clf"</span>, SVC(kernel=<span class="string">"rbf"</span>, gamma=<span class="number">1</span>, C=<span class="number">0.5</span>))</span><br><span class="line">                                ])</span><br><span class="line">poly_kernel_svm_clf.fit(X,y)</span><br><span class="line">plt.subplot(<span class="number">132</span>)</span><br><span class="line">plot_dataset( X, y, [<span class="number">-1.5</span>, <span class="number">2.5</span>, <span class="number">-1</span>, <span class="number">1.5</span>] )</span><br><span class="line">plot_predict( poly_kernel_svm_clf, [<span class="number">-1.5</span>, <span class="number">2.5</span>, <span class="number">-1</span>, <span class="number">1.5</span>] )</span><br></pre></td></tr></table></figure>
 <p>Sigmoid核函数：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">poly_kernel_svm_clf = Pipeline([ ( <span class="string">"scaler"</span>, StandardScaler()),</span><br><span class="line">                                 (<span class="string">"svm_clf"</span>, SVC(kernel=<span class="string">"sigmoid"</span>,gamma=<span class="number">1</span>, C=<span class="number">0.1</span>))</span><br><span class="line">                                ])</span><br><span class="line">poly_kernel_svm_clf.fit(X,y)</span><br><span class="line">plt.subplot(<span class="number">133</span>)</span><br><span class="line">plot_dataset( X, y, [<span class="number">-1.5</span>, <span class="number">2.5</span>, <span class="number">-1</span>, <span class="number">1.5</span>] )</span><br><span class="line">plot_predict( poly_kernel_svm_clf, [<span class="number">-1.5</span>, <span class="number">2.5</span>, <span class="number">-1</span>, <span class="number">1.5</span>] )</span><br><span class="line"></span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p>结果如下：<br><img src="assets/SVM%E4%B8%89%E7%A7%8D%E6%A0%B8%E5%87%BD%E6%95%B0.png" alt="sklearn中鸢尾花线性分类"></p>
+<p>结果如下：<br><img src="/2020/08/15/SVM%E5%BA%94%E7%94%A8/SVM%E4%B8%89%E7%A7%8D%E6%A0%B8%E5%87%BD%E6%95%B0.png" alt="sklearn中鸢尾花线性分类"></p>
 <p>SVC中的参数C越大，对于训练集来说，其误差越小，但是很容易发生过拟合；C越小，则允许有更多的训练集误分类，相当于soft margin，例如利用poly核函数的第一张图，虽然准确率还不错，但是应该发生了过拟合。</p>
 <p>本文参考博客：<a href="https://blog.csdn.net/u012526003/article/details/79088214" target="_blank" rel="noopener">参考博客</a></p>
 
