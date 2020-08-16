@@ -6,20 +6,27 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Hello World | SetoNaikai&#39;s Blogs</title>
+  <title>Anocanda中tensorflow环境配置 | SetoNaikai&#39;s Blogs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. HELLO">
+  <meta name="description" content="Anaconda使用国内源下载及安装（并配置tensorflow环境）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2020/07/21/hello-world/index.html">
+<meta property="og:title" content="Anocanda中tensorflow环境配置">
+<meta property="og:url" content="http://yoursite.com/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/index.html">
 <meta property="og:site_name" content="SetoNaikai&#39;s Blogs">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. HELLO">
+<meta property="og:description" content="Anaconda使用国内源下载及安装（并配置tensorflow环境）">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-07-21T09:55:19.065Z">
-<meta property="article:modified_time" content="2020-07-22T05:57:26.569Z">
+<meta property="og:image" content="http://yoursite.com/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/Promt.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/%E6%9F%A5%E7%9C%8B%E9%85%8D%E7%BD%AE%E7%9A%84%E7%8E%AF%E5%A2%83.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/%E8%BF%9B%E5%85%A5%E5%B7%B2%E7%BB%8F%E9%85%8D%E7%BD%AE%E7%9A%84%E7%8E%AF%E5%A2%83.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/%E6%9F%A5%E7%9C%8B%E7%8E%AF%E5%A2%831.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/%E6%9F%A5%E7%9C%8B%E7%8E%AF%E5%A2%832.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/Pycharm%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE.png">
+<meta property="og:image" content="http://yoursite.com/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/CNN%E8%AF%86%E5%88%AB%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97.png">
+<meta property="article:published_time" content="2020-08-16T01:54:11.000Z">
+<meta property="article:modified_time" content="2020-08-16T02:45:20.852Z">
 <meta property="article:author" content="SetoNaikai">
-<meta property="article:tag" content="随笔">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/Promt.png">
   
     <link rel="alternative" href="/atom.xml" title="SetoNaikai&#39;s Blogs" type="application/atom+xml">
   
@@ -174,40 +181,63 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-hello-world" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-Anocanda中tensorflow环境配置" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      Hello World
+      Anocanda中tensorflow环境配置
     </h1>
   
 
         
-        <a href="/2020/07/21/hello-world/" class="archive-article-date">
-  	<time datetime="2020-07-21T09:55:19.065Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-07-21</time>
+        <a href="/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" class="archive-article-date">
+  	<time datetime="2020-08-16T01:54:11.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-16</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h1 id="HELLO-WORLD-HELLO-C"><a href="#HELLO-WORLD-HELLO-C" class="headerlink" title="HELLO WORLD  HELLO C++"></a>HELLO WORLD  HELLO C++</h1><a id="more"></a>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+        <h1 id="Anaconda使用国内源下载及安装（并配置tensorflow环境）"><a href="#Anaconda使用国内源下载及安装（并配置tensorflow环境）" class="headerlink" title="Anaconda使用国内源下载及安装（并配置tensorflow环境）"></a>Anaconda使用国内源下载及安装（并配置tensorflow环境）</h1><a id="more"></a>
+<h2 id="下载Anaconda"><a href="#下载Anaconda" class="headerlink" title="下载Anaconda"></a>下载Anaconda</h2><p><a href="https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/" target="_blank" rel="noopener">Anaconda下载地址</a>。或者在清华镜像网站里下载Anaconda3-2020.02-Windows-x86_64.exe。<br>下载好之后，我么就不需要使用cmd，可以在开始菜单里找到Anaconda Promt。</p>
+<p>如下图所示：<br><img src="/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/Promt.png" alt="Anocanda Promt"></p>
+<p>如果安装库的时候太慢，可以更换成清华源。貌似在清华的镜像网站里安装anaconda默认就是清华的源。</p>
+<blockquote>
+<p>可打开Anaconda Prompt执行conda config –show命令，查看anaconda的默认下载源是否更换为清华源</p>
+</blockquote>
+<h2 id="Tensorflow、sklearn等环境配置"><a href="#Tensorflow、sklearn等环境配置" class="headerlink" title="Tensorflow、sklearn等环境配置"></a>Tensorflow、sklearn等环境配置</h2><p>首先创建并激活一个名为“py36_tensoflow”的python环境。    //名称任取</p>
+<h3 id="1、首先打开Anocanda-Promt，在里面输入"><a href="#1、首先打开Anocanda-Promt，在里面输入" class="headerlink" title="1、首先打开Anocanda Promt，在里面输入"></a>1、首先打开Anocanda Promt，在里面输入</h3><figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda create --name py36_tensorflow python=<span class="number">3</span>.<span class="number">6</span></span><br><span class="line">activate py36_tensorflow</span><br></pre></td></tr></table></figure>
+<p>退出刚刚创建的python环境</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">deactivate</span><br></pre></td></tr></table></figure>
+<p>之后可以执行conda info –envs命令，验证刚刚所创建的环境是否成功。<br><img src="/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/%E6%9F%A5%E7%9C%8B%E9%85%8D%E7%BD%AE%E7%9A%84%E7%8E%AF%E5%A2%83.png" alt="查看配置的环境"></p>
+<h3 id="2、进入刚刚创建的python环境下，利用conda命令安装一些必要的python包"><a href="#2、进入刚刚创建的python环境下，利用conda命令安装一些必要的python包" class="headerlink" title="2、进入刚刚创建的python环境下，利用conda命令安装一些必要的python包"></a>2、进入刚刚创建的python环境下，利用conda命令安装一些必要的python包</h3><p>首先打开Anaconda Prompt，键入：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">activate py36_tensorflow</span><br></pre></td></tr></table></figure>
+<p>如图所示:<br><img src="/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/%E8%BF%9B%E5%85%A5%E5%B7%B2%E7%BB%8F%E9%85%8D%E7%BD%AE%E7%9A%84%E7%8E%AF%E5%A2%83.png" alt="进入已经配置的环境"></p>
+<p>激活环境之后，利用conda命令安装一些必要的python包。<br>基本命令格式为：conda install package_name 或pip install package_name （推荐conda安装）<br>例：</p>
+<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">conda install tensorflow</span><br><span class="line">conda install scikit-learn</span><br></pre></td></tr></table></figure>
+<p>然后可以使用conda list 查看已经安装的包,由于本人已经安装好，所以直接conda list<br>如图：<br><img src="/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/%E6%9F%A5%E7%9C%8B%E7%8E%AF%E5%A2%831.png" alt="查看环境1"><br><img src="/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/%E6%9F%A5%E7%9C%8B%E7%8E%AF%E5%A2%832.png" alt="查看环境2"><br>可以看到里面包含tensorflow，sklearn(scikit-learn)，numpy等环境。</p>
+<blockquote>
+<p>其实在加下来Pycharm中也可以查看已经安装的库。</p>
+</blockquote>
+<h2 id="Pycharm的安装和使用"><a href="#Pycharm的安装和使用" class="headerlink" title="Pycharm的安装和使用"></a>Pycharm的安装和使用</h2><p><a href="https://www.jetbrains.com/pycharm/download/#section=windows" target="_blank" rel="noopener">Pycharm下载地址</a></p>
+<p>注：pycharm下载社区版本的就好，专业版本可以之后注册JetBrains账号，申请学生认证，获得激活权限后使用。(不过我有专业版的激活码嘻嘻。)</p>
+<p>下载好打开之后，创建一个项目，点击左上角File -&gt; Project “项目名” -&gt; Project Interpreter -&gt; 选择刚刚创建的环境，并且能在下面看到已经安装的库，和之前conda list显示的是一样的。然后就可以使用了。</p>
+<p>如图所示：<br><img src="/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/Pycharm%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE.png" alt="Pycharm环境配置"></p>
+<ul>
+<li>这就是一个项目对应一个虚拟环境，可以互不干扰，如果还有别的项目，用不到Tensorflow，但是需要别的库，就可以按照以上步骤再创建一个虚拟环境即可。</li>
+</ul>
+<h2 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h2><p>这里利用sklearn自带数据集中的手写数据集和tensorflow实现基于CNN的手写数据识别。</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow.compat.v1 <span class="keyword">as</span> tf</span><br><span class="line">tf.disable_v2_behavior()</span><br><span class="line"><span class="comment">#查看line 45注释</span></span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_digits</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> MinMaxScaler</span><br><span class="line"><span class="comment">#MinMaxScaler是什么？还有.preprocessing是什么</span></span><br><span class="line"><span class="comment">#MinMaxScaler()是数据归一化函数</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"><span class="string">Created on Fri Mar 30 10:32:41 2018</span></span><br><span class="line"><span class="string">学习CNN卷积神经网络程序</span></span><br><span class="line"><span class="string">学习网址：https://blog.csdn.net/cxmscb/article/details/71023576</span></span><br><span class="line"><span class="string">@author: admin</span></span><br><span class="line"><span class="string">整体思路：输入层 -&gt; 卷积层（激活层）-&gt; 池化层 -&gt; 卷积层 -&gt;BN归一化层+激活层 -&gt; 池化层 -&gt; 全连接层 -&gt;输出层</span></span><br><span class="line"><span class="string">"""</span></span><br><span class="line"></span><br><span class="line">digits=load_digits()</span><br><span class="line">X_data = digits.data.astype(np.float32)</span><br><span class="line">Y_data = digits.target.astype(np.float32).reshape(<span class="number">-1</span>, <span class="number">1</span>)</span><br><span class="line"><span class="comment"># X_data.shape = (1797,64);Y_data.shape = (1797,1)</span></span><br><span class="line"><span class="comment"># 最小最大值标准化</span></span><br><span class="line"><span class="comment"># 公式：X_std = (X - X.min(axis=0)) / (X.max(axis=0) - X.min(axis=0)) ;</span></span><br><span class="line"><span class="comment">#     X_scaler = X_std/ (max - min) + min;</span></span><br><span class="line">scaler = MinMaxScaler()</span><br><span class="line">X_data = scaler.fit_transform(X_data)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> OneHotEncoder</span><br><span class="line"></span><br><span class="line"><span class="comment"># 对Y值（0,9）进行one-hot编码（eg：0：1000000000）</span></span><br><span class="line">Y = OneHotEncoder().fit_transform(Y_data).todense()</span><br><span class="line"><span class="comment"># 转换为图片格式（batch,height,width,channels）</span></span><br><span class="line">X = X_data.reshape(<span class="number">-1</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">1</span>)  <span class="comment"># -1:1797</span></span><br><span class="line">batch_size = <span class="number">8</span>  <span class="comment"># 使用MBGD算法，设定batch_size为 8</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">generatebatch</span><span class="params">(X, Y, n_examples, batch_size)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> batch_i <span class="keyword">in</span> range(n_examples // batch_size):</span><br><span class="line">        start = batch_i * batch_size</span><br><span class="line">        end = start + batch_size</span><br><span class="line">        batch_xs = X[start:end]</span><br><span class="line">        batch_ys = Y[start:end]</span><br><span class="line">        <span class="keyword">yield</span> batch_xs, batch_ys  <span class="comment"># 生成每一个batch</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">tf.reset_default_graph()</span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">tensorflow 1 的API，在tensorflow 2 里不支持，</span></span><br><span class="line"><span class="string">需将：</span></span><br><span class="line"><span class="string">import tensorflow as tf</span></span><br><span class="line"><span class="string">替换为：</span></span><br><span class="line"><span class="string">import tensorflow.compat.v1 as tf</span></span><br><span class="line"><span class="string">tf.disable_v2_behavior()</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 输入层</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># [None,8,8,1]:对图片的个数不确定故None,前面生成图片是8*8，深度为1；</span></span><br><span class="line">tf_X = tf.placeholder(tf.float32, [<span class="literal">None</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">1</span>])  <span class="comment"># placeholder 为占位符，可以理解为形参；</span></span><br><span class="line">tf_Y = tf.placeholder(tf.float32, [<span class="literal">None</span>, <span class="number">10</span>])  <span class="comment"># one-hot编码为10位数</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 卷基层+激活层</span></span><br><span class="line"><span class="comment"># 权重，也是设置卷积核；height：3，weight：3，depth：1,卷积核个数：10(一个卷积核映射出一个值)</span></span><br><span class="line">conv_filter_w1 = tf.Variable(tf.random_normal([<span class="number">3</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">10</span>]))  <span class="comment"># Variable:变量；random_normal：符合正态分布取值</span></span><br><span class="line">conv_filter_b1 = tf.Variable(tf.random_normal([<span class="number">10</span>]))  <span class="comment"># 偏移值，ont-hot输出10个值，所以【10】</span></span><br><span class="line"><span class="comment"># strides=[batch,in_height,in_width,in_channel];batch 和 in_channels 要求一定为1，即只能在一个样本的一个通道上的特征图上进行移动</span></span><br><span class="line"><span class="comment"># padding = 'SAME':“SAME”表示采用填充的方式，简单地理解为以0填充边缘;“VALID”表示采用不填充的方式，多余地进行丢弃;</span></span><br><span class="line">relu_feature_maps1 = tf.nn.relu(</span><br><span class="line">    tf.nn.conv2d(tf_X, conv_filter_w1, strides=[<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>], padding=<span class="string">'SAME'</span>) + conv_filter_b1)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 池化层</span></span><br><span class="line"><span class="comment"># ksize：池化窗口（类似卷积核的设置）一般为[1,height,width,1]</span></span><br><span class="line">max_pool1 = tf.nn.max_pool(relu_feature_maps1, ksize=[<span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">1</span>], strides=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], padding=<span class="string">'SAME'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 卷基层</span></span><br><span class="line"><span class="comment"># [height,weight,depth,channel]:上一个池化层输出10个值（one-hot）故为10，形成5个卷积核，最后生成5个值输出</span></span><br><span class="line">conv_filter_w2 = tf.Variable(tf.random_normal([<span class="number">3</span>, <span class="number">3</span>, <span class="number">10</span>, <span class="number">5</span>]))</span><br><span class="line">conv_filter_b2 = tf.Variable(tf.random_normal([<span class="number">5</span>]))</span><br><span class="line"><span class="comment"># 'SAME':采用填充的方式，简单地理解为以0填充边缘，当stride为1时，输入和输出的维度相同；“VALID”表示采用不填充的方式，多余地进行丢弃。</span></span><br><span class="line">conv_out2 = tf.nn.conv2d(relu_feature_maps1, conv_filter_w2, strides=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], padding=<span class="string">'SAME'</span>) + conv_filter_b2</span><br><span class="line"></span><br><span class="line"><span class="comment"># BN归一化层——激活层</span></span><br><span class="line">batch_mean, batch_var = tf.nn.moments(conv_out2, [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>], keep_dims=<span class="literal">True</span>)</span><br><span class="line">shift = tf.Variable(tf.zeros([<span class="number">5</span>]))  <span class="comment"># 初始化 0 ,卷积核5个，故数量为5</span></span><br><span class="line">scale = tf.Variable(tf.ones([<span class="number">5</span>]))  <span class="comment"># 初始化 1</span></span><br><span class="line">epsilon = <span class="number">0.001</span></span><br><span class="line">BN_out = tf.nn.batch_normalization(conv_out2, batch_mean, batch_var, shift, scale, epsilon)</span><br><span class="line">relu_BN_maps2 = tf.nn.relu(BN_out)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 池化层</span></span><br><span class="line">max_pool2 = tf.nn.max_pool(relu_BN_maps2, ksize=[<span class="number">1</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">1</span>], strides=[<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">1</span>], padding=<span class="string">'SAME'</span>)</span><br><span class="line">print(max_pool2)  <span class="comment"># 结果：Tensor（'MaxPool_1:0',shape = (?,2,2,5),dtype = float32）</span></span><br><span class="line"><span class="comment"># 将特征图进行展开</span></span><br><span class="line">max_pool2_flat = tf.reshape(max_pool2, [<span class="number">-1</span>, <span class="number">2</span> * <span class="number">2</span> * <span class="number">5</span>])  <span class="comment"># max_pool2的shape是【？，2,2,5】所以转换成列为：2*2*5，行数：1797</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 全连接</span></span><br><span class="line"><span class="comment"># 全连接试讲各个部分的特征进行；链接，减少特征的损失</span></span><br><span class="line">fc_w1 = tf.Variable(tf.random_normal([<span class="number">2</span> * <span class="number">2</span> * <span class="number">5</span>, <span class="number">50</span>]))</span><br><span class="line">fc_b1 = tf.Variable(tf.random_normal([<span class="number">50</span>]))</span><br><span class="line">fc_out1 = tf.nn.relu(tf.matmul(max_pool2_flat, fc_w1) + fc_b1)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 输出层</span></span><br><span class="line">out_w1 = tf.Variable(tf.random_normal([<span class="number">50</span>, <span class="number">10</span>]))</span><br><span class="line">out_b1 = tf.Variable(tf.random_normal([<span class="number">10</span>]))</span><br><span class="line">pred = tf.nn.softmax(tf.matmul(fc_out1, out_w1) + out_b1)  <span class="comment"># softmax与relu一样属于激活函数</span></span><br><span class="line"><span class="comment"># tf.clip_by_value(A, min, max)：输入一个张量A，把A中的每一个元素的值都压缩在min和max之间。小于min的让它等于min，大于max的元素的值等于max</span></span><br><span class="line">loss = -tf.reduce_mean(tf_Y * tf.log(tf.clip_by_value(pred, <span class="number">1e-11</span>, <span class="number">1.0</span>)))</span><br><span class="line">train_step = tf.train.AdamOptimizer(<span class="number">1e-3</span>).minimize(loss)  <span class="comment"># AdamOptimizer:基于Adam算法的优化器</span></span><br><span class="line"><span class="comment"># tf.argmax就是返回最大的那个数值所在的下标。axis -0:所有的数组按照数组相同位置进行比较，返回值最大的下标;axis = 1:在每个数组内的数比较，返回最大值的下标；</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">axis =0                            axis = 1</span></span><br><span class="line"><span class="string">test[0] = array([1, 2, 3])         test[0] = array([1, 2, 3])  #2</span></span><br><span class="line"><span class="string">test[1] = array([2, 3, 4])         test[1] = array([2, 3, 4])  #2</span></span><br><span class="line"><span class="string">test[2] = array([5, 4, 3])         test[2] = array([5, 4, 3])  #0</span></span><br><span class="line"><span class="string">test[3] = array([8, 7, 2])         test[3] = array([8, 7, 2])  #0</span></span><br><span class="line"><span class="string"># output   :    [3, 3, 1]</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line">y_pred = tf.arg_max(pred, <span class="number">1</span>)  <span class="comment"># 1：axis</span></span><br><span class="line">bool_pred = tf.equal(tf.arg_max(tf_Y, <span class="number">1</span>), y_pred)</span><br><span class="line"><span class="comment"># 准确率</span></span><br><span class="line">accuracy = tf.reduce_mean(tf.cast(bool_pred, tf.float32))  <span class="comment"># cast(bool_pred,tf.flaot32):将bool_pred转换成float格式</span></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    sess.run(tf.global_variables_initializer())</span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> range(<span class="number">1000</span>):  <span class="comment"># 迭代1000个周期</span></span><br><span class="line">        <span class="keyword">for</span> batch_xs, batch_ys <span class="keyword">in</span> generatebatch(X, Y, Y.shape[<span class="number">0</span>], batch_size):  <span class="comment"># 每个周期进行MBGD</span></span><br><span class="line">            sess.run(train_step, feed_dict=&#123;tf_X: batch_xs, tf_Y: batch_ys&#125;)</span><br><span class="line">        <span class="keyword">if</span> (epoch % <span class="number">100</span> == <span class="number">0</span>):</span><br><span class="line">            res = sess.run(accuracy, feed_dict=&#123;tf_X: X, tf_Y: Y&#125;)</span><br><span class="line">            print(epoch, res)</span><br><span class="line">    res_ypred = y_pred.eval(feed_dict=&#123;tf_X: X, tf_Y: Y&#125;).flatten()  <span class="comment"># 只能预测一批样本，不能预测一个样本</span></span><br><span class="line">    print(res_ypred)</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+<p>运行结果如下：<br><img src="/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/CNN%E8%AF%86%E5%88%AB%E6%89%8B%E5%86%99%E6%95%B0%E5%AD%97.png" alt="CNN识别手写数字"></p>
+<h2 id="参考博客"><a href="#参考博客" class="headerlink" title="参考博客"></a>参考博客</h2><ul>
+<li><a href="https://blog.csdn.net/qq_44806305/article/details/107047335" target="_blank" rel="noopener">https://blog.csdn.net/qq_44806305/article/details/107047335</a></li>
+<li><a href="https://blog.csdn.net/cxmscb/article/details/71023576" target="_blank" rel="noopener">https://blog.csdn.net/cxmscb/article/details/71023576</a></li>
+</ul>
 
       
 
@@ -247,17 +277,6 @@
     <div class="article-info article-info-index">
       
       
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
       
 
       
@@ -308,7 +327,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/07/21/hello-world/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/08/16/Anocanda%E4%B8%ADtensorflow%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -322,15 +341,11 @@
   
 <nav id="article-nav">
   
-    <a href="/2020/07/22/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          我的第一篇博客
-        
-      </div>
-    </a>
   
+    <a href="/2020/08/15/SVM%E5%BA%94%E7%94%A8/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">SVM应用</div>
+      <i class="icon-circle-right"></i>
+    </a>
   
 </nav>
 
@@ -355,7 +370,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#HELLO-WORLD-HELLO-C"><span class="toc-number">1.</span> <span class="toc-text">HELLO WORLD  HELLO C++</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-number">1.1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-number">1.1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-number">1.1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-number">1.1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-number">1.1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Anaconda使用国内源下载及安装（并配置tensorflow环境）"><span class="toc-number">1.</span> <span class="toc-text">Anaconda使用国内源下载及安装（并配置tensorflow环境）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#下载Anaconda"><span class="toc-number">1.1.</span> <span class="toc-text">下载Anaconda</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tensorflow、sklearn等环境配置"><span class="toc-number">1.2.</span> <span class="toc-text">Tensorflow、sklearn等环境配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、首先打开Anocanda-Promt，在里面输入"><span class="toc-number">1.2.1.</span> <span class="toc-text">1、首先打开Anocanda Promt，在里面输入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、进入刚刚创建的python环境下，利用conda命令安装一些必要的python包"><span class="toc-number">1.2.2.</span> <span class="toc-text">2、进入刚刚创建的python环境下，利用conda命令安装一些必要的python包</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Pycharm的安装和使用"><span class="toc-number">1.3.</span> <span class="toc-text">Pycharm的安装和使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码示例"><span class="toc-number">1.4.</span> <span class="toc-text">代码示例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考博客"><span class="toc-number">1.5.</span> <span class="toc-text">参考博客</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
@@ -475,10 +490,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">随笔</a>
-              </li>
             
             <div class="clearfix"></div>
           </ul>
