@@ -6,15 +6,24 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Archives: 2020/9 | SetoNaikai&#39;s Blogs</title>
+  <title>APUE第三章 文件I/O | SetoNaikai&#39;s Blogs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="SetoNaikai&#39;s Blogs">
-<meta property="og:url" content="http://yoursite.com/archives/2020/09/index.html">
+  <meta name="description" content="APUE第三章 文件I&#x2F;O1、简介可用的I&#x2F;O函数有打开文件、读文件、写文件等。 大多数文件I&#x2F;O只需用到五个函数：open、read、write、lseek、close。  本章描述的函数称为不带缓冲的I&#x2F;O（unbuffered I&#x2F;O），会与第五章中说明的标准I&#x2F;O相对照。注：ISO C和POSIX.1的关系为：POSIX 是Portable Operating System Inter">
+<meta property="og:type" content="article">
+<meta property="og:title" content="APUE第三章 文件I&#x2F;O">
+<meta property="og:url" content="http://yoursite.com/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/index.html">
 <meta property="og:site_name" content="SetoNaikai&#39;s Blogs">
+<meta property="og:description" content="APUE第三章 文件I&#x2F;O1、简介可用的I&#x2F;O函数有打开文件、读文件、写文件等。 大多数文件I&#x2F;O只需用到五个函数：open、read、write、lseek、close。  本章描述的函数称为不带缓冲的I&#x2F;O（unbuffered I&#x2F;O），会与第五章中说明的标准I&#x2F;O相对照。注：ISO C和POSIX.1的关系为：POSIX 是Portable Operating System Inter">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/oflag1.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/oflag2.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/lseek1.png">
+<meta property="og:image" content="http://yoursite.com/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/lseek2.png">
+<meta property="article:published_time" content="2020-09-16T13:09:17.000Z">
+<meta property="article:modified_time" content="2020-09-16T14:09:33.372Z">
 <meta property="article:author" content="SetoNaikai">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/oflag1.png">
   
     <link rel="alternative" href="/atom.xml" title="SetoNaikai&#39;s Blogs" type="application/atom+xml">
   
@@ -163,106 +172,240 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-APUE阅读笔记1-文件IO" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      APUE第三章 文件I/O
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
+
+        
+        
+	<!-- 不蒜子统计 -->
+	<span id="busuanzi_container_page_pv" style='display:none' class="archive-article-date">
+		  <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
 <a href="/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/" class="archive-article-date">
   	<time datetime="2020-09-16T13:09:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-16</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/">APUE第三章 文件I/O</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <a id="more"></a>
 
-        <div class="article-info info-on-right">
-          
-          
+<h1 id="APUE第三章-文件I-O"><a href="#APUE第三章-文件I-O" class="headerlink" title="APUE第三章 文件I/O"></a>APUE第三章 文件I/O</h1><h2 id="1、简介"><a href="#1、简介" class="headerlink" title="1、简介"></a>1、简介</h2><p>可用的I/O函数有打开文件、读文件、写文件等。</p>
+<p>大多数文件I/O只需用到五个函数：open、read、write、lseek、close。</p>
+<blockquote>
+<p>本章描述的函数称为<strong>不带缓冲</strong>的I/O（unbuffered I/O），会与第五章中说明的标准I/O相对照。<br>注：ISO C和POSIX.1的关系为：<br>POSIX 是Portable Operating System Interfaces 的缩写，是由IEEE制定胡标准簇。这些标准的制定目的是为了提升应用程序在不同UNIX系统环境之间的可移植性。这个标准是ISO C的超集。 它不仅包含ISO C部分，还定义了很多系统服务接口，例如：socket相关接口，pthread线程相关接口等。同样的，POSIX也只是定义接口，而不定义具体的实现。<br><a href="https://www.jianshu.com/p/399e5a3c7cc5" target="_blank" rel="noopener">参考链接（简书）</a></p>
+</blockquote>
+<h2 id="2、函数open和openat"><a href="#2、函数open和openat" class="headerlink" title="2、函数open和openat"></a>2、函数open和openat</h2><h3 id="2-1、概述"><a href="#2-1、概述" class="headerlink" title="2.1、概述"></a>2.1、概述</h3><blockquote>
+<p>调用函数open和openat需要添加头文件&lt;fcntl.h&gt;</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">open</span> <span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *path, <span class="keyword">int</span> oflag, ...)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">openat</span> <span class="params">(<span class="keyword">int</span> fd, <span class="keyword">const</span> <span class="keyword">char</span> *path, <span class="keyword">int</span> oflag, ...)</span></span>;</span><br><span class="line"><span class="comment">//两函数的返回值为：若成功，返回文件描述符；出错返回-1.</span></span><br><span class="line"><span class="comment">//path为文件的路径，是要打开或者创建文件的名字。</span></span><br><span class="line"><span class="comment">//oflag可以用来说明此函数的多个选项</span></span><br><span class="line"><span class="comment">//fd参数在2.2中叙述</span></span><br></pre></td></tr></table></figure>
+<p><img src="/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/oflag1.png" alt="oflag1.png"><br><img src="/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/oflag2.png" alt="oflag2.png"></p>
+<h3 id="2-2、open和openat区别"><a href="#2-2、open和openat区别" class="headerlink" title="2.2、open和openat区别"></a>2.2、open和openat区别</h3><p>fd参数把open和openat区分开，共有三种可能性。</p>
+<ol>
+<li>path参数指定的是<strong>绝对路径</strong>，在这种情况下，fd参数可以忽略，open等同于openat。</li>
+<li>path参数指定的是<strong>相对路径</strong>名，fd参数指出了相对路径名在文件系统的开始地址。fd参数是通过打开相对路径名所在的目录来获取。</li>
+<li>path参数指定了相对路径名，fd参数具有特殊值AT_FDCWD。在这种情况下，路径名在当前工作目录中获取，openat函数在操作上和open函数类似。</li>
+</ol>
+<h2 id="3、函数creat"><a href="#3、函数creat" class="headerlink" title="3、函数creat"></a>3、函数creat</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">creat</span> <span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *path, <span class="keyword">mode_t</span> mode)</span></span>;</span><br><span class="line"><span class="comment">//返回值：若成功，返回为只写打开的文件描述符；若出错，返回-1.</span></span><br><span class="line"><span class="comment">//此函数等效于：</span></span><br><span class="line"><span class="built_in">open</span>(path,O_WRONLY|O_CREAT|O_TRUNC, mode);</span><br></pre></td></tr></table></figure>
+<p>creat不足之处就是只能以<strong>只写方式</strong>打开所创建的文件。在提供open新版本之前，如果要创建一个新的临时文件，并要对该文件进行读写操作，则必须先调用creat close，然后再调用open。现在则可用下列方式调用open实现：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">open</span>(path,O_RDWR|O_CREAT|O_TRUNC, mode)；</span><br></pre></td></tr></table></figure>
 
+<h2 id="4、函数close"><a href="#4、函数close" class="headerlink" title="4、函数close"></a>4、函数close</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">close</span> <span class="params">(<span class="keyword">int</span> fd)</span></span>;</span><br><span class="line"><span class="comment">//返回值：若成功，返回0；若出错，返回-1</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="5、函数lseek"><a href="#5、函数lseek" class="headerlink" title="5、函数lseek"></a>5、函数lseek</h2><h3 id="5-1-lseek使用方法"><a href="#5-1-lseek使用方法" class="headerlink" title="5.1 lseek使用方法"></a>5.1 lseek使用方法</h3><p>每个打开的文件都有一个与其关联的当前文件偏移量(current file offset)。它通常是非负整数，用来度量从文件开始处计算的字节数。</p>
+<p>通常读写操作都是从当前文件偏移量处开始，并使偏移量增加所读写的字节数。</p>
+<p>默认情况下，当打开一个文件时，除非指定O_APPEND选项，否则偏移量被设置为0。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">off_t</span> <span class="title">lseek</span> <span class="params">(<span class="keyword">int</span> fd, <span class="keyword">off_t</span> offset, <span class="keyword">int</span> whence)</span></span>;</span><br><span class="line"><span class="comment">//成功 return 文件偏移量；</span></span><br><span class="line"><span class="comment">//出错 return -1；</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>若whence是SEEK_SET,则将该文件的偏移量设置为<strong>距文件开始处offset个字节</strong></li>
+<li>若whence是SEEK_CUR，则将该文件的偏移量设置为<strong>当前值加offset(可正可负)</strong></li>
+<li>若whence是SEEK_END,则将该文件的偏移量设置为<strong>文件长度加offset(可正可负)</strong></li>
+</ul>
+<p>若lseek顺利执行，则返回新的文件偏移量，为此可以用以下的方式来确定打开文件的当前偏移量。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">off_t</span> currpos;</span><br><span class="line">currpos = lseek(fd,<span class="number">0</span>,SEEK_CUR);</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>注：这种方法可以检测文件是否可以设置偏移量。若文件描述符指向的是一个<strong>管道，FIFO、网络套接字，则lseek返回-1，并将errno设置为ESPIPE。</strong></p>
+</blockquote>
+<h3 id="5-2、lseek实例1"><a href="#5-2、lseek实例1" class="headerlink" title="5.2、lseek实例1"></a>5.2、lseek实例1</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">"apue.h"</span><span class="comment">//APUE作者自己写的一个文件，包含了常用的头文件，系统不自带</span></span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//STDIN_FILENO</span></span><br><span class="line">    <span class="keyword">if</span>(lseek(STDIN_FILENO,<span class="number">0</span>,SEEK_CUR) == <span class="number">-1</span>)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"cannot seek\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"seek OK\n"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>说明:</p>
+<blockquote>
+<p>STDIN_FILENO：接收键盘的输入</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>STDOUT_FILENO：向屏幕输出</p>
+</blockquote>
+</blockquote>
+<p><img src="/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/lseek1.png" alt="交互实例"></p>
+<h3 id="5-2、lseek实例2"><a href="#5-2、lseek实例2" class="headerlink" title="5.2、lseek实例2"></a>5.2、lseek实例2</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">///创建一个具有空洞的文件</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">"apue.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> buf1[] = <span class="string">"abcdefghij"</span>;</span><br><span class="line"><span class="keyword">char</span> buf1[] = <span class="string">"ABCDEFGHIJ"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> fd;</span><br><span class="line">    <span class="keyword">if</span>((fd = creat(<span class="string">"file.hole"</span>,FILE_MODE)) &lt; <span class="number">0</span>)&#123;</span><br><span class="line">        err_sys(<span class="string">"creat error"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">write</span>(fd,buf1,<span class="number">10</span>)!=<span class="number">10</span>)&#123;</span><br><span class="line">        err_sys(<span class="string">"buf1 write error"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//offset now = 10</span></span><br><span class="line">    <span class="keyword">if</span>(lseek(fd,<span class="number">16384</span>,SEEK_SET)==<span class="number">-1</span>)&#123;</span><br><span class="line">        err_sys(<span class="string">"lseek error"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//offset now = 16384</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">write</span>(fd,buf2,<span class="number">10</span>)!=<span class="number">10</span>)&#123;</span><br><span class="line">        err_sys(<span class="string">"buf2 write error"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//offset now = 16394</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果为：</p>
+<p><img src="/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/lseek2.png" alt="空洞文件"></p>
+<h2 id="6、函数read"><a href="#6、函数read" class="headerlink" title="6、函数read"></a>6、函数read</h2><p>函数read从打开文件中读数据</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">ssize_t</span> <span class="title">read</span> <span class="params">(<span class="keyword">int</span> fd,<span class="keyword">void</span> *buf,<span class="keyword">size_t</span> nbytes)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//返回值：读到的字节数，若已到文件尾，返回0；若出错，返回-1</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">ssize_t</span> <span class="title">write</span><span class="params">(<span class="keyword">int</span> fd,<span class="keyword">const</span> <span class="keyword">void</span> *buf,<span class="keyword">size_t</span> nbytes)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//返回值：若成功，返回已写的字节数；若出错，返回-1</span></span><br></pre></td></tr></table></figure>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃💩<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/alipay.jpg">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/assets/wepay.jpg">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://yoursite.com/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-<a href="/2020/09/06/linux%E5%9F%BA%E7%A1%80-Makefile/" class="archive-article-date">
-  	<time datetime="2020-09-06T07:21:58.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-06</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2020/09/06/linux%E5%9F%BA%E7%A1%80-Makefile/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">linux基础-Makefile</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/09/06/linux%E5%9F%BA%E7%A1%80-Makefile/">linux基础-Makefile</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#APUE第三章-文件I-O"><span class="toc-number">1.</span> <span class="toc-text">APUE第三章 文件I&#x2F;O</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1、简介"><span class="toc-number">1.1.</span> <span class="toc-text">1、简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2、函数open和openat"><span class="toc-number">1.2.</span> <span class="toc-text">2、函数open和openat</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1、概述"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1、概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2、open和openat区别"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2、open和openat区别</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3、函数creat"><span class="toc-number">1.3.</span> <span class="toc-text">3、函数creat</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4、函数close"><span class="toc-number">1.4.</span> <span class="toc-text">4、函数close</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5、函数lseek"><span class="toc-number">1.5.</span> <span class="toc-text">5、函数lseek</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#5-1-lseek使用方法"><span class="toc-number">1.5.1.</span> <span class="toc-text">5.1 lseek使用方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2、lseek实例1"><span class="toc-number">1.5.2.</span> <span class="toc-text">5.2、lseek实例1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-2、lseek实例2"><span class="toc-number">1.5.3.</span> <span class="toc-text">5.2、lseek实例2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6、函数read"><span class="toc-number">1.6.</span> <span class="toc-text">6、函数read</span></a></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	
-<a href="/2020/09/05/Linux%E4%B8%ADvim%E3%80%81gcc%E7%9F%A5%E8%AF%86%E7%82%B9/" class="archive-article-date">
-  	<time datetime="2020-09-05T11:11:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-05</time>
-</a>
-        </div>
-    	 
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/09/05/Linux%E4%B8%ADvim%E3%80%81gcc%E7%9F%A5%E8%AF%86%E7%82%B9/">Linux</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
   
 
-    
+  
+
+  
 
 
           </div>
@@ -297,8 +440,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
