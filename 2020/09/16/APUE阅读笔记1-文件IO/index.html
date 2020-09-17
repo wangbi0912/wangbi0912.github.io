@@ -8,19 +8,19 @@
   <link rel="dns-prefetch" href="http://yoursite.com">
   <title>APUE第三章 文件I/O | SetoNaikai&#39;s Blogs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="APUE第三章 文件I&#x2F;O1、简介可用的I&#x2F;O函数有打开文件、读文件、写文件等。 大多数文件I&#x2F;O只需用到五个函数：open、read、write、lseek、close。  本章描述的函数称为不带缓冲的I&#x2F;O（unbuffered I&#x2F;O），会与第五章中说明的标准I&#x2F;O相对照。注：ISO C和POSIX.1的关系为：POSIX 是Portable Operating System Inter">
+  <meta name="description" content="APUE第三章 文件I&#x2F;O">
 <meta property="og:type" content="article">
 <meta property="og:title" content="APUE第三章 文件I&#x2F;O">
 <meta property="og:url" content="http://yoursite.com/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/index.html">
 <meta property="og:site_name" content="SetoNaikai&#39;s Blogs">
-<meta property="og:description" content="APUE第三章 文件I&#x2F;O1、简介可用的I&#x2F;O函数有打开文件、读文件、写文件等。 大多数文件I&#x2F;O只需用到五个函数：open、read、write、lseek、close。  本章描述的函数称为不带缓冲的I&#x2F;O（unbuffered I&#x2F;O），会与第五章中说明的标准I&#x2F;O相对照。注：ISO C和POSIX.1的关系为：POSIX 是Portable Operating System Inter">
+<meta property="og:description" content="APUE第三章 文件I&#x2F;O">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://yoursite.com/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/oflag1.png">
 <meta property="og:image" content="http://yoursite.com/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/oflag2.png">
 <meta property="og:image" content="http://yoursite.com/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/lseek1.png">
 <meta property="og:image" content="http://yoursite.com/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/lseek2.png">
 <meta property="article:published_time" content="2020-09-16T13:09:17.000Z">
-<meta property="article:modified_time" content="2020-09-16T14:09:33.372Z">
+<meta property="article:modified_time" content="2020-09-17T01:34:46.094Z">
 <meta property="article:author" content="SetoNaikai">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/2020/09/16/APUE%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B01-%E6%96%87%E4%BB%B6IO/oflag1.png">
@@ -198,9 +198,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <a id="more"></a>
-
-<h1 id="APUE第三章-文件I-O"><a href="#APUE第三章-文件I-O" class="headerlink" title="APUE第三章 文件I/O"></a>APUE第三章 文件I/O</h1><h2 id="1、简介"><a href="#1、简介" class="headerlink" title="1、简介"></a>1、简介</h2><p>可用的I/O函数有打开文件、读文件、写文件等。</p>
+        <h1 id="APUE第三章-文件I-O"><a href="#APUE第三章-文件I-O" class="headerlink" title="APUE第三章 文件I/O"></a>APUE第三章 文件I/O</h1><a id="more"></a>
+<h2 id="1、简介"><a href="#1、简介" class="headerlink" title="1、简介"></a>1、简介</h2><p>可用的I/O函数有打开文件、读文件、写文件等。</p>
 <p>大多数文件I/O只需用到五个函数：open、read、write、lseek、close。</p>
 <blockquote>
 <p>本章描述的函数称为<strong>不带缓冲</strong>的I/O（unbuffered I/O），会与第五章中说明的标准I/O相对照。<br>注：ISO C和POSIX.1的关系为：<br>POSIX 是Portable Operating System Interfaces 的缩写，是由IEEE制定胡标准簇。这些标准的制定目的是为了提升应用程序在不同UNIX系统环境之间的可移植性。这个标准是ISO C的超集。 它不仅包含ISO C部分，还定义了很多系统服务接口，例如：socket相关接口，pthread线程相关接口等。同样的，POSIX也只是定义接口，而不定义具体的实现。<br><a href="https://www.jianshu.com/p/399e5a3c7cc5" target="_blank" rel="noopener">参考链接（简书）</a></p>
