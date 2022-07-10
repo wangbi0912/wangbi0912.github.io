@@ -6,19 +6,25 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>NOTICE | Hexo</title>
+  <title>二叉搜索树（二） | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+  <meta name="description" content="文章对应的题目450 删除BST的节点（M）701 二叉搜索树的插入操作（M）700 二叉搜索树的搜索（E）98 验证二叉搜索树">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NOTICE">
-<meta property="og:url" content="http://example.com/2021/07/09/Notice/index.html">
+<meta property="og:title" content="二叉搜索树（二）">
+<meta property="og:url" content="http://example.com/2021/06/14/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%BA%8C%EF%BC%89/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+<meta property="og:description" content="文章对应的题目450 删除BST的节点（M）701 二叉搜索树的插入操作（M）700 二叉搜索树的搜索（E）98 验证二叉搜索树">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-07-09T15:54:54.000Z">
-<meta property="article:modified_time" content="2022-07-10T06:58:30.212Z">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/27610647-9783181e5d62b6b8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/27610647-544da1606b2d1135.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/27610647-72a3d334adccdb60.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/27610647-5ad6ea611902cade.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2021-06-14T13:53:37.000Z">
+<meta property="article:modified_time" content="2022-07-10T06:54:19.220Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="随笔">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/27610647-9783181e5d62b6b8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -160,27 +166,53 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Notice" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-二叉搜索树（二）" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      NOTICE
+      二叉搜索树（二）
     </h1>
   
 
         
-        <a href="/2021/07/09/Notice/" class="archive-article-date">
-  	<time datetime="2021-07-09T15:54:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-07-09</time>
+        <a href="/2021/06/14/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%BA%8C%EF%BC%89/" class="archive-article-date">
+  	<time datetime="2021-06-14T13:53:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-14</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>之前电脑数据没了，重新搭建博客，之前文章在恢复中…</strong></p>
+        <h3 id="文章对应的题目"><a href="#文章对应的题目" class="headerlink" title="文章对应的题目"></a>文章对应的题目</h3><p>450 删除BST的节点（M）<br>701 二叉搜索树的插入操作（M）<br>700 二叉搜索树的搜索（E）<br>98 验证二叉搜索树</p>
+<span id="more"></span>
+
+<hr>
+<p>对于BST相关的问题，基本上有一个代码框架</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">traverse</span><span class="params">(TreeNode* root, <span class="type">int</span> target)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root -&gt; val == target) &#123;</span><br><span class="line">        <span class="comment">//找到目标操作</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(root -&gt; val &lt; target) &#123;</span><br><span class="line">        <span class="built_in">traverse</span>(root -&gt; right, target);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(root -&gt; val &gt; target) &#123;</span><br><span class="line">        <span class="built_in">traverse</span>(root -&gt; left, target);    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="98-验证二叉搜索树"><a href="#98-验证二叉搜索树" class="headerlink" title="98.验证二叉搜索树"></a>98.验证二叉搜索树</h3><p><img src="https://upload-images.jianshu.io/upload_images/27610647-9783181e5d62b6b8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="98.验证二叉搜索树"></p>
+<p>首先，直接思路就是递归遍历每一个节点，比较节点的左右孩子的值和本身相比，<br>但是，二叉搜索树不仅仅是对于一个节点的孩子节点相比，还要保证整个子树都要小于该节点的值，这时候需要一个辅助函数，函数签名为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">bool</span> <span class="title">is_valid</span><span class="params">(TreeNode* root, TreeNode* max, TreeNode* min)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>辅助函数将该节点作为后续遍历节点的根节点，遍历到左子树时为<code>root</code>为<code>max</code>节点，遍历到右子树时为<code>root</code>为<code>min</code>节点。<br>正确的代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * struct TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode *left;</span></span><br><span class="line"><span class="comment"> *     TreeNode *right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() : val(0), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">isValidBST</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">isValid</span>(root, <span class="literal">nullptr</span>, <span class="literal">nullptr</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">isValid</span><span class="params">(TreeNode* root,TreeNode* max,TreeNode* min)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">nullptr</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        <span class="keyword">if</span>(max != <span class="literal">nullptr</span> &amp;&amp; root -&gt; val &gt;= max -&gt; val)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">if</span>(min != <span class="literal">nullptr</span> &amp;&amp; root -&gt; val &lt;= min -&gt; val)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">isValid</span>(root -&gt; left, root, min) &amp;&amp; <span class="built_in">isValid</span>(root -&gt; right, max, root);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>使用辅助函数增加携带的参数信息，将约束传递到子树的所有节点，这是个小技巧。</p>
+<hr>
+<h3 id="700-二叉搜索树的搜索（E）"><a href="#700-二叉搜索树的搜索（E）" class="headerlink" title="700 二叉搜索树的搜索（E）"></a>700 二叉搜索树的搜索（E）</h3><p><img src="https://upload-images.jianshu.io/upload_images/27610647-544da1606b2d1135.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="700 二叉搜索树的搜索"></p>
+<p>这题比较简单，直接递归就行，代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">TreeNode* <span class="title">searchBST</span><span class="params">(TreeNode* root, <span class="type">int</span> val)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">nullptr</span>) <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">        <span class="comment">//可以省略判别相等的情况</span></span><br><span class="line">        <span class="comment">// if(root -&gt; val == val)</span></span><br><span class="line">        <span class="comment">//     return root;</span></span><br><span class="line">        <span class="keyword">if</span>(root -&gt; val &gt; val)</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">searchBST</span>(root -&gt; left, val);</span><br><span class="line">        <span class="keyword">if</span>(root -&gt; val &lt; val)</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">searchBST</span>(root -&gt; right, val);</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="701-二叉搜索树的插入操作"><a href="#701-二叉搜索树的插入操作" class="headerlink" title="701 二叉搜索树的插入操作"></a>701 二叉搜索树的插入操作</h3><p><img src="https://upload-images.jianshu.io/upload_images/27610647-72a3d334adccdb60.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="701 二叉搜索树的插入操作"></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * struct TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode *left;</span></span><br><span class="line"><span class="comment"> *     TreeNode *right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() : val(0), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">TreeNode* <span class="title">insertIntoBST</span><span class="params">(TreeNode* root, <span class="type">int</span> val)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">nullptr</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">TreeNode</span>(val);</span><br><span class="line">        <span class="keyword">if</span>(root -&gt; val &gt; val)</span><br><span class="line">            root -&gt; left = <span class="built_in">insertIntoBST</span>(root -&gt; left, val);</span><br><span class="line">        <span class="keyword">if</span>(root -&gt; val &lt; val)</span><br><span class="line">            root -&gt; right = <span class="built_in">insertIntoBST</span>(root -&gt; right, val);</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;<span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * struct TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode *left;</span></span><br><span class="line"><span class="comment"> *     TreeNode *right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() : val(0), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">TreeNode* <span class="title">insertIntoBST</span><span class="params">(TreeNode* root, <span class="type">int</span> val)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">nullptr</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">TreeNode</span>(val);</span><br><span class="line">        <span class="keyword">if</span>(root -&gt; val &gt; val)</span><br><span class="line">            root -&gt; left = <span class="built_in">insertIntoBST</span>(root -&gt; left, val);</span><br><span class="line">        <span class="keyword">if</span>(root -&gt; val &lt; val)</span><br><span class="line">            root -&gt; right = <span class="built_in">insertIntoBST</span>(root -&gt; right, val);</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="450-删除BST的节点"><a href="#450-删除BST的节点" class="headerlink" title="450 删除BST的节点"></a>450 删除BST的节点</h3><p><img src="https://upload-images.jianshu.io/upload_images/27610647-5ad6ea611902cade.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="450 删除BST的节点"><br>要删除二叉搜索树中的节点，必须要保证删除之后二叉搜索树保持原有性质。删除节点可以分为三种情况：</p>
+<ul>
+<li>1、删除的节点为叶子节点，左右孩子都为<code>nullptr</code>；<br>  这种情况，直接返回<code>nullptr</code>作为上一个递归的子树；</li>
+<li>2、删除的节点只有一个孩子，另一个孩子为<code>nullptr</code>；<br>  这种情况，直接返回其唯一的孩子作为上一个递归的子树；</li>
+<li>3、删除的节点有两个孩子<br>  在此情况下，为了不破坏二叉搜索树的性质，必须找到该节点<code>node</code>的左子树<code>node -&gt; left</code>中的最大节点<code>maxNode</code>或右子树<code>node -&gt; right</code>中的最小节点<code>minNode</code>代替该节点，然后递归的删除其右子树<code>node -&gt; right</code>中的<code>minNode</code>（以<code>minNode</code>为例子）<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">TreeNode* <span class="title">deleteNode</span><span class="params">(TreeNode* root, <span class="type">int</span> key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">nullptr</span>)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">        <span class="keyword">if</span>(root -&gt; val == key) &#123;</span><br><span class="line">            <span class="keyword">if</span>(root -&gt; left == <span class="literal">nullptr</span> &amp;&amp; root -&gt; right == <span class="literal">nullptr</span>) <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">            <span class="keyword">if</span>(root -&gt; left != <span class="literal">nullptr</span> &amp;&amp; root -&gt; right == <span class="literal">nullptr</span>) <span class="keyword">return</span> root -&gt; left;</span><br><span class="line">            <span class="keyword">if</span>(root -&gt; left == <span class="literal">nullptr</span> &amp;&amp; root -&gt; right != <span class="literal">nullptr</span>) <span class="keyword">return</span> root -&gt; right;</span><br><span class="line">            TreeNode* temp = <span class="built_in">getMax</span>(root -&gt; right);</span><br><span class="line">            root -&gt; val = temp -&gt; val;</span><br><span class="line">            <span class="comment">//删除右子树的最小节点</span></span><br><span class="line">            root -&gt; right = <span class="built_in">deleteNode</span>(root -&gt; right, temp -&gt; val);</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(root -&gt; val &gt; key) &#123;</span><br><span class="line">            root -&gt; left = <span class="built_in">deleteNode</span>(root -&gt; left, key);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(root -&gt; val &lt; key) &#123;</span><br><span class="line">            root -&gt; right = <span class="built_in">deleteNode</span>(root -&gt; right, key);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//获取右子树的最小节点</span></span><br><span class="line">    <span class="function">TreeNode* <span class="title">getMax</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span>(root -&gt; left) &#123;</span><br><span class="line">            root = root -&gt; left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
 
       
 
@@ -220,6 +252,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -270,7 +313,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/07/09/Notice/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/06/14/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%BA%8C%EF%BC%89/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -284,18 +327,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/08/10/%E5%9B%9E%E6%BA%AF%E9%97%AE%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/06/15/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%89%EF%BC%89/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          回溯问题
+          二叉搜索树（三）
         
       </div>
     </a>
   
   
-    <a href="/2021/06/15/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%89%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">二叉搜索树（三）</div>
+    <a href="/2021/06/12/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%80%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">二叉搜索树（一）</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -322,7 +365,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    目录，不存在的…
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E5%AF%B9%E5%BA%94%E7%9A%84%E9%A2%98%E7%9B%AE"><span class="toc-number">1.</span> <span class="toc-text">文章对应的题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#98-%E9%AA%8C%E8%AF%81%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91"><span class="toc-number">2.</span> <span class="toc-text">98.验证二叉搜索树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#700-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E6%90%9C%E7%B4%A2%EF%BC%88E%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">700 二叉搜索树的搜索（E）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#701-%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E6%8F%92%E5%85%A5%E6%93%8D%E4%BD%9C"><span class="toc-number">4.</span> <span class="toc-text">701 二叉搜索树的插入操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#450-%E5%88%A0%E9%99%A4BST%E7%9A%84%E8%8A%82%E7%82%B9"><span class="toc-number">5.</span> <span class="toc-text">450 删除BST的节点</span></a></li></ol>
                     </div>
                 </span>
             </div>

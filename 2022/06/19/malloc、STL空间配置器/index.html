@@ -6,19 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>NOTICE | Hexo</title>
+  <title>malloc、STL空间配置器 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+  <meta name="description" content="malloc一直是困惑我好久的事情，今天记录一下。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NOTICE">
-<meta property="og:url" content="http://example.com/2021/07/09/Notice/index.html">
+<meta property="og:title" content="malloc、STL空间配置器">
+<meta property="og:url" content="http://example.com/2022/06/19/malloc%E3%80%81STL%E7%A9%BA%E9%97%B4%E9%85%8D%E7%BD%AE%E5%99%A8/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+<meta property="og:description" content="malloc一直是困惑我好久的事情，今天记录一下。">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-07-09T15:54:54.000Z">
-<meta property="article:modified_time" content="2022-07-10T06:58:30.212Z">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/27610647-53a735a6284192db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2022-06-19T08:36:22.000Z">
+<meta property="article:modified_time" content="2022-07-10T06:58:11.984Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="随笔">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/27610647-53a735a6284192db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -160,27 +163,57 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Notice" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-malloc、STL空间配置器" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      NOTICE
+      malloc、STL空间配置器
     </h1>
   
 
         
-        <a href="/2021/07/09/Notice/" class="archive-article-date">
-  	<time datetime="2021-07-09T15:54:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-07-09</time>
+        <a href="/2022/06/19/malloc%E3%80%81STL%E7%A9%BA%E9%97%B4%E9%85%8D%E7%BD%AE%E5%99%A8/" class="archive-article-date">
+  	<time datetime="2022-06-19T08:36:22.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-06-19</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>之前电脑数据没了，重新搭建博客，之前文章在恢复中…</strong></p>
+        <blockquote>
+<p>malloc一直是困惑我好久的事情，今天记录一下。</p>
+</blockquote>
+<span id="more"></span>
+
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*源码描述</span></span><br><span class="line"><span class="comment">  The main properties of the algorithms are:</span></span><br><span class="line"><span class="comment">  * For large (&gt;= 512 bytes) requests, it is a pure best-fit allocator,</span></span><br><span class="line"><span class="comment">    with ties normally decided via FIFO (i.e. least recently used).</span></span><br><span class="line"><span class="comment">  * For small (&lt;= 64 bytes by default) requests, it is a caching</span></span><br><span class="line"><span class="comment">    allocator, that maintains pools of quickly recycled chunks.</span></span><br><span class="line"><span class="comment">  * In between, and for combinations of large and small requests, it does</span></span><br><span class="line"><span class="comment">    the best it can trying to meet both goals at once.</span></span><br><span class="line"><span class="comment">  * For very large requests (&gt;= 128KB by default), it relies on system</span></span><br><span class="line"><span class="comment">    memory mapping facilities, if supported.</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>malloc</code>工作原理<ol>
+<li><code>malloc</code>开始搜索空闲内存块，如果能找到一块大小合适的就分配出去</li>
+<li>如果<code>malloc</code>找不到一块合适的空闲内存，那么调用brk等系统调用扩大堆区从而获得更多的空闲内存（这里使用<code>brk</code>还是<code>mmap</code>取决于申请的大小）</li>
+<li><code>malloc</code>调用<code>brk</code>后开始转入内核态，此时操作系统中的虚拟地址系统开始工作，扩大进程的堆区，操作系统并没有为此分配真正的物理内存</li>
+<li><code>brk</code>执行结束后返回到<code>malloc</code>，从内核态切换到用户态，<code>malloc</code>找到一块合适的空闲内存后返回</li>
+<li>进程拿到内存，继续干活。</li>
+<li>当有代码读写新申请的内存时系统内部出现缺页中断，此时再次由用户态切换到内核态，操作系统此时真正的分配物理内存，之后再次由内核态切换回用户态，程序继续。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<ul>
+<li>SGI STL空间配置器</li>
+</ul>
+<p>考虑到小型区块可能造成内存碎片问题，SGI 采用两级配置器，第一级配置器直接使用 <code>malloc()</code> 和 <code>free()</code>实现；第二级配置器使用 memory pool 内存池管理。</p>
+<p>第二级配置器的原理：</p>
+<ul>
+<li>当配置区块超过 128 bytes，就使用第一级配置器</li>
+<li>当配置区块小于 128 bytes，使用内存池管理</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> &#123;_ALIGN = <span class="number">8</span>&#125;;  <span class="comment">// 小型区块的上调边界</span></span><br><span class="line"><span class="keyword">enum</span> &#123;_MAX_BYTES = <span class="number">128</span>&#125;; <span class="comment">// 小区区块的上限</span></span><br><span class="line"><span class="keyword">enum</span> &#123;_NFREELISTS = <span class="number">16</span>&#125;; <span class="comment">// _MAX_BYTES/_ALIGN  free-list 的个数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// free-list 的节点结构，降低维护链表 list 带来的额外负担</span></span><br><span class="line"><span class="keyword">union</span> <span class="title class_">_Obj</span> &#123;</span><br><span class="line">    <span class="keyword">union</span> <span class="title class_">_Obj</span>* _M_free_list_link;  <span class="comment">// 利用联合体特点</span></span><br><span class="line">    <span class="type">char</span> _M_client_data[<span class="number">1</span>];    <span class="comment">/* The client sees this. */</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="type">static</span> _Obj* __STL_VOLATILE _S_free_list[_NFREELISTS];  <span class="comment">// 注意，它是数组，每个数组元素包含若干相等的小额区块</span></span><br></pre></td></tr></table></figure>
+<p>其中 <code>free-list </code>是指针数组，16 个数组元素，就是 16 个 <code>free-list</code>，各自管理大小分别为 8， 16， 24， 32，…128 bytes(8 的倍数)的小额区块。</p>
+<p>小额区块的结构体 union _Obj 使用链表连接起来。如图所示：<br><img src="https://upload-images.jianshu.io/upload_images/27610647-53a735a6284192db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>配置器负责配置，同时也负责回收。</p>
 
       
 
@@ -220,6 +253,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -270,7 +314,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/07/09/Notice/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/06/19/malloc%E3%80%81STL%E7%A9%BA%E9%97%B4%E9%85%8D%E7%BD%AE%E5%99%A8/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -284,18 +328,9 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/08/10/%E5%9B%9E%E6%BA%AF%E9%97%AE%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          回溯问题
-        
-      </div>
-    </a>
   
-  
-    <a href="/2021/06/15/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%89%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">二叉搜索树（三）</div>
+    <a href="/2022/05/11/shared-str%E3%80%81String%E7%B1%BB%E5%AE%9E%E7%8E%B0/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">shared_str、String类实现</div>
       <i class="icon-circle-right"></i>
     </a>
   

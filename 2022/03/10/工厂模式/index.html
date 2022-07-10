@@ -6,19 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>NOTICE | Hexo</title>
+  <title>工厂模式 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+  <meta name="description" content="工厂方法和抽象工厂">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NOTICE">
-<meta property="og:url" content="http://example.com/2021/07/09/Notice/index.html">
+<meta property="og:title" content="工厂模式">
+<meta property="og:url" content="http://example.com/2022/03/10/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+<meta property="og:description" content="工厂方法和抽象工厂">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-07-09T15:54:54.000Z">
-<meta property="article:modified_time" content="2022-07-10T06:58:30.212Z">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/27610647-074107ba6bb3cf98.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/27610647-7616d064968cd7fc.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2022-03-10T07:22:52.000Z">
+<meta property="article:modified_time" content="2022-07-10T06:54:51.918Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="随笔">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/27610647-074107ba6bb3cf98.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -160,27 +164,37 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Notice" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-工厂模式" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      NOTICE
+      工厂模式
     </h1>
   
 
         
-        <a href="/2021/07/09/Notice/" class="archive-article-date">
-  	<time datetime="2021-07-09T15:54:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-07-09</time>
+        <a href="/2022/03/10/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
+  	<time datetime="2022-03-10T07:22:52.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-10</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>之前电脑数据没了，重新搭建博客，之前文章在恢复中…</strong></p>
+        <h2 id="工厂方法和抽象工厂"><a href="#工厂方法和抽象工厂" class="headerlink" title="工厂方法和抽象工厂"></a>工厂方法和抽象工厂</h2><span id="more"></span>
+
+<h3 id="工厂方法"><a href="#工厂方法" class="headerlink" title="工厂方法"></a>工厂方法</h3><p><strong>定义一个创建对象的接口，让子类决定创建哪一个类。</strong><br><img src="https://upload-images.jianshu.io/upload_images/27610647-074107ba6bb3cf98.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"><br>代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Product</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Product</span>() &#123;&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="built_in">Product</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductA</span> : <span class="keyword">public</span> Product &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductA</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductA&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">concreteProductA</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductB</span> : <span class="keyword">public</span> Product &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductB</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductB&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">concreteProductB</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Factory</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Factory</span>() &#123;&#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Factory</span>() &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> Product* <span class="title">creatFactory</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">createProductA</span> : <span class="keyword">public</span> Factory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">Product* <span class="title">creatFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> concreteProductA;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">createProductB</span> : <span class="keyword">public</span> Factory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">Product* <span class="title">creatFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> concreteProductB;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> <span class="type">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Factory* fac1 = <span class="keyword">new</span> <span class="built_in">createProductA</span>();</span><br><span class="line">    Factory* fac2 = <span class="keyword">new</span> <span class="built_in">createProductB</span>();</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;**********&quot;</span> &lt;&lt; endl;</span><br><span class="line">    Product* proA = fac1-&gt;<span class="built_in">creatFactory</span>();</span><br><span class="line">    Product* proB = fac2-&gt;<span class="built_in">creatFactory</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>工厂模式实现比较简单，但是工厂模式对于对象的创建仅仅局限于一个类（即Product是一个类），若要为不同的类实现对象创建的接口，需要使用<strong>抽象工厂模式</strong></p>
+<hr>
+<h3 id="抽象工厂"><a href="#抽象工厂" class="headerlink" title="抽象工厂"></a>抽象工厂</h3><p>结构图如下：<br><img src="https://upload-images.jianshu.io/upload_images/27610647-7616d064968cd7fc.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"><br>抽象工厂可以创建多个抽象产品类，比如说一个游戏种野怪有三种难度，共十个野怪，那么对于玩家开始游戏，就需要实例化三十个类创建野怪，这时候可以选择抽象工厂方式，将难度分为三种，解决一组相关或依赖的对象。<br>代码结构如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">//抽象产品A和B</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ProductA</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">ProductA</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ProductB</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">ProductB</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductA1</span> : <span class="keyword">public</span> ProductA&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductA1</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductA1&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductA2</span> : <span class="keyword">public</span> ProductA &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductA2</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductA2&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductB1</span> : <span class="keyword">public</span> ProductB &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductB1</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductB1&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductB2</span> : <span class="keyword">public</span> ProductB &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductB2</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductB2&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//抽象工厂</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Factory</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Factory</span>() &#123;&#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Factory</span>() &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> ProductA* <span class="title">creatFactoryA</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> ProductB* <span class="title">creatFactoryB</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//实例化工厂，生成类型1的产品 A1和B1</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">createProduct1</span> : <span class="keyword">public</span> Factory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ProductA* <span class="title">creatFactoryA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">concreteProductA1</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">ProductB* <span class="title">creatFactoryB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">concreteProductB1</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//实例化工厂，生成类型2的产品 A2和B2</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">createProduct2</span> : <span class="keyword">public</span> Factory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ProductA* <span class="title">creatFactoryA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">concreteProductA2</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">ProductB* <span class="title">creatFactoryB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">concreteProductB2</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> <span class="type">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Factory* fac1 = <span class="keyword">new</span> <span class="built_in">createProduct1</span>();</span><br><span class="line">    Factory* fac2 = <span class="keyword">new</span> <span class="built_in">createProduct2</span>();</span><br><span class="line">    ProductA* A1 = fac1 -&gt; <span class="built_in">creatFactoryA</span>();</span><br><span class="line">    ProductB* B1 = fac1 -&gt; <span class="built_in">creatFactoryB</span>();</span><br><span class="line">    ProductA* A2 = fac2 -&gt; <span class="built_in">creatFactoryA</span>();</span><br><span class="line">    ProductB* B2 = fac2 -&gt; <span class="built_in">creatFactoryB</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以把A、B想象成野怪，1、2想象成难度，如果玩家选择难度2，直接使用一个工厂<code>createProduct2</code>即可。</p>
+<hr>
+<p><strong>注意：一定要区分工厂方法和抽象工厂！！！</strong></p>
 
       
 
@@ -220,6 +234,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -270,7 +295,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/07/09/Notice/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/03/10/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -284,18 +309,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/08/10/%E5%9B%9E%E6%BA%AF%E9%97%AE%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2022/03/15/%E6%A8%A1%E7%89%88%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          回溯问题
+          模版方法模式
         
       </div>
     </a>
   
   
-    <a href="/2021/06/15/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%89%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">二叉搜索树（三）</div>
+    <a href="/2022/01/22/%E6%89%8B%E6%92%95%E7%BA%BF%E7%A8%8B%E6%B1%A0/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">手撕线程池</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -322,7 +347,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    目录，不存在的…
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95%E5%92%8C%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82"><span class="toc-number">1.</span> <span class="toc-text">工厂方法和抽象工厂</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">工厂方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%BD%E8%B1%A1%E5%B7%A5%E5%8E%82"><span class="toc-number">1.2.</span> <span class="toc-text">抽象工厂</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>

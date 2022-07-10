@@ -6,18 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>NOTICE | Hexo</title>
+  <title>模版方法模式 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+  <meta name="description" content="模版方法（Template Method）模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NOTICE">
-<meta property="og:url" content="http://example.com/2021/07/09/Notice/index.html">
+<meta property="og:title" content="模版方法模式">
+<meta property="og:url" content="http://example.com/2022/03/15/%E6%A8%A1%E7%89%88%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+<meta property="og:description" content="模版方法（Template Method）模式">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-07-09T15:54:54.000Z">
-<meta property="article:modified_time" content="2022-07-10T06:58:30.212Z">
+<meta property="article:published_time" content="2022-03-15T11:52:44.000Z">
+<meta property="article:modified_time" content="2022-07-10T06:55:13.801Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="随笔">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -160,27 +161,39 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Notice" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-模版方法模式" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      NOTICE
+      模版方法模式
     </h1>
   
 
         
-        <a href="/2021/07/09/Notice/" class="archive-article-date">
-  	<time datetime="2021-07-09T15:54:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-07-09</time>
+        <a href="/2022/03/15/%E6%A8%A1%E7%89%88%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/" class="archive-article-date">
+  	<time datetime="2022-03-15T11:52:44.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-15</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>之前电脑数据没了，重新搭建博客，之前文章在恢复中…</strong></p>
+        <hr>
+<h4 id="模版方法（Template-Method）模式"><a href="#模版方法（Template-Method）模式" class="headerlink" title="模版方法（Template Method）模式"></a>模版方法（Template Method）模式</h4><span id="more"></span>
+
+<p>在面向对象系统的设计中，对于某一个业务逻辑在不同的对象下实现细节不一样，但是逻辑框架相同，可以使用模版方法模式。</p>
+<p>普通实现中，某一业务逻辑需要按照顺序执行<code>fun1</code>～<code>fun4</code>，其中<code>fun2</code>和<code>fun3</code>在对象A和B中实现不相同，代码逻辑如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">base</span>()&#123;&#125;;</span><br><span class="line">  <span class="keyword">virtual</span> ~<span class="built_in">base</span>()&#123;&#125;;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">fun1</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="title">fun2</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="title">fun3</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">fun4</span><span class="params">()</span></span>&#123;&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> : <span class="keyword">public</span> Base&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">A</span>()&#123;&#125;;</span><br><span class="line">  ~<span class="built_in">A</span>()&#123;&#125;;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">fun2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//实现细节</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">fun3</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//实现细节</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//业务逻辑</span></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">fun1</span>();</span><br><span class="line">    <span class="built_in">fun2</span>();</span><br><span class="line">    <span class="built_in">fun3</span>();</span><br><span class="line">    <span class="built_in">fun4</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> : <span class="keyword">public</span> Base&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">B</span>()&#123;&#125;;</span><br><span class="line">  ~<span class="built_in">B</span>()&#123;&#125;;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">fun2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//不同的实现细节</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">fun3</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//不同的实现细节</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//业务逻辑</span></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">fun1</span>();</span><br><span class="line">    <span class="built_in">fun2</span>();</span><br><span class="line">    <span class="built_in">fun3</span>();</span><br><span class="line">    <span class="built_in">fun4</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这种实现方式破坏了<strong>依赖倒置原则（DIP）</strong>，即程序要依赖于抽象接口，而不是具体实现，所以高层（基类）应该提供接口用于不同的低层（子类）实现，控制权交给父类。</p>
+<p>使用模版方法模式代码框架如下，有基类<code>Base</code>，负责业务逻辑框架的函数<code>void run()</code>：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Base</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">Base</span>()&#123;&#125;;</span><br><span class="line">  <span class="keyword">virtual</span> ~<span class="built_in">Base</span>()&#123;&#125;;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">fun1</span><span class="params">()</span> </span>&#123;&#125;;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">fun2</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">fun3</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">fun4</span><span class="params">()</span> </span>&#123;&#125;;</span><br><span class="line">  <span class="comment">//业务逻辑</span></span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">fun1</span>();</span><br><span class="line">    <span class="built_in">fun2</span>();</span><br><span class="line">    <span class="built_in">fun3</span>();</span><br><span class="line">    <span class="built_in">fun4</span>();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> : <span class="keyword">public</span> Base&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">A</span>()&#123;&#125;;</span><br><span class="line">  ~<span class="built_in">A</span>()&#123;&#125;;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">fun2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//实现细节</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">fun3</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//实现细节</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">B</span> : <span class="keyword">public</span> Base&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">B</span>()&#123;&#125;;</span><br><span class="line">  ~<span class="built_in">B</span>()&#123;&#125;;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">fun2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//不同的实现细节</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="type">void</span> <span class="title">fun3</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//不同的实现细节</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span>* argv[])</span> </span>&#123;</span><br><span class="line">  <span class="comment">//实现1</span></span><br><span class="line">  Base* obj1 = <span class="keyword">new</span> A;</span><br><span class="line">  obj1 -&gt; <span class="built_in">run</span>();</span><br><span class="line">  <span class="comment">//实现2</span></span><br><span class="line">  Base* obj2 = <span class="keyword">new</span> B;</span><br><span class="line">  obj2 -&gt; <span class="built_in">run</span>();</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里对于不同的业务实现A和B，高层都提供了两个接口（虚函数），逻辑交给了高层，利用了多态性和晚绑定。</p>
+<hr>
 
       
 
@@ -220,6 +233,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -270,7 +294,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/07/09/Notice/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/03/15/%E6%A8%A1%E7%89%88%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -284,18 +308,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/08/10/%E5%9B%9E%E6%BA%AF%E9%97%AE%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2022/03/26/%E6%89%8B%E6%92%95-KMP%E3%80%81%E5%A0%86%E6%8E%92%E5%BA%8F%E3%80%81%E5%BF%AB%E6%8E%92/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          回溯问题
+          手撕-KMP、堆排序、快排
         
       </div>
     </a>
   
   
-    <a href="/2021/06/15/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%89%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">二叉搜索树（三）</div>
+    <a href="/2022/03/10/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">工厂模式</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -322,7 +346,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    目录，不存在的…
+                    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E7%89%88%E6%96%B9%E6%B3%95%EF%BC%88Template-Method%EF%BC%89%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">模版方法（Template Method）模式</span></a></li></ol>
                     </div>
                 </span>
             </div>

@@ -6,19 +6,23 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>NOTICE | Hexo</title>
+  <title>二叉搜索树（一） | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+  <meta name="description" content="文章对应的题目230  BST第K小的元素538  二叉搜索树转化为累加树">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NOTICE">
-<meta property="og:url" content="http://example.com/2021/07/09/Notice/index.html">
+<meta property="og:title" content="二叉搜索树（一）">
+<meta property="og:url" content="http://example.com/2021/06/12/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+<meta property="og:description" content="文章对应的题目230  BST第K小的元素538  二叉搜索树转化为累加树">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-07-09T15:54:54.000Z">
-<meta property="article:modified_time" content="2022-07-10T06:58:30.212Z">
+<meta property="og:image" content="http://example.com/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%80%EF%BC%89/230.png">
+<meta property="og:image" content="http://example.com/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%80%EF%BC%89/538.png">
+<meta property="article:published_time" content="2021-06-12T02:35:47.000Z">
+<meta property="article:modified_time" content="2022-07-10T06:28:16.091Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="随笔">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%80%EF%BC%89/230.png">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -160,27 +164,47 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Notice" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-二叉搜索树（一）" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      NOTICE
+      二叉搜索树（一）
     </h1>
   
 
         
-        <a href="/2021/07/09/Notice/" class="archive-article-date">
-  	<time datetime="2021-07-09T15:54:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-07-09</time>
+        <a href="/2021/06/12/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%80%EF%BC%89/" class="archive-article-date">
+  	<time datetime="2021-06-12T02:35:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-12</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>之前电脑数据没了，重新搭建博客，之前文章在恢复中…</strong></p>
+        <h3 id="文章对应的题目"><a href="#文章对应的题目" class="headerlink" title="文章对应的题目"></a>文章对应的题目</h3><p>230  BST第K小的元素<br>538  二叉搜索树转化为累加树</p>
+<span id="more"></span>
+
+<hr>
+<h3 id="二叉搜索树BST特性："><a href="#二叉搜索树BST特性：" class="headerlink" title="二叉搜索树BST特性："></a>二叉搜索树BST特性：</h3><p>1、对于BST上每个节点<code>node</code>，左子树的节点的值都比<code>node</code>的值要小，右子树节点的值都比<code>node</code>的值要大。<br>2、对于BST的每一个节点<code>node</code>，他的左侧子树<code>node -&gt; left</code>和右侧子树<code>node -&gt; right</code>都为BST。<br>3、对BST做<strong>中序遍历</strong>，得到的遍历结果是<strong>升序</strong>的。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//对BST做中序遍历</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">traverse</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="literal">nullptr</span>)  <span class="keyword">return</span>;</span><br><span class="line">    <span class="built_in">traverse</span>(root -&gt; left);</span><br><span class="line">    cout &lt;&lt; root -&gt; val &lt;&lt; endl;</span><br><span class="line">    <span class="built_in">traverse</span>(root -&gt; right);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="230-寻找第K小的元素"><a href="#230-寻找第K小的元素" class="headerlink" title="230. 寻找第K小的元素"></a>230. 寻找第K小的元素</h1><p><img src="/./%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%80%EF%BC%89/230.png" alt="230. 寻找第K小的元素"><br>题目需求如上，直接思路就是中序遍历，找到排名第K的元素，代码如下。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * struct TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode *left;</span></span><br><span class="line"><span class="comment"> *     TreeNode *right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() : val(0), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="type">int</span> res= <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">kthSmallest</span><span class="params">(TreeNode* root, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">traverse</span>(root, k);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">traverse</span><span class="params">(TreeNode* root, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">nullptr</span>) &#123;  </span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">traverse</span>(root -&gt; left, k);</span><br><span class="line">        i++;</span><br><span class="line">        <span class="keyword">if</span>(i == k) &#123;</span><br><span class="line">            res = root -&gt; val;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">traverse</span>(root -&gt; right, k);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>时间复杂度为<code>O(N)</code>，像红黑树这种自平衡的BST，增删查改时间复杂度都是对数级的<code>O(logN)</code>，所以说有点低效。<br>若要达到对数级的时间复杂度，就需要知道当前的节点的排名是多少（类似于二分查找）。<br>比如说你让我查找排名为k的元素，当前节点知道自己排名第<code>m</code>，那么我可以比较<code>m</code>和<code>k</code>的大小：</p>
+<p>1、如果<code>m == k</code>，显然就是找到了第<code>k</code>个元素，返回当前节点就行了。<br>2、如果<code>k &lt; m</code>，那说明排名第k的元素在左子树，所以可以去左子树搜索第<code>k</code>个元素。<br>3、如果<code>k &gt; m</code>，那说明排名第k的元素在右子树，所以可以去右子树搜索第<code>k - m - 1</code>个元素。</p>
+<p>这样就可以将时间复杂度降到<code>O(logN)</code>了。这就需要在二叉树节点中维护一个排名信息：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">     <span class="type">int</span> val;</span><br><span class="line">     <span class="comment">//size为当前节点为根节点的树的节点总数</span></span><br><span class="line">     <span class="type">int</span> size;</span><br><span class="line">     TreeNode *left;</span><br><span class="line">     TreeNode *right;</span><br><span class="line">     <span class="built_in">TreeNode</span>() : <span class="built_in">val</span>(<span class="number">0</span>), <span class="built_in">left</span>(<span class="literal">nullptr</span>), <span class="built_in">right</span>(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">     <span class="built_in">TreeNode</span>(<span class="type">int</span> x) : <span class="built_in">val</span>(x), <span class="built_in">left</span>(<span class="literal">nullptr</span>), <span class="built_in">right</span>(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">     <span class="built_in">TreeNode</span>(<span class="type">int</span> x, TreeNode *left, TreeNode *right) : <span class="built_in">val</span>(x), <span class="built_in">left</span>(left), <span class="built_in">right</span>(right) &#123;&#125;</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+<p>这样就可以将排名<code>k</code>和<code>node -&gt; left -&gt; size</code>对比，达到对数级的时间复杂度。</p>
+<hr>
+<h3 id="二叉搜索树转化为累加树"><a href="#二叉搜索树转化为累加树" class="headerlink" title="二叉搜索树转化为累加树"></a>二叉搜索树转化为累加树</h3><p><img src="/./%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%80%EF%BC%89/538.png" alt="二叉搜索树转化为累加树"><br>其实就是利用二叉树的中序遍历特性，本题直接利用降序输出即可，递归顺序为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">traverse</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == nullprt)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="built_in">traverse</span>(root -&gt; right);</span><br><span class="line">    cout &lt;&lt; root -&gt; val &lt;&lt; endl;</span><br><span class="line">    <span class="built_in">traverse</span>(root -&gt; left);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码可以从大到小降序打印 BST 节点的值，如果维护一个外部累加变量<code>sum</code>，然后把<code>sum</code>赋值给 BST 中的每一个节点，就可以将 BST 转化成累加树。代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * struct TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode *left;</span></span><br><span class="line"><span class="comment"> *     TreeNode *right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() : val(0), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="function">TreeNode* <span class="title">convertBST</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">GST</span>(root);</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">GST</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">nullptr</span>)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        <span class="built_in">GST</span>(root -&gt; right);</span><br><span class="line">        sum += root -&gt; val;</span><br><span class="line">        root -&gt; val = sum;</span><br><span class="line">        <span class="built_in">GST</span>(root -&gt; left);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>[labuladong公众号](<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247488101&idx=1&sn=6041ddda5f20ccde8a7036d3e3a1482c&chksm=9bd7ec6daca0657b2ab20a936437e2c8206384c3b1485fe91747ad796fa3a5b08556b2f4911e&scene=21#wechat_redirect">手把手刷二叉搜索树（第一期） (qq.com)</a>)</p>
 
       
 
@@ -220,6 +244,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -270,7 +305,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/07/09/Notice/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/06/12/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%80%EF%BC%89/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -284,20 +319,15 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/08/10/%E5%9B%9E%E6%BA%AF%E9%97%AE%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/06/14/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%BA%8C%EF%BC%89/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          回溯问题
+          二叉搜索树（二）
         
       </div>
     </a>
   
-  
-    <a href="/2021/06/15/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%89%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">二叉搜索树（三）</div>
-      <i class="icon-circle-right"></i>
-    </a>
   
 </nav>
 
@@ -322,7 +352,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    目录，不存在的…
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E5%AF%B9%E5%BA%94%E7%9A%84%E9%A2%98%E7%9B%AE"><span class="toc-number">1.</span> <span class="toc-text">文章对应的题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91BST%E7%89%B9%E6%80%A7%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">二叉搜索树BST特性：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#230-%E5%AF%BB%E6%89%BE%E7%AC%ACK%E5%B0%8F%E7%9A%84%E5%85%83%E7%B4%A0"><span class="toc-number"></span> <span class="toc-text">230. 寻找第K小的元素</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E8%BD%AC%E5%8C%96%E4%B8%BA%E7%B4%AF%E5%8A%A0%E6%A0%91"><span class="toc-number">1.</span> <span class="toc-text">二叉搜索树转化为累加树</span></a></li></ol>
                     </div>
                 </span>
             </div>

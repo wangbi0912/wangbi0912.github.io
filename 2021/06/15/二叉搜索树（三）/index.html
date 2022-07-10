@@ -6,19 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>NOTICE | Hexo</title>
+  <title>二叉搜索树（三） | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+  <meta name="description" content="文章对应的题目96 不同的二叉搜索树95 不同的二叉搜索树II">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NOTICE">
-<meta property="og:url" content="http://example.com/2021/07/09/Notice/index.html">
+<meta property="og:title" content="二叉搜索树（三）">
+<meta property="og:url" content="http://example.com/2021/06/15/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%89%EF%BC%89/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+<meta property="og:description" content="文章对应的题目96 不同的二叉搜索树95 不同的二叉搜索树II">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-07-09T15:54:54.000Z">
-<meta property="article:modified_time" content="2022-07-10T06:58:30.212Z">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/27610647-fb884c22652bbbb1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2021-06-15T14:01:43.000Z">
+<meta property="article:modified_time" content="2022-07-10T06:54:34.603Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="随笔">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/27610647-fb884c22652bbbb1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -160,27 +163,44 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Notice" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-二叉搜索树（三）" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      NOTICE
+      二叉搜索树（三）
     </h1>
   
 
         
-        <a href="/2021/07/09/Notice/" class="archive-article-date">
-  	<time datetime="2021-07-09T15:54:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-07-09</time>
+        <a href="/2021/06/15/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%89%EF%BC%89/" class="archive-article-date">
+  	<time datetime="2021-06-15T14:01:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-06-15</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>之前电脑数据没了，重新搭建博客，之前文章在恢复中…</strong></p>
+        <h3 id="文章对应的题目"><a href="#文章对应的题目" class="headerlink" title="文章对应的题目"></a>文章对应的题目</h3><p>96 不同的二叉搜索树<br>95 不同的二叉搜索树II</p>
+<span id="more"></span>
+
+<hr>
+<h3 id="96-不同的二叉搜索树"><a href="#96-不同的二叉搜索树" class="headerlink" title="96.不同的二叉搜索树"></a>96.不同的二叉搜索树</h3><p><img src="https://upload-images.jianshu.io/upload_images/27610647-fb884c22652bbbb1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="96.不同的二叉搜索树"><br>若输入<code>n=3</code>，总共有5种BST，结果为5，这就需要<strong>穷举</strong>。<br>若<code>n=5</code>，或者说用<code>&#123;1, 2, 3, 4, 5&#125;</code>构造平衡二叉树，首先每一个点都能作为根节点，若我们固定<code>3</code>为根节点，左子树为<code>&#123;1, 2&#125;</code>，右子树为<code>&#123;4, 5&#125;</code>，左右两棵子树分别有2种情况。所以对于固定<code>3</code>为根节点这个情况来讲，共有<strong>2x2&#x3D;4</strong>种结果.<br>对于如何计算左子树<code>&#123;1, 2&#125;</code>、右子树<code>&#123;4, 5&#125;</code>的情况，这是一个计算树的组合的子问题，直接用递归即可。需要一个辅助函数。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">count</span><span class="params">(<span class="type">int</span> low, <span class="type">int</span> high)</span></span>;  <span class="comment">//闭区间[low, high]的数字能组成count(low, high)种BST</span></span><br></pre></td></tr></table></figure>
+<p>具体实现代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">numTrees</span><span class="params">(<span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">count</span>(<span class="number">1</span>, n);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">count</span><span class="params">(<span class="type">int</span> low, <span class="type">int</span> high)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(low &gt; high)</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        <span class="type">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> mid = low; mid &lt;= high; mid++) &#123;</span><br><span class="line">            <span class="type">int</span> left = <span class="built_in">count</span>(low, mid - <span class="number">1</span>);</span><br><span class="line">            <span class="type">int</span> right = <span class="built_in">count</span>(mid + <span class="number">1</span>, high);</span><br><span class="line">            res += left * right;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>提交之后并不能通过，超出时间限制，因为存在<strong>重叠子问题</strong>，在动态规划中消除重叠子问题的方法，就是加一个<strong>备忘录</strong><code>memo</code>。代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">numTrees</span><span class="params">(<span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">memo</span>(n, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(n)); <span class="comment">//初始化二维vector，每一个元素都为0</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">count</span>(<span class="number">1</span>, n, memo);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">count</span><span class="params">(<span class="type">int</span> low, <span class="type">int</span> high, vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; memo)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(low &gt; high)</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span>(memo[low - <span class="number">1</span>][high - <span class="number">1</span>] !=<span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span> memo[low - <span class="number">1</span>][high - <span class="number">1</span>];</span><br><span class="line">        <span class="type">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> mid = low; mid &lt;= high; mid++) &#123;</span><br><span class="line">            <span class="type">int</span> left = <span class="built_in">count</span>(low, mid - <span class="number">1</span>, memo);</span><br><span class="line">            <span class="type">int</span> right = <span class="built_in">count</span>(mid + <span class="number">1</span>, high, memo);</span><br><span class="line">            res += left * right;</span><br><span class="line">        &#125;</span><br><span class="line">        memo[low - <span class="number">1</span>][high - <span class="number">1</span>] = res;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>但是提交之后还是超过时间限制…</p>
+<hr>
+<h3 id="95-不同的二叉搜索树II"><a href="#95-不同的二叉搜索树II" class="headerlink" title="95.不同的二叉搜索树II"></a>95.不同的二叉搜索树II</h3><p>此题思路和上题一样，都是遍历每一个节点作为根节点，迭代求出以当前点为根节点其他子树的树的形状。<br>具体的步骤为：</p>
+<ol>
+<li>穷举<code>root</code>节点的所有可能。</li>
+<li>递归构造左右子树的BST。</li>
+<li>穷举左右子树作为<code>root</code>的左右子树<br>具体代码如下<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * struct TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode *left;</span></span><br><span class="line"><span class="comment"> *     TreeNode *right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() : val(0), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">vector&lt;TreeNode*&gt; <span class="title">generateTrees</span><span class="params">(<span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">build</span>(<span class="number">1</span>, n);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">vector&lt;TreeNode*&gt; <span class="title">build</span><span class="params">(<span class="type">int</span> low, <span class="type">int</span> high)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(low &gt; high) &#123;</span><br><span class="line">            <span class="keyword">return</span> &#123;<span class="literal">nullptr</span>&#125;;</span><br><span class="line">        &#125;</span><br><span class="line">        vector&lt;TreeNode*&gt; res;    <span class="comment">//保存当前root节点的结果</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> mid = low; mid &lt;= high; mid ++) &#123;</span><br><span class="line">            vector&lt;TreeNode*&gt; left = <span class="built_in">build</span>(low, mid - <span class="number">1</span>);</span><br><span class="line">            vector&lt;TreeNode*&gt; right = <span class="built_in">build</span>(mid + <span class="number">1</span>, high);</span><br><span class="line">            <span class="comment">//给root节点穷举所有所有子树的组合</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">auto</span> i : left) &#123;</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">auto</span> j : right) &#123;</span><br><span class="line">                    TreeNode* root = <span class="keyword">new</span> <span class="built_in">TreeNode</span>(mid);</span><br><span class="line">                    root -&gt; left = i;</span><br><span class="line">                    root -&gt; right = j;</span><br><span class="line">                    res.<span class="built_in">push_back</span>(root);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ol>
 
       
 
@@ -220,6 +240,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -270,7 +301,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/07/09/Notice/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/06/15/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%89%EF%BC%89/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -284,18 +315,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/08/10/%E5%9B%9E%E6%BA%AF%E9%97%AE%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/07/09/Notice/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          回溯问题
+          NOTICE
         
       </div>
     </a>
   
   
-    <a href="/2021/06/15/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%89%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">二叉搜索树（三）</div>
+    <a href="/2021/06/14/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%BA%8C%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">二叉搜索树（二）</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -322,7 +353,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    目录，不存在的…
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E5%AF%B9%E5%BA%94%E7%9A%84%E9%A2%98%E7%9B%AE"><span class="toc-number">1.</span> <span class="toc-text">文章对应的题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#96-%E4%B8%8D%E5%90%8C%E7%9A%84%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91"><span class="toc-number">2.</span> <span class="toc-text">96.不同的二叉搜索树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#95-%E4%B8%8D%E5%90%8C%E7%9A%84%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91II"><span class="toc-number">3.</span> <span class="toc-text">95.不同的二叉搜索树II</span></a></li></ol>
                     </div>
                 </span>
             </div>

@@ -6,18 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>NOTICE | Hexo</title>
+  <title>缓存淘汰策略-LRU、LFU | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+  <meta name="description" content="LRU和LFU简单实现">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NOTICE">
-<meta property="og:url" content="http://example.com/2021/07/09/Notice/index.html">
+<meta property="og:title" content="缓存淘汰策略-LRU、LFU">
+<meta property="og:url" content="http://example.com/2022/04/06/%E7%BC%93%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5-LRU%E3%80%81LFU/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+<meta property="og:description" content="LRU和LFU简单实现">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-07-09T15:54:54.000Z">
-<meta property="article:modified_time" content="2022-07-10T06:58:30.212Z">
+<meta property="article:published_time" content="2022-04-06T12:22:14.000Z">
+<meta property="article:modified_time" content="2022-07-10T06:57:46.205Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="随笔">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -160,27 +161,39 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Notice" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-缓存淘汰策略-LRU、LFU" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      NOTICE
+      缓存淘汰策略-LRU、LFU
     </h1>
   
 
         
-        <a href="/2021/07/09/Notice/" class="archive-article-date">
-  	<time datetime="2021-07-09T15:54:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-07-09</time>
+        <a href="/2022/04/06/%E7%BC%93%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5-LRU%E3%80%81LFU/" class="archive-article-date">
+  	<time datetime="2022-04-06T12:22:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-04-06</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>之前电脑数据没了，重新搭建博客，之前文章在恢复中…</strong></p>
+        <p>LRU和LFU简单实现</p>
+<span id="more"></span>
+
+<h4 id="1-LRU（最近最少使用缓存）"><a href="#1-LRU（最近最少使用缓存）" class="headerlink" title="1. LRU（最近最少使用缓存）"></a>1. LRU（最近最少使用缓存）</h4><blockquote>
+<p>力扣146题</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">Node</span> &#123;</span><br><span class="line">    <span class="type">int</span> key, val;</span><br><span class="line">    Node* prev;</span><br><span class="line">    Node* next;</span><br><span class="line">    <span class="built_in">Node</span>(<span class="type">int</span> x, <span class="type">int</span> y) : <span class="built_in">key</span>(x), <span class="built_in">val</span>(y), <span class="built_in">prev</span>(<span class="literal">nullptr</span>), <span class="built_in">next</span>(<span class="literal">nullptr</span>) &#123;&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">DoubleList</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Node* head = <span class="keyword">new</span> <span class="built_in">Node</span>(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    Node* tail = <span class="keyword">new</span> <span class="built_in">Node</span>(<span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="type">int</span> size = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">DoubleList</span>() &#123;</span><br><span class="line">        head -&gt; next = tail;</span><br><span class="line">        tail -&gt; prev = head;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">push_back</span><span class="params">(Node* l_node)</span> </span>&#123;</span><br><span class="line">        l_node -&gt; next = tail;</span><br><span class="line">        l_node -&gt; prev = tail -&gt; prev;</span><br><span class="line">        tail -&gt; prev -&gt; next = l_node;</span><br><span class="line">        tail -&gt; prev = l_node;</span><br><span class="line">        size++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">remove</span><span class="params">(Node* l_node)</span> </span>&#123;</span><br><span class="line">        l_node -&gt; prev -&gt; next = l_node -&gt; next;</span><br><span class="line">        l_node -&gt; next -&gt; prev = l_node -&gt; prev;</span><br><span class="line">        l_node -&gt; prev = <span class="literal">nullptr</span>;</span><br><span class="line">        l_node -&gt; next = <span class="literal">nullptr</span>;</span><br><span class="line">        size--;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">Node* <span class="title">removeFirst</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(head -&gt; next == tail)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">        Node* First = head -&gt; next;</span><br><span class="line">        <span class="built_in">remove</span>(First);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> First;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">List_size</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> size;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">LRUCache</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> capacity;</span><br><span class="line">    unordered_map&lt;<span class="type">int</span>, Node*&gt; map;</span><br><span class="line">    DoubleList dlist;</span><br><span class="line">    </span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">LRUCache</span>(<span class="type">int</span> capacity) : <span class="built_in">capacity</span>(capacity)&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">get</span><span class="params">(<span class="type">int</span> key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">auto</span> it = map.<span class="built_in">find</span>(key);</span><br><span class="line">        <span class="keyword">if</span>(it == map.<span class="built_in">end</span>())</span><br><span class="line">            <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">        Node* temp = map[key];</span><br><span class="line">        dlist.<span class="built_in">remove</span>(temp);</span><br><span class="line">        dlist.<span class="built_in">push_back</span>(temp);</span><br><span class="line">        <span class="keyword">return</span> temp -&gt; val;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">put</span><span class="params">(<span class="type">int</span> key, <span class="type">int</span> value)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">auto</span> it = map.<span class="built_in">find</span>(key);</span><br><span class="line">        <span class="keyword">if</span>(it != map.<span class="built_in">end</span>()) &#123;</span><br><span class="line">            Node* temp = map[key];</span><br><span class="line">            temp -&gt; val = value;</span><br><span class="line">            dlist.<span class="built_in">remove</span>(temp);</span><br><span class="line">            dlist.<span class="built_in">push_back</span>(temp);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(dlist.<span class="built_in">List_size</span>() == capacity) &#123;</span><br><span class="line">            Node* first = dlist.<span class="built_in">removeFirst</span>();</span><br><span class="line">            map.<span class="built_in">erase</span>(map.<span class="built_in">find</span>(first -&gt; key));</span><br><span class="line">        &#125;</span><br><span class="line">        Node* x = <span class="keyword">new</span> <span class="built_in">Node</span>(key, value);</span><br><span class="line">        map.<span class="built_in">emplace</span>(key, x);</span><br><span class="line">        dlist.<span class="built_in">push_back</span>(x);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Your LRUCache object will be instantiated and called as such:</span></span><br><span class="line"><span class="comment"> * LRUCache* obj = new LRUCache(capacity);</span></span><br><span class="line"><span class="comment"> * int param_1 = obj-&gt;get(key);</span></span><br><span class="line"><span class="comment"> * obj-&gt;put(key,value);</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="2-LFU（最不经常使用缓存）"><a href="#2-LFU（最不经常使用缓存）" class="headerlink" title="2. LFU（最不经常使用缓存）"></a>2. LFU（最不经常使用缓存）</h4><blockquote>
+<p>力扣460题</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; key2val;</span><br><span class="line">    unordered_map&lt;<span class="type">int</span>, <span class="type">int</span>&gt; key2freq;</span><br><span class="line">    unordered_map&lt;<span class="type">int</span>, list&lt;<span class="type">int</span>&gt;&gt; freq2keys;</span><br><span class="line">    <span class="type">int</span> minFreq = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">increaseFreq</span><span class="params">(<span class="type">int</span> key)</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> freq = key2freq[key];</span><br><span class="line">        key2freq[key]++;</span><br><span class="line">        freq2keys[freq].<span class="built_in">remove</span>(key);</span><br><span class="line">        <span class="keyword">if</span>(freq2keys[freq].<span class="built_in">empty</span>()) &#123;</span><br><span class="line">            freq2keys.<span class="built_in">erase</span>(freq);</span><br><span class="line">            <span class="keyword">if</span>(freq == <span class="keyword">this</span>-&gt;minFreq)</span><br><span class="line">                <span class="keyword">this</span>-&gt;minFreq++;</span><br><span class="line">        &#125;</span><br><span class="line">        freq2keys[freq+<span class="number">1</span>].<span class="built_in">push_front</span>(key);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">removeMinfreqKey</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="type">int</span> key = freq2keys[<span class="keyword">this</span>-&gt;minFreq].<span class="built_in">back</span>();</span><br><span class="line">        freq2keys[<span class="keyword">this</span>-&gt;minFreq].<span class="built_in">pop_back</span>();</span><br><span class="line">        <span class="keyword">if</span>(freq2keys[<span class="keyword">this</span>-&gt;minFreq].<span class="built_in">empty</span>()) &#123;</span><br><span class="line">            freq2keys.<span class="built_in">erase</span>(<span class="keyword">this</span>-&gt;minFreq);</span><br><span class="line">        &#125;</span><br><span class="line">        key2val.<span class="built_in">erase</span>(key);</span><br><span class="line">        key2freq.<span class="built_in">erase</span>(key);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">LFU</span><span class="params">(vector&lt;vector&lt;<span class="type">int</span>&gt; &gt;&amp; operators, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        vector&lt;<span class="type">int</span>&gt; res;</span><br><span class="line">        <span class="type">int</span> size = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> oper : operators) &#123;</span><br><span class="line">            <span class="keyword">if</span>(oper[<span class="number">0</span>] == <span class="number">2</span>) &#123;</span><br><span class="line">                <span class="keyword">auto</span> it = key2val.<span class="built_in">find</span>(oper[<span class="number">1</span>]);</span><br><span class="line">                <span class="keyword">if</span>(it == key2val.<span class="built_in">end</span>()) &#123;</span><br><span class="line">                    res.<span class="built_in">push_back</span>(<span class="number">-1</span>);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    res.<span class="built_in">push_back</span>(it-&gt;second);</span><br><span class="line">                    <span class="built_in">increaseFreq</span>(oper[<span class="number">1</span>]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span>(oper[<span class="number">0</span>] == <span class="number">1</span>) &#123;</span><br><span class="line">                <span class="keyword">auto</span> it = key2val.<span class="built_in">find</span>(oper[<span class="number">1</span>]);</span><br><span class="line">                <span class="keyword">if</span>(it != key2val.<span class="built_in">end</span>()) &#123;</span><br><span class="line">                    key2val[oper[<span class="number">1</span>]] = oper[<span class="number">2</span>];</span><br><span class="line">                    <span class="built_in">increaseFreq</span>(oper[<span class="number">1</span>]);</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="keyword">if</span>(size == k) &#123;</span><br><span class="line">                        <span class="built_in">removeMinfreqKey</span>();</span><br><span class="line">                        size--;</span><br><span class="line">                    &#125;</span><br><span class="line">                    key2val[oper[<span class="number">1</span>]] = oper[<span class="number">2</span>];</span><br><span class="line">                    key2freq[oper[<span class="number">1</span>]] = <span class="number">1</span>;</span><br><span class="line">                    freq2keys[<span class="number">1</span>].<span class="built_in">push_front</span>(oper[<span class="number">1</span>]);</span><br><span class="line">                    <span class="keyword">this</span>-&gt;minFreq = <span class="number">1</span>;</span><br><span class="line">                    size++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
       
 
@@ -220,6 +233,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -270,7 +294,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/07/09/Notice/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/04/06/%E7%BC%93%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5-LRU%E3%80%81LFU/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -284,18 +308,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/08/10/%E5%9B%9E%E6%BA%AF%E9%97%AE%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2022/04/07/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          回溯问题
+          单例模式线程安全问题
         
       </div>
     </a>
   
   
-    <a href="/2021/06/15/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%89%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">二叉搜索树（三）</div>
+    <a href="/2022/03/26/%E6%89%8B%E6%92%95-KMP%E3%80%81%E5%A0%86%E6%8E%92%E5%BA%8F%E3%80%81%E5%BF%AB%E6%8E%92/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">手撕-KMP、堆排序、快排</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -322,7 +346,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    目录，不存在的…
+                    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-LRU%EF%BC%88%E6%9C%80%E8%BF%91%E6%9C%80%E5%B0%91%E4%BD%BF%E7%94%A8%E7%BC%93%E5%AD%98%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">1. LRU（最近最少使用缓存）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-LFU%EF%BC%88%E6%9C%80%E4%B8%8D%E7%BB%8F%E5%B8%B8%E4%BD%BF%E7%94%A8%E7%BC%93%E5%AD%98%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">2. LFU（最不经常使用缓存）</span></a></li></ol>
                     </div>
                 </span>
             </div>

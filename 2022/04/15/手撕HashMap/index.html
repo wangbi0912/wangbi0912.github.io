@@ -6,18 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>NOTICE | Hexo</title>
+  <title>手撕HashMap | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+  <meta name="description" content="HashMap不完整实现，大概意思是这样">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NOTICE">
-<meta property="og:url" content="http://example.com/2021/07/09/Notice/index.html">
+<meta property="og:title" content="手撕HashMap">
+<meta property="og:url" content="http://example.com/2022/04/15/%E6%89%8B%E6%92%95HashMap/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+<meta property="og:description" content="HashMap不完整实现，大概意思是这样">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-07-09T15:54:54.000Z">
-<meta property="article:modified_time" content="2022-07-10T06:58:30.212Z">
+<meta property="article:published_time" content="2022-04-15T07:01:23.000Z">
+<meta property="article:modified_time" content="2022-07-10T06:56:53.141Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="随笔">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
@@ -160,27 +161,30 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Notice" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-手撕HashMap" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      NOTICE
+      手撕HashMap
     </h1>
   
 
         
-        <a href="/2021/07/09/Notice/" class="archive-article-date">
-  	<time datetime="2021-07-09T15:54:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-07-09</time>
+        <a href="/2022/04/15/%E6%89%8B%E6%92%95HashMap/" class="archive-article-date">
+  	<time datetime="2022-04-15T07:01:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-04-15</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>之前电脑数据没了，重新搭建博客，之前文章在恢复中…</strong></p>
+        <hr>
+<h2 id="HashMap不完整实现，大概意思是这样"><a href="#HashMap不完整实现，大概意思是这样" class="headerlink" title="HashMap不完整实现，大概意思是这样"></a>HashMap不完整实现，大概意思是这样</h2><span id="more"></span>
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">* @author Bi Wang</span></span><br><span class="line"><span class="comment">* @version 创建时间：2022-3-18</span></span><br><span class="line"><span class="comment">* 说明：本程序实现了一个HashMap。</span></span><br><span class="line"><span class="comment">* 功能：使用开链法解决Hash冲突，实现了查找、插入、删除功能。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> HASHMAP_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> HASHMAP_H</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">Key</span>, <span class="keyword">class</span> <span class="title class_">Value</span>&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HashNode</span> &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Key _key;</span><br><span class="line">    Value _value;</span><br><span class="line">    HashNode* next;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">HashNode</span>(Key key, Value Value):_key(key), _value(value), <span class="built_in">next</span>(<span class="literal">nullptr</span>) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    ~<span class="built_in">HashNode</span>()&#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//重载赋值函数</span></span><br><span class="line">    HashNode&amp; <span class="keyword">operator</span>=(<span class="type">const</span> HashNode&amp; node) &#123;</span><br><span class="line">        _key = node._key;</span><br><span class="line">        _value = node._value;</span><br><span class="line">        next = node.next;</span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">Key</span>, <span class="keyword">class</span> <span class="title class_">Value</span>, <span class="keyword">class</span> <span class="title class_">HashFunc</span>, <span class="keyword">class</span> <span class="title class_">EqualKey</span>&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">HashMap</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> _size;</span><br><span class="line">    HashFunc hash;</span><br><span class="line">    EqualKey equal;</span><br><span class="line">    HashNode&lt;Key, Value&gt; ** hash_table;</span><br><span class="line">    Value valueNUll;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">HashMap</span>(<span class="type">const</span> <span class="type">unsigned</span> <span class="type">int</span> size));</span><br><span class="line">    ~<span class="built_in">HashMap</span>();</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">insert</span><span class="params">(<span class="type">const</span> Key&amp; key, <span class="type">const</span> Value&amp; value)</span></span>;</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">del</span><span class="params">(<span class="type">const</span> Key&amp; key)</span></span>;</span><br><span class="line">    <span class="function">Value&amp; <span class="title">find</span><span class="params">(<span class="type">const</span> Key&amp; key)</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//构造</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">Key</span>, <span class="keyword">class</span> <span class="title class_">Value</span>, <span class="keyword">class</span> <span class="title class_">HashFunc</span>, <span class="keyword">class</span> <span class="title class_">EqualKey</span>&gt;</span><br><span class="line">HashMap&lt;Key, Value, HashFunc, EqualKey&gt;::<span class="built_in">HashMap</span>(<span class="type">const</span> <span class="type">unsigned</span> <span class="type">int</span> size) : </span><br><span class="line">_size(size), <span class="built_in">hash</span>(), <span class="built_in">equal</span>() &#123;</span><br><span class="line">    hash_table = <span class="keyword">new</span> HashNode&lt;Key, Node&gt;*[_size];</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">unsigned</span> <span class="type">int</span> i = <span class="number">0</span>; i &lt; _size; i++) &#123;</span><br><span class="line">        hash_table[i] = <span class="literal">nullptr</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//析构</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">Key</span>, <span class="keyword">class</span> <span class="title class_">Value</span>, <span class="keyword">class</span> <span class="title class_">HashFunc</span>, <span class="keyword">class</span> <span class="title class_">EqualKey</span>&gt;</span><br><span class="line">HashMap&lt;Key, Value, HashFunc, EqualKey&gt;::~<span class="built_in">HashMap</span>() &#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">unsigned</span> <span class="type">int</span> i = <span class="number">0</span>; i &lt; _size; i++) &#123;</span><br><span class="line">        HashNode&lt;Key, Value&gt;* cur = hash_table[i];</span><br><span class="line">        <span class="keyword">while</span>(cur) &#123;</span><br><span class="line">            HashNode&lt;Key, Value&gt;* temp = cur;</span><br><span class="line">            <span class="keyword">delete</span> temp;</span><br><span class="line">            cur = cur-&gt;next;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">delete</span>[] hash_table;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//插入</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">Key</span>, <span class="keyword">class</span> <span class="title class_">Value</span>, <span class="keyword">class</span> <span class="title class_">HashFunc</span>, <span class="keyword">class</span> <span class="title class_">EqualKey</span>&gt;</span><br><span class="line"><span class="type">bool</span> HashMap&lt;Key, Value, HashFunc, EqualKey&gt;::<span class="built_in">insert</span>(<span class="type">const</span> Key&amp; key, <span class="type">const</span> Value&amp; value) &#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> index = <span class="built_in">hash</span>(key)%_size;</span><br><span class="line">    HashNode&lt;Key, Value&gt;* node = <span class="keyword">new</span> <span class="built_in">HashNode</span>&lt;Key, Value&gt;(key, value);</span><br><span class="line">    node-&gt;next = hash_table[index];</span><br><span class="line">    hash_table[index] = node;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//删除</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">Key</span>, <span class="keyword">class</span> <span class="title class_">Value</span>, <span class="keyword">class</span> <span class="title class_">HashFunc</span>, <span class="keyword">class</span> <span class="title class_">EqualKey</span>&gt;</span><br><span class="line"><span class="type">bool</span> HashMap&lt;Key, Value, HashFunc, EqualKey&gt;::<span class="built_in">del</span>(<span class="type">const</span> Key&amp; key) &#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> index = <span class="built_in">hash</span>(key)%_size;</span><br><span class="line">    HashNode&lt;Key, Value&gt;* node = hash_table[index];</span><br><span class="line">    HashNode&lt;Key, Value&gt;* prev = <span class="literal">nullptr</span>;</span><br><span class="line">    prev -&gt; next = node;</span><br><span class="line">    <span class="keyword">while</span> (node) &#123;</span><br><span class="line">        <span class="keyword">if</span>(node -&gt; _key == key) &#123;</span><br><span class="line">            prev -&gt; next = node -&gt; next;</span><br><span class="line">            <span class="keyword">delete</span> node;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        node = node -&gt; next;</span><br><span class="line">        prev = prev -&gt; next;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//查找</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">Key</span>, <span class="keyword">class</span> <span class="title class_">Value</span>, <span class="keyword">class</span> <span class="title class_">HashFunc</span>, <span class="keyword">class</span> <span class="title class_">EqualKey</span>&gt;</span><br><span class="line">Value&amp; HashMap&lt;Key, Value, HashFunc, EqualKey&gt;::<span class="built_in">find</span>(<span class="type">const</span> Key&amp; key) &#123;</span><br><span class="line">    <span class="type">unsigned</span> <span class="type">int</span> index = <span class="built_in">hash</span>(key)%_size;</span><br><span class="line">    HashNode&lt;Key, Value&gt;* node = hash_table[index];</span><br><span class="line">    <span class="keyword">if</span>(!node)   <span class="keyword">return</span> valueNUll;</span><br><span class="line">    <span class="keyword">while</span>(node) &#123;</span><br><span class="line">        <span class="keyword">if</span>(node -&gt; _key == key)</span><br><span class="line">            <span class="keyword">return</span> node -&gt; _value;</span><br><span class="line">        node = node -&gt; next;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//哈希函数</span></span><br><span class="line"><span class="comment">// class HashFunc</span></span><br><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">// public:</span></span><br><span class="line"><span class="comment">//     int operator()(const unsigned int &amp; key )</span></span><br><span class="line"><span class="comment">//     &#123;</span></span><br><span class="line"><span class="comment">//         int hash = 0;</span></span><br><span class="line"><span class="comment">//         for(int i = 0; i &lt; key.length(); ++i)</span></span><br><span class="line"><span class="comment">//         &#123;</span></span><br><span class="line"><span class="comment">//             hash = hash &lt;&lt; 7 ^ key[i];</span></span><br><span class="line"><span class="comment">//         &#125;</span></span><br><span class="line"><span class="comment">//         return (hash &amp; 0x7FFFFFFF);</span></span><br><span class="line"><span class="comment">//     &#125;</span></span><br><span class="line"><span class="comment">// &#125;;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//比较函数，上面实现的哈希表默认是数值类型，不需要比较函数</span></span><br><span class="line"><span class="comment">// class EqualKey</span></span><br><span class="line"><span class="comment">// &#123;</span></span><br><span class="line"><span class="comment">// public:</span></span><br><span class="line"><span class="comment">//     bool operator()(const string &amp; A, const string &amp; B)</span></span><br><span class="line"><span class="comment">//     &#123;</span></span><br><span class="line"><span class="comment">//         if (A.compare(B) == 0)</span></span><br><span class="line"><span class="comment">//             return true;</span></span><br><span class="line"><span class="comment">//         else</span></span><br><span class="line"><span class="comment">//             return false;</span></span><br><span class="line"><span class="comment">//     &#125;</span></span><br><span class="line"><span class="comment">// &#125;;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
 
       
 
@@ -220,6 +224,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -270,7 +285,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/07/09/Notice/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/04/15/%E6%89%8B%E6%92%95HashMap/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -284,18 +299,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/08/10/%E5%9B%9E%E6%BA%AF%E9%97%AE%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2022/05/08/%E8%AF%BB%E5%86%99%E9%94%81%E5%AE%9E%E7%8E%B0/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          回溯问题
+          读写锁实现
         
       </div>
     </a>
   
   
-    <a href="/2021/06/15/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%89%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">二叉搜索树（三）</div>
+    <a href="/2022/04/07/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">单例模式线程安全问题</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -322,7 +337,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    目录，不存在的…
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HashMap%E4%B8%8D%E5%AE%8C%E6%95%B4%E5%AE%9E%E7%8E%B0%EF%BC%8C%E5%A4%A7%E6%A6%82%E6%84%8F%E6%80%9D%E6%98%AF%E8%BF%99%E6%A0%B7"><span class="toc-number">1.</span> <span class="toc-text">HashMap不完整实现，大概意思是这样</span></a></li></ol>
                     </div>
                 </span>
             </div>

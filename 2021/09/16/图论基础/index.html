@@ -6,19 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>NOTICE | Hexo</title>
+  <title>图论基础 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+  <meta name="description" content="文章对应的题目797 所有可能的路径（M）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NOTICE">
-<meta property="og:url" content="http://example.com/2021/07/09/Notice/index.html">
+<meta property="og:title" content="图论基础">
+<meta property="og:url" content="http://example.com/2021/09/16/%E5%9B%BE%E8%AE%BA%E5%9F%BA%E7%A1%80/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="之前电脑数据没了，重新搭建博客，之前文章在恢复中…">
+<meta property="og:description" content="文章对应的题目797 所有可能的路径（M）">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-07-09T15:54:54.000Z">
-<meta property="article:modified_time" content="2022-07-10T06:58:30.212Z">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/27610647-6de8816f86e87ace.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="article:published_time" content="2021-09-16T03:04:23.000Z">
+<meta property="article:modified_time" content="2022-07-10T06:56:03.510Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="随笔">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/27610647-6de8816f86e87ace.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -160,27 +163,45 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-Notice" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-图论基础" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      NOTICE
+      图论基础
     </h1>
   
 
         
-        <a href="/2021/07/09/Notice/" class="archive-article-date">
-  	<time datetime="2021-07-09T15:54:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-07-09</time>
+        <a href="/2021/09/16/%E5%9B%BE%E8%AE%BA%E5%9F%BA%E7%A1%80/" class="archive-article-date">
+  	<time datetime="2021-09-16T03:04:23.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-09-16</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p><strong>之前电脑数据没了，重新搭建博客，之前文章在恢复中…</strong></p>
+        <h3 id="文章对应的题目"><a href="#文章对应的题目" class="headerlink" title="文章对应的题目"></a>文章对应的题目</h3><p>797 所有可能的路径（M）</p>
+<span id="more"></span>
+
+<hr>
+<p>图基本的实现方式分为<strong>邻接表</strong>和<strong>邻接矩阵</strong></p>
+<ul>
+<li>邻接表：把每一个节点<code>x</code>的邻居都存到一个列表里，然后把<code>x</code>和这个列表关联起来，就可以通过一个节点<code>x</code>找到其所有相邻节点。</li>
+<li>邻接矩阵：是一个<code>bool</code>数组，例如<code>matrix[n][n]</code>，例如节点<code>x</code>和<code>y</code>是相连的，则<code>matrix[x][y]</code>就为<code>true</code>，若需要找x的邻居，遍历一遍<code>matrix[x]</code>即可。</li>
+</ul>
+<p>对于<strong>图的遍历</strong>，和多叉树类似</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">traverse</span><span class="params">(GraphNode* root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="literal">nullptr</span>)  <span class="keyword">return</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> child : root -&gt; child) &#123;</span><br><span class="line">        <span class="built_in">traverse</span>(child);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是对于有环图，会陷入死循环，这时候可以添加一个<code>visited</code>数组</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//记录被遍历过的节点</span></span><br><span class="line"><span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">visited</span><span class="params">(graph.size())</span></span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">traverse</span><span class="params">(GraphNode* root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="literal">nullptr</span> || visited[root])  <span class="keyword">return</span>;</span><br><span class="line">    visited[root] == <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> child : root -&gt; child) &#123;</span><br><span class="line">        <span class="built_in">traverse</span>(child);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="797-所有可能的路径"><a href="#797-所有可能的路径" class="headerlink" title="797 所有可能的路径"></a>797 所有可能的路径</h3><p>题目如下：<br><img src="https://upload-images.jianshu.io/upload_images/27610647-6de8816f86e87ace.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"><br>解法很简单，以<code>0</code>为起点遍历图，同时记录遍历过的路径，当遍历到终点时将路径记录下来即可。而且由于是无向图，所以不需要<code>visited</code>数组。<br>代码如下（图的遍历）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; res;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; path;</span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; <span class="built_in">allPathsSourceTarget</span>(vector&lt;vector&lt;<span class="type">int</span>&gt;&gt;&amp; graph) &#123;</span><br><span class="line">        <span class="built_in">traverse</span>(graph, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">traverse</span><span class="params">(vector&lt;vector&lt;<span class="type">int</span>&gt;&gt;&amp; graph, <span class="type">int</span> s)</span> </span>&#123;</span><br><span class="line">        path.<span class="built_in">push_back</span>(s);</span><br><span class="line">        <span class="type">int</span> size = graph.<span class="built_in">size</span>();</span><br><span class="line">        <span class="keyword">if</span>(s == size - <span class="number">1</span>) &#123;</span><br><span class="line">            res.<span class="built_in">push_back</span>(path);</span><br><span class="line">            path.<span class="built_in">pop_back</span>();</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i : graph[s]) &#123;</span><br><span class="line">            <span class="built_in">traverse</span>(graph, i);</span><br><span class="line">        &#125;</span><br><span class="line">        path.<span class="built_in">pop_back</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<hr>
+<h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p><a target="_blank" rel="noopener" href="https://labuladong.gitee.io/algo/2/19/35/">图论基础 :: labuladong的算法小抄 (gitee.io)</a></p>
+<p>​                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </p>
 
       
 
@@ -220,6 +241,17 @@
     <div class="article-info article-info-index">
       
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
       
 
       
@@ -270,7 +302,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/07/09/Notice/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/09/16/%E5%9B%BE%E8%AE%BA%E5%9F%BA%E7%A1%80/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -284,18 +316,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2021/08/10/%E5%9B%9E%E6%BA%AF%E9%97%AE%E9%A2%98/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2021/11/28/%E5%B8%B8%E8%A7%81%E8%83%8C%E5%8C%85%E5%BD%92%E7%BA%B3/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          回溯问题
+          常见背包归纳
         
       </div>
     </a>
   
   
-    <a href="/2021/06/15/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%89%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">二叉搜索树（三）</div>
+    <a href="/2021/08/10/%E5%9B%9E%E6%BA%AF%E9%97%AE%E9%A2%98/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">回溯问题</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -322,7 +354,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    目录，不存在的…
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E7%AB%A0%E5%AF%B9%E5%BA%94%E7%9A%84%E9%A2%98%E7%9B%AE"><span class="toc-number">1.</span> <span class="toc-text">文章对应的题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#797-%E6%89%80%E6%9C%89%E5%8F%AF%E8%83%BD%E7%9A%84%E8%B7%AF%E5%BE%84"><span class="toc-number">2.</span> <span class="toc-text">797 所有可能的路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Reference"><span class="toc-number">3.</span> <span class="toc-text">Reference</span></a></li></ol>
                     </div>
                 </span>
             </div>
