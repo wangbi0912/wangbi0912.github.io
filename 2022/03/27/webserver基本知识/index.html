@@ -7,20 +7,28 @@
   <meta name="referrer" content="no-referrer" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>读写锁实现 | 小王的Blog</title>
+  <title>webserver基本知识 | 小王的Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="使用互斥锁和条件变量实现读写锁">
+  <meta name="description" content="1、基础知识RAII RAII全称是“Resource Acquisition is Initialization”，直译过来是“资源获取即初始化”. 在构造函数中申请分配资源，在析构函数中释放资源。因为C++的语言机制保证了，当一个对象创建的时候，自动调用构造函数，当对象超出作用域的时候会自动调用析构函数。所以，在RAII的指导下，我们应该使用类来管理资源，将资源和对象的生命周期绑定 RAII的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="读写锁实现">
-<meta property="og:url" content="http://example.com/2022/05/08/%E8%AF%BB%E5%86%99%E9%94%81%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:title" content="webserver基本知识">
+<meta property="og:url" content="http://example.com/2022/03/27/webserver%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/index.html">
 <meta property="og:site_name" content="小王的Blog">
-<meta property="og:description" content="使用互斥锁和条件变量实现读写锁">
+<meta property="og:description" content="1、基础知识RAII RAII全称是“Resource Acquisition is Initialization”，直译过来是“资源获取即初始化”. 在构造函数中申请分配资源，在析构函数中释放资源。因为C++的语言机制保证了，当一个对象创建的时候，自动调用构造函数，当对象超出作用域的时候会自动调用析构函数。所以，在RAII的指导下，我们应该使用类来管理资源，将资源和对象的生命周期绑定 RAII的">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-05-08T06:36:30.000Z">
-<meta property="article:modified_time" content="2022-07-10T06:58:01.659Z">
+<meta property="og:image" content="https://i.loli.net/2020/05/29/iVTuxoOaQvYcSrA.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/29/9DlXZPUygOrHbE2.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/29/lvdktpU5xYXwPTg.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/29/pWNfHEBucjs5JVm.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/29/Fm5ZJfUShDcNWov.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/29/lRNaU6hMACiWdg7.png">
+<meta property="og:image" content="https://i.loli.net/2020/05/29/9s5Vz8nThU6jD4X.png">
+<meta property="article:published_time" content="2022-03-27T07:45:19.000Z">
+<meta property="article:modified_time" content="2022-07-15T07:52:07.416Z">
 <meta property="article:author" content="wang bi">
-<meta property="article:tag" content="随笔">
+<meta property="article:tag" content="Linux">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/29/iVTuxoOaQvYcSrA.png">
   
     <link rel="alternative" href="/atom.xml" title="小王的Blog" type="application/atom+xml">
   
@@ -168,30 +176,156 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-读写锁实现" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-webserver基本知识" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      读写锁实现
+      webserver基本知识
     </h1>
   
 
         
-        <a href="/2022/05/08/%E8%AF%BB%E5%86%99%E9%94%81%E5%AE%9E%E7%8E%B0/" class="archive-article-date">
-  	<time datetime="2022-05-08T06:36:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-05-08</time>
+        <a href="/2022/03/27/webserver%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" class="archive-article-date">
+  	<time datetime="2022-03-27T07:45:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2022-03-27</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="使用互斥锁和条件变量实现读写锁"><a href="#使用互斥锁和条件变量实现读写锁" class="headerlink" title="使用互斥锁和条件变量实现读写锁"></a>使用互斥锁和条件变量实现读写锁</h3><span id="more"></span>
+        <h2 id="1、基础知识"><a href="#1、基础知识" class="headerlink" title="1、基础知识"></a>1、基础知识</h2><h4 id="RAII"><a href="#RAII" class="headerlink" title="RAII"></a><strong>RAII</strong></h4><ul>
+<li>RAII全称是“Resource Acquisition is Initialization”，直译过来是“资源获取即初始化”.</li>
+<li>在构造函数中申请分配资源，在析构函数中释放资源。因为C++的语言机制保证了，当一个对象创建的时候，自动调用构造函数，当对象超出作用域的时候会自动调用析构函数。所以，在RAII的指导下，我们应该使用类来管理资源，将资源和对象的生命周期绑定</li>
+<li>RAII的核心思想是将资源或者状态与对象的生命周期绑定，通过C++的语言机制，实现资源和状态的安全管理,智能指针是RAII最好的例子</li>
+</ul>
+<h4 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a><strong>信号量</strong></h4><p>信号量是一种特殊的变量，它只能取自然数值并且只支持两种操作：等待(P)和信号(V).假设有信号量SV，对其的P、V操作如下：</p>
+<blockquote>
+<ul>
+<li>P，如果SV的值大于0，则将其减一；若SV的值为0，则挂起执行</li>
+<li>V，如果有其他进行因为等待SV而挂起，则唤醒；若没有，则将SV值加一</li>
+</ul>
+</blockquote>
+<p>信号量的取值可以是任何自然数，最常用的，最简单的信号量是二进制信号量，只有0和1两个值.</p>
+<blockquote>
+<ul>
+<li>sem_init函数用于初始化一个未命名的信号量</li>
+<li>sem_destory函数用于销毁信号量</li>
+<li>sem_wait函数将以原子操作方式将信号量减一,信号量为0时,sem_wait阻塞</li>
+<li>sem_post函数以原子操作方式将信号量加一,信号量大于0时,唤醒调用sem_post的线程</li>
+</ul>
+</blockquote>
+<p>以上，成功返回0，失败返回errno</p>
+<h4 id="互斥量"><a href="#互斥量" class="headerlink" title="互斥量"></a><strong>互斥量</strong></h4><p>互斥锁,也成互斥量,可以保护关键代码段,以确保独占式访问.当进入关键代码段,获得互斥锁将其加锁;离开关键代码段,唤醒等待该互斥锁的线程.</p>
+<blockquote>
+<ul>
+<li>pthread_mutex_init函数用于初始化互斥锁</li>
+<li>pthread_mutex_destory函数用于销毁互斥锁</li>
+<li>pthread_mutex_lock函数以原子操作方式给互斥锁加锁</li>
+<li>pthread_mutex_unlock函数以原子操作方式给互斥锁解锁</li>
+</ul>
+</blockquote>
+<p>以上，成功返回0，失败返回errno</p>
+<h4 id="条件变量"><a href="#条件变量" class="headerlink" title="条件变量"></a><strong>条件变量</strong></h4><p>条件变量提供了一种线程间的通知机制,当某个共享数据达到某个值时,唤醒等待这个共享数据的线程.</p>
+<blockquote>
+<ul>
+<li>pthread_cond_init函数用于初始化条件变量</li>
+<li>pthread_cond_destory函数销毁条件变量</li>
+<li>pthread_cond_broadcast函数以广播的方式唤醒<strong>所有</strong>等待目标条件变量的线程</li>
+<li>pthread_cond_wait函数用于等待目标条件变量.该函数调用时需要传入 <strong>mutex参数(加锁的互斥锁)</strong> ,函数执行时,先把调用线程放入条件变量的请求队列,然后将互斥锁mutex解锁,当函数成功返回为0时,互斥锁会再次被锁上. <strong>也就是说函数内部会有一次解锁和加锁操作</strong>.</li>
+</ul>
+</blockquote>
+<h3 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h3><h4 id="锁机制的功能"><a href="#锁机制的功能" class="headerlink" title="锁机制的功能"></a><strong>锁机制的功能</strong></h4><ul>
+<li>实现多线程同步，通过锁机制，确保任一时刻只能有一个线程能进入关键代码段.</li>
+</ul>
+<h4 id="封装的功能"><a href="#封装的功能" class="headerlink" title="封装的功能"></a><strong>封装的功能</strong></h4><ul>
+<li>类中主要是Linux下三种锁进行封装，将锁的创建于销毁函数封装在类的构造与析构函数中，实现RAII机制</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> 1class sem&#123;</span><br><span class="line"> 2    public:</span><br><span class="line"> 3        //构造函数</span><br><span class="line"> 4        sem()</span><br><span class="line"> 5        &#123;</span><br><span class="line"> 6            //信号量初始化</span><br><span class="line"> 7            if(sem_init(&amp;m_sem,0,0)!=0)&#123;</span><br><span class="line"> 8                throw std::exception();</span><br><span class="line"> 9            &#125;</span><br><span class="line">10        &#125;</span><br><span class="line">11        //析构函数</span><br><span class="line">12        ~sem()</span><br><span class="line">13        &#123;</span><br><span class="line">14            //信号量销毁</span><br><span class="line">15            sem_destroy(&amp;m_sem);</span><br><span class="line">16        &#125;</span><br><span class="line">17    private:</span><br><span class="line">18        sem_t m_sem;</span><br><span class="line">19&#125;;</span><br></pre></td></tr></table></figure>
 
-<p>代码</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">rw_lock</span> &#123;</span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> stat;   <span class="comment">//0 : 无锁，-1 : 写锁， &gt;0 : 读锁的数量</span></span><br><span class="line">    <span class="type">pthread_mutex_t</span> mutex;  </span><br><span class="line">    <span class="type">pthread_cond_t</span> cond;  </span><br><span class="line">    </span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">rw_lock</span>() : <span class="built_in">stat</span>(<span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">pthread_mutex_init</span>(&amp;mutex, <span class="literal">NULL</span>);</span><br><span class="line">        <span class="built_in">pthread_cond_init</span>(&amp;cond, <span class="literal">NULL</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~<span class="built_in">rw_lock</span>() &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">rdlock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="built_in">pthread_mutex_lock</span>(&amp;mutex);</span><br><span class="line">        <span class="keyword">while</span> (stat &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="built_in">pthread_cond_wait</span>(&amp;cond, &amp;mutex);</span><br><span class="line">        &#125;</span><br><span class="line">        ++stat;</span><br><span class="line">        <span class="built_in">pthread_mutex_unlock</span>(&amp;mutex);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">rwunlock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="built_in">pthread_mutex_lock</span>(&amp;mutex);</span><br><span class="line">        --stat;</span><br><span class="line">        <span class="keyword">if</span> (stat == <span class="number">0</span>)</span><br><span class="line">            <span class="built_in">pthread_cond_signal</span>(&amp;cond);</span><br><span class="line">        <span class="built_in">pthread_mutex_unlock</span>(&amp;mutex);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">wrlock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="built_in">pthread_mutex_lock</span>(&amp;mutex);</span><br><span class="line">        <span class="keyword">while</span> (stat &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="built_in">pthread_cond_wait</span>(&amp;cond, &amp;mutex);</span><br><span class="line">        &#125;</span><br><span class="line">        --stat;</span><br><span class="line">        <span class="built_in">pthread_mutex_unlock</span>(&amp;mutex);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">wrunlock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="built_in">pthread_mutex_lock</span>(&amp;mutex);</span><br><span class="line">        ++stat;</span><br><span class="line">        <span class="built_in">pthread_cond_signal</span>(&amp;cond);</span><br><span class="line">        <span class="built_in">pthread_mutex_unlock</span>(&amp;mutex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将重复使用的代码封装为函数，减少代码的重复，使其更简洁</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> 1   //条件变量的使用机制需要配合锁来使用</span><br><span class="line"> 2   //内部会有一次加锁和解锁</span><br><span class="line"> 3   //封装起来会使得更加简洁</span><br><span class="line"> 4   bool wait()</span><br><span class="line"> 5   &#123;</span><br><span class="line"> 6       int ret=0;</span><br><span class="line"> 7       pthread_mutex_lock(&amp;m_mutex);</span><br><span class="line"> 8       ret=pthread_cond_wait(&amp;m_cond,&amp;m_mutex);</span><br><span class="line"> 9       pthread_mutex_unlock(&amp;m_mutex);</span><br><span class="line">10       return ret==0;</span><br><span class="line">11   &#125;</span><br><span class="line">12   bool signal()</span><br><span class="line">13   &#123;</span><br><span class="line">14       return pthread_cond_signal(&amp;m_cond)==0;</span><br><span class="line">15   &#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2、半同步半异步-线程池"><a href="#2、半同步半异步-线程池" class="headerlink" title="2、半同步半异步+线程池"></a>2、半同步半异步+线程池</h2><h3 id="服务器编程基本框架"><a href="#服务器编程基本框架" class="headerlink" title="服务器编程基本框架"></a>服务器编程基本框架</h3><p>主要由I&#x2F;O单元，逻辑单元和网络存储单元组成，其中每个单元之间通过请求队列进行通信，从而协同完成任务。</p>
+<p>其中I&#x2F;O单元用于处理客户端连接，读写网络数据；逻辑单元用于处理业务逻辑的线程；网络存储单元指本地数据库和文件等。</p>
+<p><img src="https://i.loli.net/2020/05/29/iVTuxoOaQvYcSrA.png" alt="image-20200529181932994"></p>
+<h3 id="五种I-x2F-O模型"><a href="#五种I-x2F-O模型" class="headerlink" title="五种I&#x2F;O模型"></a>五种I&#x2F;O模型</h3><ul>
+<li><strong>阻塞IO</strong>:调用者调用了某个函数，等待这个函数返回，期间什么也不做，不停的去检查这个函数有没有返回，必须等这个函数返回才能进行下一步动作</li>
+<li><strong>非阻塞IO</strong>:非阻塞等待，每隔一段时间就去检测IO事件是否就绪。没有就绪就可以做其他事。非阻塞I&#x2F;O执行系统调用总是立即返回，不管时间是否已经发生，若时间没有发生，则返回-1，此时可以根据errno区分这两种情况，对于accept，recv和send，事件未发生时，errno通常被设置成eagain</li>
+<li><strong>信号驱动IO</strong>:linux用套接口进行信号驱动IO，安装一个信号处理函数，进程继续运行并不阻塞，当IO时间就绪，进程收到SIGIO信号。然后处理IO事件。</li>
+<li><strong>IO复用</strong>:linux用select&#x2F;poll函数实现IO复用模型，这两个函数也会使进程阻塞，但是和阻塞IO所不同的是这两个函数可以同时阻塞多个IO操作。而且可以同时对多个读操作、写操作的IO函数进行检测。知道有数据可读或可写时，才真正调用IO操作函数</li>
+<li><strong>异步IO</strong>:linux中，可以调用aio_read函数告诉内核描述字缓冲区指针和缓冲区的大小、文件偏移及通知的方式，然后立即返回，当内核将数据拷贝到缓冲区后，再通知应用程序。</li>
+</ul>
+<p><strong>注意：阻塞I&#x2F;O，非阻塞I&#x2F;O，信号驱动I&#x2F;O和I&#x2F;O复用都是同步I&#x2F;O。同步I&#x2F;O指内核向应用程序通知的是就绪事件，比如只通知有客户端连接，要求用户代码自行执行I&#x2F;O操作，异步I&#x2F;O是指内核向应用程序通知的是完成事件，比如读取客户端的数据后才通知应用程序，由内核完成I&#x2F;O操作。</strong></p>
+<h3 id="事件处理模式"><a href="#事件处理模式" class="headerlink" title="事件处理模式"></a>事件处理模式</h3><ul>
+<li>reactor模式中，主线程(<strong>I&#x2F;O处理单元</strong>)只负责监听文件描述符上是否有事件发生，有的话立即通知工作线程(<strong>逻辑单元</strong> )，读写数据、接受新连接及处理客户请求均在工作线程中完成。通常由<strong>同步I&#x2F;O</strong>实现。</li>
+</ul>
+<p><img src="https://i.loli.net/2020/05/29/9DlXZPUygOrHbE2.png" alt="image-20200529182048896"></p>
+<ul>
+<li>proactor模式中，主线程和内核负责处理读写数据、接受新连接等I&#x2F;O操作，工作线程仅负责业务逻辑，如处理客户请求。通常由<strong>异步I&#x2F;O</strong>实现。</li>
+</ul>
+<p><img src="https://i.loli.net/2020/05/29/lvdktpU5xYXwPTg.png" alt="image-20200529182104068"></p>
+<h3 id="同步I-x2F-O模拟proactor模式"><a href="#同步I-x2F-O模拟proactor模式" class="headerlink" title="同步I&#x2F;O模拟proactor模式"></a>同步I&#x2F;O模拟proactor模式</h3><p>由于异步I&#x2F;O并不成熟，实际中使用较少，这里将使用同步I&#x2F;O模拟实现proactor模式。</p>
+<p>同步I&#x2F;O模型的工作流程如下（epoll_wait为例）：</p>
+<blockquote>
+<ul>
+<li>主线程往epoll内核事件表注册socket上的读就绪事件。</li>
+<li>主线程调用epoll_wait等待socket上有数据可读</li>
+<li>当socket上有数据可读，epoll_wait通知主线程,主线程从socket循环读取数据，直到没有更多数据可读，然后将读取到的数据封装成一个请求对象并插入请求队列。</li>
+<li>睡眠在请求队列上某个工作线程被唤醒，它获得请求对象并处理客户请求，然后往epoll内核事件表中注册该socket上的写就绪事件</li>
+<li>主线程调用epoll_wait等待socket可写。</li>
+<li>当socket上有数据可写，epoll_wait通知主线程。主线程往socket上写入服务器处理客户请求的结果。</li>
+</ul>
+</blockquote>
+<p><img src="https://i.loli.net/2020/05/29/pWNfHEBucjs5JVm.png" alt="image-20200529182127823"></p>
+<h3 id="并发编程模式"><a href="#并发编程模式" class="headerlink" title="并发编程模式"></a>并发编程模式</h3><p>并发编程方法的实现有多线程和多进程两种，但这里涉及的并发模式指I&#x2F;O处理单元与逻辑单元的协同完成任务的方法。</p>
+<ul>
+<li>半同步&#x2F;半异步模式</li>
+<li>领导者&#x2F;追随者模式</li>
+</ul>
+<h3 id="半同步-x2F-半反应堆"><a href="#半同步-x2F-半反应堆" class="headerlink" title="半同步&#x2F;半反应堆"></a>半同步&#x2F;半反应堆</h3><p>半同步&#x2F;半反应堆并发模式是半同步&#x2F;半异步的变体，将半异步具体化为某种事件处理模式.</p>
+<p>并发模式中的同步和异步</p>
+<blockquote>
+<ul>
+<li>同步指的是程序完全按照代码序列的顺序执行</li>
+<li>异步指的是程序的执行需要由系统事件驱动</li>
+</ul>
+</blockquote>
+<p><img src="https://i.loli.net/2020/05/29/Fm5ZJfUShDcNWov.png" alt="image-20200529182211696"></p>
+<p>半同步&#x2F;半异步模式工作流程</p>
+<blockquote>
+<ul>
+<li>同步线程用于处理客户逻辑</li>
+<li>异步线程用于处理I&#x2F;O事件</li>
+<li>异步线程监听到客户请求后，就将其封装成请求对象并插入请求队列中</li>
+<li>请求队列将通知某个工作在<strong>同步模式的工作线程</strong>来读取并处理该请求对象</li>
+</ul>
+</blockquote>
+<p><img src="https://i.loli.net/2020/05/29/lRNaU6hMACiWdg7.png" alt="image-20200529182234142"></p>
+<p>半同步&#x2F;半反应堆工作流程（以Proactor模式为例）</p>
+<blockquote>
+<ul>
+<li>主线程充当异步线程，负责监听所有socket上的事件</li>
+<li>若有新请求到来，主线程接收之以得到新的连接socket，然后往epoll内核事件表中注册该socket上的读写事件</li>
+<li>如果连接socket上有读写事件发生，主线程从socket上接收数据，并将数据封装成请求对象插入到请求队列中</li>
+<li>所有工作线程睡眠在请求队列上，当有任务到来时，通过竞争（如互斥锁）获得任务的接管权</li>
+</ul>
+</blockquote>
+<p><img src="https://i.loli.net/2020/05/29/9s5Vz8nThU6jD4X.png" alt="image-20200529182418750"></p>
+<h3 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h3><ul>
+<li>空间换时间,浪费服务器的硬件资源,换取运行效率.</li>
+<li>池是一组资源的集合,这组资源在服务器启动之初就被完全创建好并初始化,这称为静态资源.</li>
+<li>当服务器进入正式运行阶段,开始处理客户请求的时候,如果它需要相关的资源,可以直接从池中获取,无需动态分配.</li>
+<li>当服务器处理完一个客户连接后,可以把相关的资源放回池中,无需执行系统调用释放资源.</li>
+</ul>
+<blockquote>
+<p> 线程池实现可以见我另外一篇博客</p>
+</blockquote>
 
       
 
@@ -236,7 +370,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Linux</a>
         		</li>
       		
 		</ul>
@@ -292,7 +426,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/05/08/%E8%AF%BB%E5%86%99%E9%94%81%E5%AE%9E%E7%8E%B0/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2022/03/27/webserver%E5%9F%BA%E6%9C%AC%E7%9F%A5%E8%AF%86/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -306,18 +440,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2022/05/11/shared-str%E3%80%81String%E7%B1%BB%E5%AE%9E%E7%8E%B0/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2022/04/06/%E7%BC%93%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5-LRU%E3%80%81LFU/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          shared_str、String类实现
+          缓存淘汰策略-LRU、LFU
         
       </div>
     </a>
   
   
-    <a href="/2022/04/15/%E6%89%8B%E6%92%95HashMap/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">手撕HashMap</div>
+    <a href="/2022/03/26/%E6%89%8B%E6%92%95-KMP%E3%80%81%E5%A0%86%E6%8E%92%E5%BA%8F%E3%80%81%E5%BF%AB%E6%8E%92/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">手撕-KMP、堆排序、快排</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -344,7 +478,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E4%BA%92%E6%96%A5%E9%94%81%E5%92%8C%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E5%AE%9E%E7%8E%B0%E8%AF%BB%E5%86%99%E9%94%81"><span class="toc-number">1.</span> <span class="toc-text">使用互斥锁和条件变量实现读写锁</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">1.</span> <span class="toc-text">1、基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#RAII"><span class="toc-number">1.0.1.</span> <span class="toc-text">RAII</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%A1%E5%8F%B7%E9%87%8F"><span class="toc-number">1.0.2.</span> <span class="toc-text">信号量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%92%E6%96%A5%E9%87%8F"><span class="toc-number">1.0.3.</span> <span class="toc-text">互斥量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F"><span class="toc-number">1.0.4.</span> <span class="toc-text">条件变量</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">1.1.</span> <span class="toc-text">功能</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%94%81%E6%9C%BA%E5%88%B6%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="toc-number">1.1.1.</span> <span class="toc-text">锁机制的功能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B0%81%E8%A3%85%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="toc-number">1.1.2.</span> <span class="toc-text">封装的功能</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E3%80%81%E5%8D%8A%E5%90%8C%E6%AD%A5%E5%8D%8A%E5%BC%82%E6%AD%A5-%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="toc-number">2.</span> <span class="toc-text">2、半同步半异步+线程池</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BC%96%E7%A8%8B%E5%9F%BA%E6%9C%AC%E6%A1%86%E6%9E%B6"><span class="toc-number">2.1.</span> <span class="toc-text">服务器编程基本框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E7%A7%8DI-x2F-O%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.2.</span> <span class="toc-text">五种I&#x2F;O模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.3.</span> <span class="toc-text">事件处理模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5I-x2F-O%E6%A8%A1%E6%8B%9Fproactor%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.4.</span> <span class="toc-text">同步I&#x2F;O模拟proactor模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.5.</span> <span class="toc-text">并发编程模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%8A%E5%90%8C%E6%AD%A5-x2F-%E5%8D%8A%E5%8F%8D%E5%BA%94%E5%A0%86"><span class="toc-number">2.6.</span> <span class="toc-text">半同步&#x2F;半反应堆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="toc-number">2.7.</span> <span class="toc-text">线程池</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
