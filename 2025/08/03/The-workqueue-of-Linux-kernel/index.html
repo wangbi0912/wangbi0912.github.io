@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Introduction for the workqueue of Linux kernel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The workqueue of Linux kernel">
+<meta property="og:url" content="http://example.com/2025/08/03/The-workqueue-of-Linux-kernel/index.html">
+<meta property="og:site_name" content="Bevis Wang">
+<meta property="og:description" content="Introduction for the workqueue of Linux kernel">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2025/08/03/The-workqueue-of-Linux-kernel/cmwq.png">
+<meta property="og:image" content="http://example.com/2025/08/03/The-workqueue-of-Linux-kernel/wq_struct.png">
+<meta property="article:published_time" content="2025-08-03T09:02:49.000Z">
+<meta property="article:modified_time" content="2025-08-03T09:15:13.304Z">
+<meta property="article:author" content="wang bi">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2025/08/03/The-workqueue-of-Linux-kernel/cmwq.png">
+
+<link rel="canonical" href="http://example.com/2025/08/03/The-workqueue-of-Linux-kernel/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>The workqueue of Linux kernel | Bevis Wang</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Bevis Wang</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/08/03/The-workqueue-of-Linux-kernel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="wang bi">
+      <meta itemprop="description" content="你不必踌躇">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bevis Wang">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          The workqueue of Linux kernel
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-08-03 17:02:49 / Modified: 17:15:13" itemprop="dateCreated datePublished" datetime="2025-08-03T17:02:49+08:00">2025-08-03</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>23k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>41 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>Introduction for the workqueue of Linux kernel</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="1-BG"><a href="#1-BG" class="headerlink" title="1. BG"></a>1. BG</h2><p>workqueue主要是提供一个小型的、方便创建的异步工作环境，user无需创建内核线程便可实现异步效果。相应的，workqueue也是defer interrupt的一种常用方式。</p>
+<p>在Kernel最初的workqueue实现中，多线程wq在每个CPU上有一个工作者线程，而单线程 wq在全系统有一个工作者线程。一个MT wq需要保持与CPU数量相同的工 作者数量。这些年来，内核增加了很多MT wq的用户，随着CPU核心数量的不断 增加，一些系统刚启动就达到了默认的32k PID的饱和空间。当前Kernel采用的是并发管理工作队列（<strong>Concurrency Managed Workqueue,</strong> CMWQ），下面是CMWQ的几个元素：</p>
+<ul>
+<li>work ：工作。</li>
+<li>workqueue ：工作的集合。workqueue 和 work 是一对多的关系。</li>
+<li>worker ：工人。在代码中 worker 对应一个 <code>work_thread()</code> 内核线程。</li>
+<li>worker_pool：工人的集合。worker_pool 和 worker 是一对多的关系。</li>
+<li>pwq(pool_workqueue)：中间人 &#x2F; 中介，负责建立起 workqueue 和 worker_pool 之间的关系。workqueue 和 pwq 是一对多的关系，pwq 和 worker_pool 是一对一的关系。</li>
+</ul>
+<p>下面根据源码具体分析各个元素：</p>
+<h2 id="2-worker-pool"><a href="#2-worker-pool" class="headerlink" title="2. worker_pool"></a>2. worker_pool</h2><p>执行work的具体action的线程为worker，worker的一组集合即为worker_pool。CMWQ即根据当前work的负载来动态增减（管理）worker_pool中worker的数量。CMWQ 对 worker_pool 分成两类：</p>
+<ol>
+<li>normal worker_pool，给通用的 workqueue 使用；</li>
+<li>unbound worker_pool，给 WQ_UNBOUND 类型的的 workqueue 使用；</li>
+</ol>
+<p>workqueue子系统模块的init是三段式的：<code>workqueue_init_early</code>、<code>workqueue_init</code>及<code>workqueue_init_topology</code>。本文按照各个元素来剖析workqueue，并不会关注workqueue子系统的加载流程。</p>
+<h3 id="2-1-normal-worker-pool"><a href="#2-1-normal-worker-pool" class="headerlink" title="2.1 normal worker pool"></a>2.1 normal worker pool</h3><ol>
+<li><code>workqueue_init_early</code>→<code>init_worker_pool</code></li>
+<li><code>workqueue_init</code>→<code>create_worker</code></li>
+</ol>
+<p><code>workqueue_init_early</code>函数会调用<code>init_worker_pool</code>来为每个cpu创建两个<code>worker_pool</code>，nice值分别为<code>0</code>和<code>HIGHPRI_NICE_LEVEL</code></p>
+<p>代码如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// kernel/workqueue.c</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * workqueue_init_early - early init for workqueue subsystem</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * This is the first step of three-staged workqueue subsystem initialization and</span></span><br><span class="line"><span class="comment"> * invoked as soon as the bare basics - memory allocation, cpumasks and idr are</span></span><br><span class="line"><span class="comment"> * up. It sets up all the data structures and system workqueues and allows early</span></span><br><span class="line"><span class="comment"> * boot code to create workqueues and queue/cancel work items. Actual work item</span></span><br><span class="line"><span class="comment"> * execution starts only after kthreads can be created and scheduled right</span></span><br><span class="line"><span class="comment"> * before early initcalls.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> __init <span class="title function_">workqueue_init_early</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">wq_pod_type</span> *<span class="title">pt</span> =</span> &amp;wq_pod_types[WQ_AFFN_SYSTEM];</span><br><span class="line">	<span class="type">int</span> std_nice[NR_STD_WORKER_POOLS] = &#123; <span class="number">0</span>, HIGHPRI_NICE_LEVEL &#125;;</span><br><span class="line">	<span class="type">int</span> i, cpu;</span><br><span class="line">  ...</span><br><span class="line">	<span class="comment">/* initialize CPU pools */</span></span><br><span class="line">	for_each_possible_cpu(cpu) &#123;</span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">worker_pool</span> *<span class="title">pool</span>;</span></span><br><span class="line"></span><br><span class="line">		i = <span class="number">0</span>;</span><br><span class="line">		for_each_cpu_worker_pool(pool, cpu) &#123;</span><br><span class="line">		<span class="comment">// 创建worker_pool，指定优先级（0和HIGHPRI_NICE_LEVEL）</span></span><br><span class="line">			BUG_ON(init_worker_pool(pool));</span><br><span class="line">			pool-&gt;cpu = cpu;</span><br><span class="line">			cpumask_copy(pool-&gt;attrs-&gt;cpumask, cpumask_of(cpu));</span><br><span class="line">			cpumask_copy(pool-&gt;attrs-&gt;__pod_cpumask, cpumask_of(cpu));</span><br><span class="line">			pool-&gt;attrs-&gt;nice = std_nice[i++];</span><br><span class="line">			pool-&gt;attrs-&gt;affn_strict = <span class="literal">true</span>;</span><br><span class="line">			pool-&gt;node = cpu_to_node(cpu);</span><br><span class="line"></span><br><span class="line">			<span class="comment">/* alloc pool ID */</span></span><br><span class="line">			mutex_lock(&amp;wq_pool_mutex);</span><br><span class="line">			BUG_ON(worker_pool_assign_id(pool));</span><br><span class="line">			mutex_unlock(&amp;wq_pool_mutex);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>init_worker_pool</code> 是创建worker_pool的具体实现，比如初始化<code>work_list</code>和<code>idle_list</code>，创建<code>idle_worker</code>超时销毁的timer等。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * init_worker_pool - initialize a newly zalloc&#x27;d worker_pool</span></span><br><span class="line"><span class="comment"> * @pool: worker_pool to initialize</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Initialize a newly zalloc&#x27;d @pool.  It also allocates @pool-&gt;attrs.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Return: 0 on success, -errno on failure.  Even on failure, all fields</span></span><br><span class="line"><span class="comment"> * inside @pool proper are initialized and put_unbound_pool() can be called</span></span><br><span class="line"><span class="comment"> * on @pool safely to release it.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">init_worker_pool</span><span class="params">(<span class="keyword">struct</span> worker_pool *pool)</span></span><br><span class="line">&#123;</span><br><span class="line">	raw_spin_lock_init(&amp;pool-&gt;lock);</span><br><span class="line">	pool-&gt;id = <span class="number">-1</span>;</span><br><span class="line">	pool-&gt;cpu = <span class="number">-1</span>;</span><br><span class="line">	pool-&gt;node = NUMA_NO_NODE;</span><br><span class="line">	pool-&gt;flags |= POOL_DISASSOCIATED;</span><br><span class="line">	pool-&gt;watchdog_ts = jiffies;</span><br><span class="line">	<span class="comment">// 各个workqueue将work挂载至该list上，running状态的worker执行</span></span><br><span class="line">	INIT_LIST_HEAD(&amp;pool-&gt;worklist);</span><br><span class="line">	<span class="comment">// worker在完成一个work后，状态变为idle，添加至该list中</span></span><br><span class="line">	INIT_LIST_HEAD(&amp;pool-&gt;idle_list);</span><br><span class="line">	hash_init(pool-&gt;busy_hash);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 创建超时destroy idle worker的timer</span></span><br><span class="line">	timer_setup(&amp;pool-&gt;idle_timer, idle_worker_timeout, TIMER_DEFERRABLE);</span><br><span class="line">	INIT_WORK(&amp;pool-&gt;idle_cull_work, idle_cull_fn);</span><br><span class="line"></span><br><span class="line">	timer_setup(&amp;pool-&gt;mayday_timer, pool_mayday_timeout, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">	INIT_LIST_HEAD(&amp;pool-&gt;workers);</span><br><span class="line">	INIT_LIST_HEAD(&amp;pool-&gt;dying_workers);</span><br><span class="line"></span><br><span class="line">	ida_init(&amp;pool-&gt;worker_ida);</span><br><span class="line">	INIT_HLIST_NODE(&amp;pool-&gt;hash_node);</span><br><span class="line">	pool-&gt;refcnt = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* shouldn&#x27;t fail above this point */</span></span><br><span class="line">	pool-&gt;attrs = alloc_workqueue_attrs();</span><br><span class="line">	<span class="keyword">if</span> (!pool-&gt;attrs)</span><br><span class="line">		<span class="keyword">return</span> -ENOMEM;</span><br><span class="line"></span><br><span class="line">	wqattrs_clear_for_pool(pool-&gt;attrs);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>workqueue init第二阶段会为每个worker_pool创建一个初始worker</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> __init <span class="title function_">workqueue_init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">workqueue_struct</span> *<span class="title">wq</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">worker_pool</span> *<span class="title">pool</span>;</span></span><br><span class="line">	<span class="type">int</span> cpu, bkt;</span><br><span class="line"></span><br><span class="line">	wq_cpu_intensive_thresh_init();</span><br><span class="line"></span><br><span class="line">	mutex_lock(&amp;wq_pool_mutex);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Per-cpu pools created earlier could be missing node hint. Fix them</span></span><br><span class="line"><span class="comment">	 * up. Also, create a rescuer for workqueues that requested it.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	for_each_possible_cpu(cpu) &#123;</span><br><span class="line">		for_each_cpu_worker_pool(pool, cpu) &#123;</span><br><span class="line">			pool-&gt;node = cpu_to_node(cpu);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	list_for_each_entry(wq, &amp;workqueues, <span class="built_in">list</span>) &#123;</span><br><span class="line">		WARN(init_rescuer(wq),</span><br><span class="line">		     <span class="string">&quot;workqueue: failed to create early rescuer for %s&quot;</span>,</span><br><span class="line">		     wq-&gt;name);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	mutex_unlock(&amp;wq_pool_mutex);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* create the initial workers */</span></span><br><span class="line">	for_each_online_cpu(cpu) &#123;</span><br><span class="line">		for_each_cpu_worker_pool(pool, cpu) &#123;</span><br><span class="line">			pool-&gt;flags &amp;= ~POOL_DISASSOCIATED;</span><br><span class="line">			BUG_ON(!create_worker(pool));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	hash_for_each(unbound_pool_hash, bkt, pool, hash_node)</span><br><span class="line">		BUG_ON(!create_worker(pool));</span><br><span class="line"></span><br><span class="line">	wq_online = <span class="literal">true</span>;</span><br><span class="line">	wq_watchdog_init();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">|-&gt;</span><br><span class="line"><span class="type">static</span> <span class="keyword">struct</span> worker *<span class="title function_">create_worker</span><span class="params">(<span class="keyword">struct</span> worker_pool *pool)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">worker</span> *<span class="title">worker</span>;</span></span><br><span class="line">	<span class="type">int</span> id;</span><br><span class="line">	<span class="type">char</span> id_buf[<span class="number">23</span>];</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* ID is needed to determine kthread name */</span></span><br><span class="line">	id = ida_alloc(&amp;pool-&gt;worker_ida, GFP_KERNEL);</span><br><span class="line">	<span class="keyword">if</span> (id &lt; <span class="number">0</span>) &#123;</span><br><span class="line">		pr_err_once(<span class="string">&quot;workqueue: Failed to allocate a worker ID: %pe\n&quot;</span>,</span><br><span class="line">			    ERR_PTR(id));</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	worker = alloc_worker(pool-&gt;node);</span><br><span class="line">	<span class="keyword">if</span> (!worker) &#123;</span><br><span class="line">		pr_err_once(<span class="string">&quot;workqueue: Failed to allocate a worker\n&quot;</span>);</span><br><span class="line">		<span class="keyword">goto</span> fail;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	worker-&gt;id = id;</span><br><span class="line">	<span class="comment">// normal和unbound worker内核线程名创建</span></span><br><span class="line">	<span class="keyword">if</span> (pool-&gt;cpu &gt;= <span class="number">0</span>)</span><br><span class="line">		<span class="built_in">snprintf</span>(id_buf, <span class="keyword">sizeof</span>(id_buf), <span class="string">&quot;%d:%d%s&quot;</span>, pool-&gt;cpu, id,</span><br><span class="line">			 pool-&gt;attrs-&gt;nice &lt; <span class="number">0</span>  ? <span class="string">&quot;H&quot;</span> : <span class="string">&quot;&quot;</span>);</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="built_in">snprintf</span>(id_buf, <span class="keyword">sizeof</span>(id_buf), <span class="string">&quot;u%d:%d&quot;</span>, pool-&gt;id, id);</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 在指定NUMA node上创建线程，线程函数为worker_thread</span></span><br><span class="line">	worker-&gt;task = kthread_create_on_node(worker_thread, worker, pool-&gt;node,</span><br><span class="line">					      <span class="string">&quot;kworker/%s&quot;</span>, id_buf);</span><br><span class="line">	<span class="keyword">if</span> (IS_ERR(worker-&gt;task)) &#123;</span><br><span class="line">		<span class="keyword">if</span> (PTR_ERR(worker-&gt;task) == -EINTR) &#123;</span><br><span class="line">			pr_err(<span class="string">&quot;workqueue: Interrupted when creating a worker thread \&quot;kworker/%s\&quot;\n&quot;</span>,</span><br><span class="line">			       id_buf);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			pr_err_once(<span class="string">&quot;workqueue: Failed to create a worker thread: %pe&quot;</span>,</span><br><span class="line">				    worker-&gt;task);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">goto</span> fail;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 指定nice值</span></span><br><span class="line">	set_user_nice(worker-&gt;task, pool-&gt;attrs-&gt;nice);</span><br><span class="line">	trace_android_rvh_create_worker(worker-&gt;task, pool-&gt;attrs);</span><br><span class="line">	kthread_bind_mask(worker-&gt;task, pool_allowed_cpus(pool));</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* successful, attach the worker to the pool attach到worker_pool中 */</span></span><br><span class="line">	worker_attach_to_pool(worker, pool);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* start the newly created worker */</span></span><br><span class="line">	raw_spin_lock_irq(&amp;pool-&gt;lock);</span><br><span class="line"></span><br><span class="line">	worker-&gt;pool-&gt;nr_workers++;</span><br><span class="line">	worker_enter_idle(worker);</span><br><span class="line">	kick_pool(pool);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * @worker is waiting on a completion in kthread() and will trigger hung</span></span><br><span class="line"><span class="comment">	 * check if not woken up soon. As kick_pool() might not have waken it</span></span><br><span class="line"><span class="comment">	 * up, wake it up explicitly once more.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	wake_up_process(worker-&gt;task);</span><br><span class="line"></span><br><span class="line">	raw_spin_unlock_irq(&amp;pool-&gt;lock);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> worker;</span><br><span class="line"></span><br><span class="line">fail:</span><br><span class="line">	ida_free(&amp;pool-&gt;worker_ida, id);</span><br><span class="line">	kfree(worker);</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-2-unbounded-worker-pool"><a href="#2-2-unbounded-worker-pool" class="headerlink" title="2.2 unbounded worker pool"></a>2.2 unbounded worker pool</h3><p>normal worker pool中的worker是与cpu绑定的，Android Linux kernel大部分使用的还是unbound worker pool，schedule_work()、queue_work()函数底层均使用的是unbound。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">bool</span> <span class="title function_">queue_work</span><span class="params">(<span class="keyword">struct</span> workqueue_struct *wq,</span></span><br><span class="line"><span class="params">			      <span class="keyword">struct</span> work_struct *work)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">return</span> queue_work_on(WORK_CPU_UNBOUND, wq, work);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>unbound worker_pool 相对应的意思，就是 worker 可以在多个 CPU 上调度的。但是他其实也是绑定的，只不过它绑定的单位不是 CPU 而是 node。所谓的 node 是对 NUMA(Non Uniform Memory Access Architecture) 系统来说的，NUMA 可能存在多个 node，每个 node 可能包含一个或者多个 CPU。</p>
+<p>unbound worker pool可分为两类：</p>
+<ul>
+<li>unbound_std_wq_attrs</li>
+<li>ordered_wq_attrs</li>
+</ul>
+<p>依旧在第一阶段初始化</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> __init <span class="title function_">workqueue_init_early</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">...</span><br><span class="line">	<span class="comment">/* create default unbound and ordered wq attrs */</span></span><br><span class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; NR_STD_WORKER_POOLS; i++) &#123;</span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">workqueue_attrs</span> *<span class="title">attrs</span>;</span></span><br><span class="line"></span><br><span class="line">		BUG_ON(!(attrs = alloc_workqueue_attrs()));</span><br><span class="line">		attrs-&gt;nice = std_nice[i];</span><br><span class="line">		unbound_std_wq_attrs[i] = attrs;</span><br><span class="line"></span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		 * An ordered wq should have only one pwq as ordering is</span></span><br><span class="line"><span class="comment">		 * guaranteed by max_active which is enforced by pwqs.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		BUG_ON(!(attrs = alloc_workqueue_attrs()));</span><br><span class="line">		attrs-&gt;nice = std_nice[i];</span><br><span class="line">		attrs-&gt;ordered = <span class="literal">true</span>;</span><br><span class="line">		ordered_wq_attrs[i] = attrs;</span><br><span class="line">	&#125;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>剩下的流程没太关注。</p>
+<h2 id="3-worker"><a href="#3-worker" class="headerlink" title="3. worker"></a>3. worker</h2><p>worker即上文中<code>create_worker</code>函数创建的内核线程：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">worker-&gt;task = kthread_create_on_node(worker_thread, worker, pool-&gt;node,</span><br><span class="line">				      <span class="string">&quot;kworker/%s&quot;</span>, id_buf);</span><br></pre></td></tr></table></figure>
+
+<p>这里分析worker_thread是怎么执行（处理work），以及CMWQ是怎么管理worker的。</p>
+<h3 id="3-1-worker-thread"><a href="#3-1-worker-thread" class="headerlink" title="3.1 worker_thread"></a>3.1 worker_thread</h3><ol>
+<li>判断<code>worker-&gt;flags</code>是否已经被置为<code>WORKER_DIE</code> ，然后做detach和free操作（<code>WORKER_DIE</code> 是在由timer做的）；</li>
+<li><code>worker_leave_idle</code> 离开IDLE状态</li>
+<li><code>need_more_worker</code> 判断当前<code>worker_pool</code>上的work_list是否非空 &amp; <code>worker_pool</code>的running task为空；两个条件同时满足，则需要更多worker，否则继续sleep；</li>
+<li>随后循环check自身是否需要转为manager（即running），然后assign work到该worker</li>
+<li><code>process_one_work()</code> 该函数过长<ol>
+<li>将该work置为busy</li>
+<li>判断是不是cpu密集型work（<code>WQ_CPU_INTENSIVE</code>）；若是，则不能参与CMWQ，且使其成为一个独立的内核线程，并重新判断需不需要more worker（<code>kick_pool(pool);</code>）</li>
+<li>执行work的具体函数（<code>worker-&gt;current_func(work);</code>）</li>
+</ol>
+</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">worker_thread</span><span class="params">(<span class="type">void</span> *__worker)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">worker</span> *<span class="title">worker</span> =</span> __worker;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">worker_pool</span> *<span class="title">pool</span> =</span> worker-&gt;pool;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* tell the scheduler that this is a workqueue worker */</span></span><br><span class="line">	set_pf_worker(<span class="literal">true</span>);</span><br><span class="line">woke_up:</span><br><span class="line">	raw_spin_lock_irq(&amp;pool-&gt;lock);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* am I supposed to die? */</span></span><br><span class="line">	<span class="keyword">if</span> (unlikely(worker-&gt;flags &amp; WORKER_DIE)) &#123;</span><br><span class="line">		raw_spin_unlock_irq(&amp;pool-&gt;lock);</span><br><span class="line">		set_pf_worker(<span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">		set_task_comm(worker-&gt;task, <span class="string">&quot;kworker/dying&quot;</span>);</span><br><span class="line">		ida_free(&amp;pool-&gt;worker_ida, worker-&gt;id);</span><br><span class="line">		worker_detach_from_pool(worker);</span><br><span class="line">		WARN_ON_ONCE(!list_empty(&amp;worker-&gt;entry));</span><br><span class="line">		kfree(worker);</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	worker_leave_idle(worker);</span><br><span class="line">recheck:</span><br><span class="line">	<span class="comment">/* no more worker necessary? */</span></span><br><span class="line">	<span class="keyword">if</span> (!need_more_worker(pool))</span><br><span class="line">		<span class="keyword">goto</span> sleep;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* do we need to manage? */</span></span><br><span class="line">	<span class="keyword">if</span> (unlikely(!may_start_working(pool)) &amp;&amp; manage_workers(worker))</span><br><span class="line">		<span class="keyword">goto</span> recheck;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * -&gt;scheduled list can only be filled while a worker is</span></span><br><span class="line"><span class="comment">	 * preparing to process a work or actually processing it.</span></span><br><span class="line"><span class="comment">	 * Make sure nobody diddled with it while I was sleeping.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	WARN_ON_ONCE(!list_empty(&amp;worker-&gt;scheduled));</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Finish PREP stage.  We&#x27;re guaranteed to have at least one idle</span></span><br><span class="line"><span class="comment">	 * worker or that someone else has already assumed the manager</span></span><br><span class="line"><span class="comment">	 * role.  This is where @worker starts participating in concurrency</span></span><br><span class="line"><span class="comment">	 * management if applicable and concurrency management is restored</span></span><br><span class="line"><span class="comment">	 * after being rebound.  See rebind_workers() for details.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	worker_clr_flags(worker, WORKER_PREP | WORKER_REBOUND);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">do</span> &#123;</span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">work_struct</span> *<span class="title">work</span> =</span></span><br><span class="line">			list_first_entry(&amp;pool-&gt;worklist,</span><br><span class="line">					 <span class="keyword">struct</span> work_struct, entry);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (assign_work(work, worker, <span class="literal">NULL</span>))</span><br><span class="line">			process_scheduled_works(worker);</span><br><span class="line">	&#125; <span class="keyword">while</span> (keep_working(pool));</span><br><span class="line"></span><br><span class="line">	worker_set_flags(worker, WORKER_PREP);</span><br><span class="line">sleep:</span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * pool-&gt;lock is held and there&#x27;s no work to process and no need to</span></span><br><span class="line"><span class="comment">	 * manage, sleep.  Workers are woken up only while holding</span></span><br><span class="line"><span class="comment">	 * pool-&gt;lock or from local cpu, so setting the current state</span></span><br><span class="line"><span class="comment">	 * before releasing pool-&gt;lock is enough to prevent losing any</span></span><br><span class="line"><span class="comment">	 * event.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	worker_enter_idle(worker);</span><br><span class="line">	__set_current_state(TASK_IDLE);</span><br><span class="line">	raw_spin_unlock_irq(&amp;pool-&gt;lock);</span><br><span class="line">	schedule();</span><br><span class="line">	<span class="keyword">goto</span> woke_up;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">|-&gt;</span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">process_scheduled_works</span><span class="params">(<span class="keyword">struct</span> worker *worker)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">work_struct</span> *<span class="title">work</span>;</span></span><br><span class="line">	<span class="type">bool</span> first = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span> ((work = list_first_entry_or_null(&amp;worker-&gt;scheduled,</span><br><span class="line">						<span class="keyword">struct</span> work_struct, entry))) &#123;</span><br><span class="line">		<span class="keyword">if</span> (first) &#123;</span><br><span class="line">			worker-&gt;pool-&gt;watchdog_ts = jiffies;</span><br><span class="line">			first = <span class="literal">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		process_one_work(worker, work);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">||-&gt;</span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">process_one_work</span><span class="params">(<span class="keyword">struct</span> worker *worker, <span class="keyword">struct</span> work_struct *work)</span></span><br><span class="line">__<span class="title function_">releases</span><span class="params">(&amp;pool-&gt;lock)</span></span><br><span class="line">__<span class="title function_">acquires</span><span class="params">(&amp;pool-&gt;lock)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">pool_workqueue</span> *<span class="title">pwq</span> =</span> get_work_pwq(work);</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">worker_pool</span> *<span class="title">pool</span> =</span> worker-&gt;pool;</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> work_data;</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> CONFIG_LOCKDEP</span></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * It is permissible to free the struct work_struct from</span></span><br><span class="line"><span class="comment">	 * inside the function that is called from it, this we need to</span></span><br><span class="line"><span class="comment">	 * take into account for lockdep too.  To avoid bogus &quot;held</span></span><br><span class="line"><span class="comment">	 * lock freed&quot; warnings as well as problems when looking into</span></span><br><span class="line"><span class="comment">	 * work-&gt;lockdep_map, make a copy and use that here.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">lockdep_map</span> <span class="title">lockdep_map</span>;</span></span><br><span class="line"></span><br><span class="line">	lockdep_copy_map(&amp;lockdep_map, &amp;work-&gt;lockdep_map);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	<span class="comment">/* ensure we&#x27;re on the correct CPU */</span></span><br><span class="line">	WARN_ON_ONCE(!(pool-&gt;flags &amp; POOL_DISASSOCIATED) &amp;&amp;</span><br><span class="line">		     raw_smp_processor_id() != pool-&gt;cpu);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* claim and dequeue */</span></span><br><span class="line">	debug_work_deactivate(work);</span><br><span class="line">	hash_add(pool-&gt;busy_hash, &amp;worker-&gt;hentry, (<span class="type">unsigned</span> <span class="type">long</span>)work);</span><br><span class="line">	worker-&gt;current_work = work;</span><br><span class="line">	worker-&gt;current_func = work-&gt;func;</span><br><span class="line">	worker-&gt;current_pwq = pwq;</span><br><span class="line">	worker-&gt;current_at = worker-&gt;task-&gt;se.sum_exec_runtime;</span><br><span class="line">	work_data = *work_data_bits(work);</span><br><span class="line">	worker-&gt;current_color = get_work_color(work_data);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Record wq name for cmdline and debug reporting, may get</span></span><br><span class="line"><span class="comment">	 * overridden through set_worker_desc().</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	strscpy(worker-&gt;desc, pwq-&gt;wq-&gt;name, WORKER_DESC_LEN);</span><br><span class="line"></span><br><span class="line">	list_del_init(&amp;work-&gt;entry);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * CPU intensive works don&#x27;t participate in concurrency management.</span></span><br><span class="line"><span class="comment">	 * They&#x27;re the scheduler&#x27;s responsibility.  This takes @worker out</span></span><br><span class="line"><span class="comment">	 * of concurrency management and the next code block will chain</span></span><br><span class="line"><span class="comment">	 * execution of the pending work items.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">if</span> (unlikely(pwq-&gt;wq-&gt;flags &amp; WQ_CPU_INTENSIVE))</span><br><span class="line">		worker_set_flags(worker, WORKER_CPU_INTENSIVE);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Kick @pool if necessary. It&#x27;s always noop for per-cpu worker pools</span></span><br><span class="line"><span class="comment">	 * since nr_running would always be &gt;= 1 at this point. This is used to</span></span><br><span class="line"><span class="comment">	 * chain execution of the pending work items for WORKER_NOT_RUNNING</span></span><br><span class="line"><span class="comment">	 * workers such as the UNBOUND and CPU_INTENSIVE ones.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	kick_pool(pool);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Record the last pool and clear PENDING which should be the last</span></span><br><span class="line"><span class="comment">	 * update to @work.  Also, do this inside @pool-&gt;lock so that</span></span><br><span class="line"><span class="comment">	 * PENDING and queued state changes happen together while IRQ is</span></span><br><span class="line"><span class="comment">	 * disabled.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	set_work_pool_and_clear_pending(work, pool-&gt;id);</span><br><span class="line"></span><br><span class="line">	pwq-&gt;stats[PWQ_STAT_STARTED]++;</span><br><span class="line">	raw_spin_unlock_irq(&amp;pool-&gt;lock);</span><br><span class="line"></span><br><span class="line">	lock_map_acquire(&amp;pwq-&gt;wq-&gt;lockdep_map);</span><br><span class="line">	lock_map_acquire(&amp;lockdep_map);</span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Strictly speaking we should mark the invariant state without holding</span></span><br><span class="line"><span class="comment">	 * any locks, that is, before these two lock_map_acquire()&#x27;s.</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 * However, that would result in:</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 *   A(W1)</span></span><br><span class="line"><span class="comment">	 *   WFC(C)</span></span><br><span class="line"><span class="comment">	 *		A(W1)</span></span><br><span class="line"><span class="comment">	 *		C(C)</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 * Which would create W1-&gt;C-&gt;W1 dependencies, even though there is no</span></span><br><span class="line"><span class="comment">	 * actual deadlock possible. There are two solutions, using a</span></span><br><span class="line"><span class="comment">	 * read-recursive acquire on the work(queue) &#x27;locks&#x27;, but this will then</span></span><br><span class="line"><span class="comment">	 * hit the lockdep limitation on recursive locks, or simply discard</span></span><br><span class="line"><span class="comment">	 * these locks.</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 * AFAICT there is no possible deadlock scenario between the</span></span><br><span class="line"><span class="comment">	 * flush_work() and complete() primitives (except for single-threaded</span></span><br><span class="line"><span class="comment">	 * workqueues), so hiding them isn&#x27;t a problem.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	lockdep_invariant_state(<span class="literal">true</span>);</span><br><span class="line">	trace_workqueue_execute_start(work);</span><br><span class="line">	worker-&gt;current_func(work);</span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * While we must be careful to not use &quot;work&quot; after this, the trace</span></span><br><span class="line"><span class="comment">	 * point will only record its address.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	trace_workqueue_execute_end(work, worker-&gt;current_func);</span><br><span class="line">	pwq-&gt;stats[PWQ_STAT_COMPLETED]++;</span><br><span class="line">	lock_map_release(&amp;lockdep_map);</span><br><span class="line">	lock_map_release(&amp;pwq-&gt;wq-&gt;lockdep_map);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (unlikely(in_atomic() || lockdep_depth(current) &gt; <span class="number">0</span> ||</span><br><span class="line">		     rcu_preempt_depth() &gt; <span class="number">0</span>)) &#123;</span><br><span class="line">		pr_err(<span class="string">&quot;BUG: workqueue leaked lock or atomic: %s/0x%08x/%d/%d\n&quot;</span></span><br><span class="line">		       <span class="string">&quot;     last function: %ps\n&quot;</span>,</span><br><span class="line">		       current-&gt;comm, preempt_count(), rcu_preempt_depth(),</span><br><span class="line">		       task_pid_nr(current), worker-&gt;current_func);</span><br><span class="line">		debug_show_held_locks(current);</span><br><span class="line">		dump_stack();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * The following prevents a kworker from hogging CPU on !PREEMPTION</span></span><br><span class="line"><span class="comment">	 * kernels, where a requeueing work item waiting for something to</span></span><br><span class="line"><span class="comment">	 * happen could deadlock with stop_machine as such work item could</span></span><br><span class="line"><span class="comment">	 * indefinitely requeue itself while all other CPUs are trapped in</span></span><br><span class="line"><span class="comment">	 * stop_machine. At the same time, report a quiescent RCU state so</span></span><br><span class="line"><span class="comment">	 * the same condition doesn&#x27;t freeze RCU.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	cond_resched();</span><br><span class="line"></span><br><span class="line">	raw_spin_lock_irq(&amp;pool-&gt;lock);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * In addition to %WQ_CPU_INTENSIVE, @worker may also have been marked</span></span><br><span class="line"><span class="comment">	 * CPU intensive by wq_worker_tick() if @work hogged CPU longer than</span></span><br><span class="line"><span class="comment">	 * wq_cpu_intensive_thresh_us. Clear it.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	worker_clr_flags(worker, WORKER_CPU_INTENSIVE);</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* tag the worker for identification in schedule() */</span></span><br><span class="line">	worker-&gt;last_func = worker-&gt;current_func;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* we&#x27;re done with it, release */</span></span><br><span class="line">	hash_del(&amp;worker-&gt;hentry);</span><br><span class="line">	worker-&gt;current_work = <span class="literal">NULL</span>;</span><br><span class="line">	worker-&gt;current_func = <span class="literal">NULL</span>;</span><br><span class="line">	worker-&gt;current_pwq = <span class="literal">NULL</span>;</span><br><span class="line">	worker-&gt;current_color = INT_MAX;</span><br><span class="line">	pwq_dec_nr_in_flight(pwq, work_data);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-CMWQ"><a href="#3-2-CMWQ" class="headerlink" title="3.2 CMWQ"></a>3.2 CMWQ</h3><p>CMWQ的主要思想如下：</p>
+<ul>
+<li>worker_pool 中的 worker 有 3 种状态：idle、running、suspend；</li>
+<li>如果 worker_pool 中有 work 需要处理，保持至少一个 running worker 来处理；</li>
+<li>running worker 在处理 work 的过程中进入了阻塞 suspend 状态，为了保持其他 work 的执行，需要唤醒新的 idle worker 来处理 work；</li>
+<li>如果有 work 需要执行且 running worker 大于 1 个，会让多余的 running worker 进入 idle 状态；</li>
+<li>如果没有 work 需要执行，会让所有 worker 进入 idle 状态；</li>
+<li>如果创建的 worker 过多，destroy_worker 在 300s(IDLE_WORKER_TIMEOUT) 时间内没有再次运行的 idle worker。</li>
+</ul>
+<p><img src="/2025/08/03/The-workqueue-of-Linux-kernel/cmwq.png" alt="cmwq_status"></p>
+<h2 id="4-workqueue"><a href="#4-workqueue" class="headerlink" title="4 workqueue"></a>4 workqueue</h2><p>workqueue 就是存放一组 work 的集合，基本可以分为两类：一类系统创建的 workqueue，一类是用户自己创建的 workqueue。</p>
+<p><strong>系统创建的wq如下：</strong></p>
+<p>大致可以分为三类：</p>
+<ol>
+<li>普通的</li>
+<li>高优先级的</li>
+<li>unbound的</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> __init <span class="title function_">workqueue_init_early</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	...</span><br><span class="line"></span><br><span class="line">	system_wq = alloc_workqueue(<span class="string">&quot;events&quot;</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">	system_highpri_wq = alloc_workqueue(<span class="string">&quot;events_highpri&quot;</span>, WQ_HIGHPRI, <span class="number">0</span>);</span><br><span class="line">	system_long_wq = alloc_workqueue(<span class="string">&quot;events_long&quot;</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">	system_unbound_wq = alloc_workqueue(<span class="string">&quot;events_unbound&quot;</span>, WQ_UNBOUND,</span><br><span class="line">					    WQ_MAX_ACTIVE);</span><br><span class="line">	system_freezable_wq = alloc_workqueue(<span class="string">&quot;events_freezable&quot;</span>,</span><br><span class="line">					      WQ_FREEZABLE, <span class="number">0</span>);</span><br><span class="line">	system_power_efficient_wq = alloc_workqueue(<span class="string">&quot;events_power_efficient&quot;</span>,</span><br><span class="line">					      WQ_POWER_EFFICIENT, <span class="number">0</span>);</span><br><span class="line">	system_freezable_power_efficient_wq = alloc_workqueue(<span class="string">&quot;events_freezable_power_efficient&quot;</span>,</span><br><span class="line">					      WQ_FREEZABLE | WQ_POWER_EFFICIENT,</span><br><span class="line">					      <span class="number">0</span>);</span><br><span class="line">	BUG_ON(!system_wq || !system_highpri_wq || !system_long_wq ||</span><br><span class="line">	       !system_unbound_wq || !system_freezable_wq ||</span><br><span class="line">	       !system_power_efficient_wq ||</span><br><span class="line">	       !system_freezable_power_efficient_wq);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>创建workqueue的接口为<code>alloc_workqueue</code></strong> </p>
+<p>这里需要注意pool_workqueues；一个系统至少存在几十个 workqueues，“插入”一个 workqueue 的 work 可能在不同的 CPU 上运行（一般执行一个 work 的 CPU 都是将该 work 插入 wq 的线程所在的 CPU），而一个 CPU 的两个 worker pool 里处理的 work 也可能来自不同的 workqueue。</p>
+<p>workqueue 和 CPU 实际形成了一种“<strong>多对多</strong>”的关系，为此创建了一个名为***”pool_workqueue*”** 的结构体（简称 pwq）来连接这两者（可理解为一个 workqueue 在一个 CPU 上的代理，如果有 50 个 workqueues，4 个CPU，那么就有 200 个 pwq）：</p>
+<p><img src="/2025/08/03/The-workqueue-of-Linux-kernel/wq_struct.png" alt="wq_struct"></p>
+<p>一个<code>workqueue_struct</code>中会维护与cpu个数相同的pwqs，具体的函数为<code>alloc_and_link_pwqs</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">int</span> <span class="title function_">alloc_and_link_pwqs</span><span class="params">(<span class="keyword">struct</span> workqueue_struct *wq)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">bool</span> highpri = wq-&gt;flags &amp; WQ_HIGHPRI;</span><br><span class="line">	<span class="type">int</span> cpu, ret;</span><br><span class="line">	<span class="type">bool</span> skip = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">	wq-&gt;cpu_pwq = alloc_percpu(<span class="keyword">struct</span> pool_workqueue *);</span><br><span class="line">	<span class="keyword">if</span> (!wq-&gt;cpu_pwq)</span><br><span class="line">		<span class="keyword">goto</span> enomem;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// 为每个cpu创建pwqs，并于workqueue建立联系（init_wq）</span></span><br><span class="line">	<span class="keyword">if</span> (!(wq-&gt;flags &amp; WQ_UNBOUND)) &#123;</span><br><span class="line">		for_each_possible_cpu(cpu) &#123;</span><br><span class="line">			<span class="class"><span class="keyword">struct</span> <span class="title">pool_workqueue</span> **<span class="title">pwq_p</span> =</span></span><br><span class="line">				per_cpu_ptr(wq-&gt;cpu_pwq, cpu);</span><br><span class="line">			<span class="class"><span class="keyword">struct</span> <span class="title">worker_pool</span> *<span class="title">pool</span> =</span></span><br><span class="line">				&amp;(per_cpu_ptr(cpu_worker_pools, cpu)[highpri]);</span><br><span class="line"></span><br><span class="line">			*pwq_p = kmem_cache_alloc_node(pwq_cache, GFP_KERNEL,</span><br><span class="line">						       pool-&gt;node);</span><br><span class="line">			<span class="keyword">if</span> (!*pwq_p)</span><br><span class="line">				<span class="keyword">goto</span> enomem;</span><br><span class="line"></span><br><span class="line">			init_pwq(*pwq_p, wq, pool);</span><br><span class="line"></span><br><span class="line">			mutex_lock(&amp;wq-&gt;mutex);</span><br><span class="line">			link_pwq(*pwq_p);</span><br><span class="line">			mutex_unlock(&amp;wq-&gt;mutex);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	trace_android_rvh_alloc_and_link_pwqs(wq, &amp;ret, &amp;skip);</span><br><span class="line">	<span class="keyword">if</span> (skip)</span><br><span class="line">		<span class="keyword">goto</span> oem_skip;</span><br><span class="line"></span><br><span class="line">	cpus_read_lock();</span><br><span class="line">	<span class="keyword">if</span> (wq-&gt;flags &amp; __WQ_ORDERED) &#123;</span><br><span class="line">		ret = apply_workqueue_attrs(wq, ordered_wq_attrs[highpri]);</span><br><span class="line">		<span class="comment">/* there should only be single pwq for ordering guarantee */</span></span><br><span class="line">		WARN(!ret &amp;&amp; (wq-&gt;pwqs.next != &amp;wq-&gt;dfl_pwq-&gt;pwqs_node ||</span><br><span class="line">			      wq-&gt;pwqs.prev != &amp;wq-&gt;dfl_pwq-&gt;pwqs_node),</span><br><span class="line">		     <span class="string">&quot;ordering guarantee broken for workqueue %s\n&quot;</span>, wq-&gt;name);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		ret = apply_workqueue_attrs(wq, unbound_std_wq_attrs[highpri]);</span><br><span class="line">	&#125;</span><br><span class="line">	cpus_read_unlock();</span><br><span class="line"></span><br><span class="line">oem_skip:</span><br><span class="line">	<span class="comment">/* for unbound pwq, flush the pwq_release_worker ensures that the</span></span><br><span class="line"><span class="comment">	 * pwq_release_workfn() completes before calling kfree(wq).</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">if</span> (ret)</span><br><span class="line">		kthread_flush_worker(pwq_release_worker);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> ret;</span><br><span class="line"></span><br><span class="line">enomem:</span><br><span class="line">	<span class="keyword">if</span> (wq-&gt;cpu_pwq) &#123;</span><br><span class="line">		for_each_possible_cpu(cpu) &#123;</span><br><span class="line">			<span class="class"><span class="keyword">struct</span> <span class="title">pool_workqueue</span> *<span class="title">pwq</span> =</span> *per_cpu_ptr(wq-&gt;cpu_pwq, cpu);</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (pwq)</span><br><span class="line">				kmem_cache_free(pwq_cache, pwq);</span><br><span class="line">		&#125;</span><br><span class="line">		free_percpu(wq-&gt;cpu_pwq);</span><br><span class="line">		wq-&gt;cpu_pwq = <span class="literal">NULL</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> -ENOMEM;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-work"><a href="#5-work" class="headerlink" title="5 work"></a>5 work</h2><p>work的创建并没什么好说的，使用<code>INIT_WORK</code>宏初始化work的func即可，然后调用<code>queue_work</code>或者<code>schedule_work</code> 将work压入到workqueue中。</p>
+<p>最终调用的函数为<code>__queue_work()</code> ，将work填充到worker pool的work_list中，待worker执行。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> __queue_work(<span class="type">int</span> cpu, <span class="keyword">struct</span> workqueue_struct *wq,</span><br><span class="line">			 <span class="keyword">struct</span> work_struct *work)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">pool_workqueue</span> *<span class="title">pwq</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">worker_pool</span> *<span class="title">last_pool</span>, *<span class="title">pool</span>;</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span> work_flags;</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">int</span> req_cpu = cpu;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * While a work item is PENDING &amp;&amp; off queue, a task trying to</span></span><br><span class="line"><span class="comment">	 * steal the PENDING will busy-loop waiting for it to either get</span></span><br><span class="line"><span class="comment">	 * queued or lose PENDING.  Grabbing PENDING and queueing should</span></span><br><span class="line"><span class="comment">	 * happen with IRQ disabled.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	lockdep_assert_irqs_disabled();</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * For a draining wq, only works from the same workqueue are</span></span><br><span class="line"><span class="comment">	 * allowed. The __WQ_DESTROYING helps to spot the issue that</span></span><br><span class="line"><span class="comment">	 * queues a new work item to a wq after destroy_workqueue(wq).</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">if</span> (unlikely(wq-&gt;flags &amp; (__WQ_DESTROYING | __WQ_DRAINING) &amp;&amp;</span><br><span class="line">		     WARN_ON_ONCE(!is_chained_work(wq))))</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	rcu_read_lock();</span><br><span class="line">retry:</span><br><span class="line">	<span class="comment">/* pwq which will be used unless @work is executing elsewhere */</span></span><br><span class="line">	<span class="keyword">if</span> (req_cpu == WORK_CPU_UNBOUND) &#123;</span><br><span class="line">		<span class="keyword">if</span> (wq-&gt;flags &amp; WQ_UNBOUND)</span><br><span class="line">			cpu = wq_select_unbound_cpu(raw_smp_processor_id());</span><br><span class="line">		<span class="keyword">else</span></span><br><span class="line">			cpu = raw_smp_processor_id();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	pwq = rcu_dereference(*per_cpu_ptr(wq-&gt;cpu_pwq, cpu));</span><br><span class="line">	pool = pwq-&gt;pool;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * If @work was previously on a different pool, it might still be</span></span><br><span class="line"><span class="comment">	 * running there, in which case the work needs to be queued on that</span></span><br><span class="line"><span class="comment">	 * pool to guarantee non-reentrancy.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	last_pool = get_work_pool(work);</span><br><span class="line">	<span class="keyword">if</span> (last_pool &amp;&amp; last_pool != pool) &#123;</span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">worker</span> *<span class="title">worker</span>;</span></span><br><span class="line"></span><br><span class="line">		raw_spin_lock(&amp;last_pool-&gt;lock);</span><br><span class="line"></span><br><span class="line">		worker = find_worker_executing_work(last_pool, work);</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span> (worker &amp;&amp; worker-&gt;current_pwq-&gt;wq == wq) &#123;</span><br><span class="line">			pwq = worker-&gt;current_pwq;</span><br><span class="line">			pool = pwq-&gt;pool;</span><br><span class="line">			WARN_ON_ONCE(pool != last_pool);</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="comment">/* meh... not running there, queue here */</span></span><br><span class="line">			raw_spin_unlock(&amp;last_pool-&gt;lock);</span><br><span class="line">			raw_spin_lock(&amp;pool-&gt;lock);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		raw_spin_lock(&amp;pool-&gt;lock);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * pwq is determined and locked. For unbound pools, we could have raced</span></span><br><span class="line"><span class="comment">	 * with pwq release and it could already be dead. If its refcnt is zero,</span></span><br><span class="line"><span class="comment">	 * repeat pwq selection. Note that unbound pwqs never die without</span></span><br><span class="line"><span class="comment">	 * another pwq replacing it in cpu_pwq or while work items are executing</span></span><br><span class="line"><span class="comment">	 * on it, so the retrying is guaranteed to make forward-progress.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">if</span> (unlikely(!pwq-&gt;refcnt)) &#123;</span><br><span class="line">		<span class="keyword">if</span> (wq-&gt;flags &amp; WQ_UNBOUND) &#123;</span><br><span class="line">			raw_spin_unlock(&amp;pool-&gt;lock);</span><br><span class="line">			cpu_relax();</span><br><span class="line">			<span class="keyword">goto</span> retry;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">/* oops */</span></span><br><span class="line">		WARN_ONCE(<span class="literal">true</span>, <span class="string">&quot;workqueue: per-cpu pwq for %s on cpu%d has 0 refcnt&quot;</span>,</span><br><span class="line">			  wq-&gt;name, cpu);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/* pwq determined, queue */</span></span><br><span class="line">	trace_workqueue_queue_work(req_cpu, pwq, work);</span><br><span class="line"></span><br><span class="line">	trace_android_vh_wq_queue_work(work, wq-&gt;name, wq-&gt;flags, cpu);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (WARN_ON(!list_empty(&amp;work-&gt;entry)))</span><br><span class="line">		<span class="keyword">goto</span> out;</span><br><span class="line"></span><br><span class="line">	pwq-&gt;nr_in_flight[pwq-&gt;work_color]++;</span><br><span class="line">	work_flags = work_color_to_flags(pwq-&gt;work_color);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (likely(pwq-&gt;nr_active &lt; pwq-&gt;max_active)) &#123;</span><br><span class="line">		<span class="keyword">if</span> (list_empty(&amp;pool-&gt;worklist))</span><br><span class="line">			pool-&gt;watchdog_ts = jiffies;</span><br><span class="line"></span><br><span class="line">		trace_workqueue_activate_work(work);</span><br><span class="line">		pwq-&gt;nr_active++;</span><br><span class="line">		insert_work(pwq, work, &amp;pool-&gt;worklist, work_flags);</span><br><span class="line">		kick_pool(pool);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		work_flags |= WORK_STRUCT_INACTIVE;</span><br><span class="line">		insert_work(pwq, work, &amp;pwq-&gt;inactive_works, work_flags);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">out:</span><br><span class="line">	raw_spin_unlock(&amp;pool-&gt;lock);</span><br><span class="line">	rcu_read_unlock();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因此，使用<code>alloc_workqueue()</code>创建自己的workqueue并不能拥有比系统workqueue更高的优先级，只是为了提供更精细或者定制的行为配置，比如：</p>
+<ol>
+<li>设置并发度<code>max_actions</code> </li>
+<li>设置flags（绑定至某个cpu、优先级、是否在suspend时被freeze等）</li>
+</ol>
+<h2 id="6-Reference"><a href="#6-Reference" class="headerlink" title="6 Reference"></a>6 Reference</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/latest/core-api/workqueue.html">https://www.kernel.org/doc/html/latest/core-api/workqueue.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://kernel.meizu.com/2016/08/21//linux-workqueue.html/">https://kernel.meizu.com/2016/08/21//linux-workqueue.html/</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/91106844">https://zhuanlan.zhihu.com/p/91106844</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/05/04/FreeRTOS-schdule/" rel="prev" title="FreeRTOS schdule">
+      <i class="fa fa-chevron-left"></i> FreeRTOS schdule
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-BG"><span class="nav-number">1.</span> <span class="nav-text">1. BG</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-worker-pool"><span class="nav-number">2.</span> <span class="nav-text">2. worker_pool</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-normal-worker-pool"><span class="nav-number">2.1.</span> <span class="nav-text">2.1 normal worker pool</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-unbounded-worker-pool"><span class="nav-number">2.2.</span> <span class="nav-text">2.2 unbounded worker pool</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-worker"><span class="nav-number">3.</span> <span class="nav-text">3. worker</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-worker-thread"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 worker_thread</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-CMWQ"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 CMWQ</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-workqueue"><span class="nav-number">4.</span> <span class="nav-text">4 workqueue</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-work"><span class="nav-number">5.</span> <span class="nav-text">5 work</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-Reference"><span class="nav-number">6.</span> <span class="nav-text">6 Reference</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">wang bi</p>
+  <div class="site-description" itemprop="description">你不必踌躇</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wangbi0912@github.com" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wangbi0912@github.com" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wangbi0912@163.com" title="E-Mail → mailto:wangbi0912@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wang bi</span>
+</div>
+  <div class="powered-by">
+  </div>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/01/2023 10:00:00"); //此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒.";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+</body>
+</html>
