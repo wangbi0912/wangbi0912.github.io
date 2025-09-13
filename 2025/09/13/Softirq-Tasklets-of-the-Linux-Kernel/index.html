@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Introduction for Softirq and Tasklets of the Linux kernel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Softirq&amp;Tasklets of the Linux Kernel">
+<meta property="og:url" content="http://example.com/2025/09/13/Softirq-Tasklets-of-the-Linux-Kernel/index.html">
+<meta property="og:site_name" content="Bevis Wang">
+<meta property="og:description" content="Introduction for Softirq and Tasklets of the Linux kernel">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2025/09/13/Softirq-Tasklets-of-the-Linux-Kernel/ksoftirq.png">
+<meta property="og:image" content="http://example.com/2025/09/13/Softirq-Tasklets-of-the-Linux-Kernel/softirq_pipeline.png">
+<meta property="article:published_time" content="2025-09-13T07:55:25.000Z">
+<meta property="article:modified_time" content="2025-09-13T08:07:48.679Z">
+<meta property="article:author" content="wang bi">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2025/09/13/Softirq-Tasklets-of-the-Linux-Kernel/ksoftirq.png">
+
+<link rel="canonical" href="http://example.com/2025/09/13/Softirq-Tasklets-of-the-Linux-Kernel/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Softirq&Tasklets of the Linux Kernel | Bevis Wang</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Bevis Wang</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2025/09/13/Softirq-Tasklets-of-the-Linux-Kernel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="wang bi">
+      <meta itemprop="description" content="你不必踌躇">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Bevis Wang">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Softirq&Tasklets of the Linux Kernel
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2025-09-13 15:55:25 / Modified: 16:07:48" itemprop="dateCreated datePublished" datetime="2025-09-13T15:55:25+08:00">2025-09-13</time>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="Symbols count in article">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">Symbols count in article: </span>
+              <span>8.9k</span>
+            </span>
+            <span class="post-meta-item" title="Reading time">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">Reading time &asymp;</span>
+              <span>16 mins.</span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <blockquote>
+<p>Introduction for Softirq and Tasklets of the Linux kernel</p>
+</blockquote>
+<span id="more"></span>
+
+<h2 id="1-BG"><a href="#1-BG" class="headerlink" title="1 BG"></a>1 BG</h2><p>计算机设备中，外设的速度是远低于cpu的计算速度的，一般采用中断这种异步方式来进行时间通知。</p>
+<p>在整个中断处理过程中，arm64 的 CPU 全局中断是自动 disable 的 (PSTATE 寄存器中的 interrupt bit 被 masks)。如果用户想支持 interrupt nested，需要自己在中断服务程序中使能中断。Linux 现在是不使用中断嵌套的。</p>
+<p>这就需要保证中断的isr需要尽可能短，将非紧急但很占用时间的具体操作延后。即所谓的<strong>defered interrupt或</strong>中断下半部。</p>
+<p>这里不关注Arm的中断触发到处理流程，仅记录两种defered interrupt的方式：softirq和tasklet</p>
+<h2 id="2-Software-Interrupts"><a href="#2-Software-Interrupts" class="headerlink" title="2 Software Interrupts"></a>2 Software Interrupts</h2><h3 id="1-init"><a href="#1-init" class="headerlink" title="1 init"></a>1 init</h3><p>当前内核中softirq有9个，均是静态分配。</p>
+<p>其中两个用来实现tasklet（<code>HI_SOFTIRQ</code>和<code>TASKLET_SOFTIRQ</code>），两个用于网络的发送和接收操作（<code>NET_TX_SOFTIRQ</code>和<code>NET_RX_SOFTIRQ</code>），一个用于调度器（<code>SCHED_SOFTIRQ</code>），实现SMP系统上周期性的负载均衡。在启用高分辨率定时器时，还需要一个<code>HRTIMER_SOFTIRQ</code> 还有一个用作read_copy_update。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">enum</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	HI_SOFTIRQ=<span class="number">0</span>,</span><br><span class="line">	TIMER_SOFTIRQ,</span><br><span class="line">	NET_TX_SOFTIRQ,</span><br><span class="line">	NET_RX_SOFTIRQ,</span><br><span class="line">	BLOCK_SOFTIRQ,</span><br><span class="line">	BLOCK_IOPOLL_SOFTIRQ,</span><br><span class="line">	TASKLET_SOFTIRQ,</span><br><span class="line">	SCHED_SOFTIRQ,</span><br><span class="line">	HRTIMER_SOFTIRQ,</span><br><span class="line">	RCU_SOFTIRQ,    <span class="comment">/* Preferable RCU should always be the last softirq */</span></span><br><span class="line"></span><br><span class="line">	NR_SOFTIRQS</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>所有的softirq及其对应的handler都在下面这个static数组中。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">softirq_action</span> <span class="title">softirq_vec</span>[<span class="title">NR_SOFTIRQS</span>] __<span class="title">cacheline_aligned_in_smp</span>;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后通过<code>open_softirq()</code>函数进行绑定，在timer、RCU等相关模块初始化时进行调用</p>
+<p>所以如果需要自定义添加softirq的话，需要重新编译内核镜像。</p>
+<p>softirq模块初始化会注册<code>TASKLET_SOFTIRQ</code>、<code>HI_SOFTIRQ</code> 两个软中断用来给 tasklet 服务。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> __init <span class="title function_">softirq_init</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> cpu;</span><br><span class="line"></span><br><span class="line">	for_each_possible_cpu(cpu) &#123;</span><br><span class="line">		per_cpu(tasklet_vec, cpu).tail =</span><br><span class="line">			&amp;per_cpu(tasklet_vec, cpu).head;</span><br><span class="line">		per_cpu(tasklet_hi_vec, cpu).tail =</span><br><span class="line">			&amp;per_cpu(tasklet_hi_vec, cpu).head;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	open_softirq(TASKLET_SOFTIRQ, tasklet_action);</span><br><span class="line">	open_softirq(HI_SOFTIRQ, tasklet_hi_action);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">|-&gt;</span><br><span class="line"><span class="type">void</span> <span class="title function_">open_softirq</span><span class="params">(<span class="type">int</span> nr, <span class="type">void</span> (*action)(<span class="keyword">struct</span> softirq_action *))</span></span><br><span class="line">&#123;</span><br><span class="line">	softirq_vec[nr].action = action;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-trigger"><a href="#2-trigger" class="headerlink" title="2 trigger"></a>2 trigger</h3><p>softirq有一个pending的bitmap，在中断上半部完成之后会调用<code>raise_softirq()</code>函数将某个softirq的bit置为1。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">raise_softirq</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> nr)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> flags;</span><br><span class="line"></span><br><span class="line">	local_irq_save(flags);</span><br><span class="line">	raise_softirq_irqoff(nr);</span><br><span class="line">	local_irq_restore(flags);</span><br><span class="line">&#125;</span><br><span class="line">EXPORT_SYMBOL_GPL(raise_softirq);</span><br></pre></td></tr></table></figure>
+
+<p>然后<code>local_softirq_pending()</code> 检查是否有pending的softirq，然后<code>invoke_softirq()</code> 触发softirq的处理流程。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * irq_exit - Exit an interrupt context, update RCU and lockdep</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * Also processes softirqs if needed and possible.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">void</span> <span class="title function_">irq_exit</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	__irq_exit_rcu();</span><br><span class="line">	ct_irq_exit();</span><br><span class="line">	 <span class="comment">/* must be last! */</span></span><br><span class="line">	lockdep_hardirq_exit();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">|-&gt;</span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">void</span> __irq_exit_rcu(<span class="type">void</span>)</span><br><span class="line">&#123;</span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> __ARCH_IRQ_EXIT_IRQS_DISABLED</span></span><br><span class="line">	local_irq_disable();</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">	lockdep_assert_irqs_disabled();</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	account_hardirq_exit(current);</span><br><span class="line">	preempt_count_sub(HARDIRQ_OFFSET);</span><br><span class="line">	<span class="keyword">if</span> (!in_interrupt() &amp;&amp; local_softirq_pending())</span><br><span class="line">		invoke_softirq();</span><br><span class="line"></span><br><span class="line">	tick_irq_exit();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">||-&gt;</span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">void</span> <span class="title function_">invoke_softirq</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (!force_irqthreads() || !__this_cpu_read(ksoftirqd)) &#123;</span><br><span class="line"><span class="meta">#<span class="keyword">ifdef</span> CONFIG_HAVE_IRQ_EXIT_ON_IRQ_STACK</span></span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		 * We can safely execute softirq on the current stack if</span></span><br><span class="line"><span class="comment">		 * it is the irq stack, because it should be near empty</span></span><br><span class="line"><span class="comment">		 * at this stage.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		__do_softirq();</span><br><span class="line"><span class="meta">#<span class="keyword">else</span></span></span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		 * Otherwise, irq_exit() is called on the task stack that can</span></span><br><span class="line"><span class="comment">		 * be potentially deep already. So call softirq in its own stack</span></span><br><span class="line"><span class="comment">		 * to prevent from any overrun.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		do_softirq_own_stack();</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		wakeup_softirqd();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面来介绍下上面代码中的<code>invoke_softirq()</code> 函数，首先判断有没有强制打开内核的中断线程化（非requested_thread_irq函数），若强制开启，则<code>__do_softirq()</code> ，否则调用<code>wakeup_softirqd()</code> 唤醒内核软中断线程。</p>
+<blockquote>
+<p>内核强制开启线程化，需要打开下面配置</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">if</span> defined(CONFIG_IRQ_FORCED_THREADING) &amp;&amp; !defined(CONFIG_PREEMPT_RT)</span></span><br><span class="line">DEFINE_STATIC_KEY_FALSE(force_irqthreads_key);</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> <span class="type">int</span> __init <span class="title function_">setup_forced_irqthreads</span><span class="params">(<span class="type">char</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">	static_branch_enable(&amp;force_irqthreads_key);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">early_param(<span class="string">&quot;threadirqs&quot;</span>, setup_forced_irqthreads);</span><br><span class="line"><span class="meta">#<span class="keyword">endif</span></span></span><br></pre></td></tr></table></figure>
+
+<p><code>__do_softirq()</code> 如下，会调用<code>handle_softirqs()</code> ;</p>
+<p><code>handle_softirqs()</code> 函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line">asmlinkage __visible <span class="type">void</span> __softirq_entry __do_softirq(<span class="type">void</span>)</span><br><span class="line">&#123;</span><br><span class="line">	handle_softirqs(<span class="literal">false</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">|-&gt;</span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">handle_softirqs</span><span class="params">(<span class="type">bool</span> ksirqd)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> end = jiffies + MAX_SOFTIRQ_TIME;</span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> old_flags = current-&gt;flags;</span><br><span class="line">	<span class="type">int</span> max_restart = MAX_SOFTIRQ_RESTART;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">softirq_action</span> *<span class="title">h</span>;</span></span><br><span class="line">	<span class="type">bool</span> in_hardirq;</span><br><span class="line">	__u32 deferred;</span><br><span class="line">	__u32 pending;</span><br><span class="line">	<span class="type">int</span> softirq_bit;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/*</span></span><br><span class="line"><span class="comment">	 * Mask out PF_MEMALLOC as the current task context is borrowed for the</span></span><br><span class="line"><span class="comment">	 * softirq. A softirq handled, such as network RX, might set PF_MEMALLOC</span></span><br><span class="line"><span class="comment">	 * again if the socket is related to swapping.</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	current-&gt;flags &amp;= ~PF_MEMALLOC;</span><br><span class="line">	<span class="comment">// 获取pending的softirq bitmap</span></span><br><span class="line">	pending = local_softirq_pending();</span><br><span class="line">	deferred = softirq_deferred_for_rt(&amp;pending);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 关闭软中断</span></span><br><span class="line">	softirq_handle_begin();</span><br><span class="line"></span><br><span class="line">	in_hardirq = lockdep_softirq_start();</span><br><span class="line">	account_softirq_enter(current);</span><br><span class="line"></span><br><span class="line">restart:</span><br><span class="line">	<span class="comment">/* Reset the pending bitmask before enabling irqs */</span></span><br><span class="line">	set_softirq_pending(deferred);</span><br><span class="line">	set_active_softirqs(pending);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//启用本地中断（softirq可以被打断）</span></span><br><span class="line">	local_irq_enable();</span><br><span class="line"></span><br><span class="line">	h = softirq_vec;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">// 遍历每个pending的软中断，执行action</span></span><br><span class="line">	<span class="keyword">while</span> ((softirq_bit = ffs(pending))) &#123;</span><br><span class="line">		<span class="type">unsigned</span> <span class="type">int</span> vec_nr;</span><br><span class="line">		<span class="type">int</span> prev_count;</span><br><span class="line"></span><br><span class="line">		h += softirq_bit - <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">		vec_nr = h - softirq_vec;</span><br><span class="line">		prev_count = preempt_count();</span><br><span class="line"></span><br><span class="line">		kstat_incr_softirqs_this_cpu(vec_nr);</span><br><span class="line"></span><br><span class="line">		trace_softirq_entry(vec_nr);</span><br><span class="line">		h-&gt;action(h);</span><br><span class="line">		trace_softirq_exit(vec_nr);</span><br><span class="line">		<span class="keyword">if</span> (unlikely(prev_count != preempt_count())) &#123;</span><br><span class="line">			pr_err(<span class="string">&quot;huh, entered softirq %u %s %p with preempt_count %08x, exited with %08x?\n&quot;</span>,</span><br><span class="line">			       vec_nr, softirq_to_name[vec_nr], h-&gt;action,</span><br><span class="line">			       prev_count, preempt_count());</span><br><span class="line">			preempt_count_set(prev_count);</span><br><span class="line">		&#125;</span><br><span class="line">		h++;</span><br><span class="line">		pending &gt;&gt;= softirq_bit;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	set_active_softirqs(<span class="number">0</span>);</span><br><span class="line">	<span class="keyword">if</span> (!IS_ENABLED(CONFIG_PREEMPT_RT) &amp;&amp; ksirqd)</span><br><span class="line">		rcu_softirq_qs();</span><br><span class="line"></span><br><span class="line">	local_irq_disable();</span><br><span class="line"></span><br><span class="line">	pending = local_softirq_pending();</span><br><span class="line">	deferred = softirq_deferred_for_rt(&amp;pending);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (pending) &#123;</span><br><span class="line">		<span class="keyword">if</span> (time_before(jiffies, end) &amp;&amp; !need_resched() &amp;&amp;</span><br><span class="line">		    --max_restart)</span><br><span class="line">			<span class="keyword">goto</span> restart;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 防止线程饥饿，唤醒内核线程ksoftirqd来处理软中断</span></span><br><span class="line">	<span class="keyword">if</span> (pending | deferred)</span><br><span class="line">		wakeup_softirqd();</span><br><span class="line"></span><br><span class="line">	account_softirq_exit(current);</span><br><span class="line">	lockdep_softirq_end(in_hardirq);</span><br><span class="line">	<span class="comment">// 重新打开软中断</span></span><br><span class="line">	softirq_handle_end();</span><br><span class="line">	current_restore_flags(old_flags, PF_MEMALLOC);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">||-&gt;</span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">void</span> <span class="title function_">softirq_handle_begin</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	__local_bh_disable_ip(_RET_IP_, SOFTIRQ_OFFSET);</span><br><span class="line">&#125;</span><br><span class="line">||-&gt;</span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">void</span> <span class="title function_">softirq_handle_end</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	__local_bh_enable(SOFTIRQ_OFFSET);</span><br><span class="line">	WARN_ON_ONCE(in_interrupt());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据上述的代码分析，softirq在处理中有以下关键信息：</p>
+<ol>
+<li>softirq可以被硬件中断抢占</li>
+<li>softirq不可以被softirq抢占</li>
+<li>为了防止softirq过多影响内核线程，添加ksoftirqd线程，防止线程饥饿</li>
+</ol>
+<h3 id="3-ksoftirqd"><a href="#3-ksoftirqd" class="headerlink" title="3 ksoftirqd"></a>3 ksoftirqd</h3><p>上面说到，为了防止softirq过多导致的线程饥饿，会唤醒内核线程ksoftirqd来进行softirq的后续处理。</p>
+<p>ksoftirqd是per-cpu的线程，<code>ps -A</code>可以看到线程数和cpu核数一致：<br><img src="/2025/09/13/Softirq-Tasklets-of-the-Linux-Kernel/ksoftirq.png" alt="ksoftirq"></p>
+<p>ksoftirq的创建代码如下，通过<code>spawn_ksoftirqd()</code> 调用<code>smpboot_register_percpu_thread()</code> ，最终调用到<code>kthread_create_on_cpu()</code> 函数在指定cpu上创建内核线程。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="class"><span class="keyword">struct</span> <span class="title">smp_hotplug_thread</span> <span class="title">softirq_threads</span> =</span> &#123;</span><br><span class="line">	.store			= &amp;ksoftirqd,</span><br><span class="line">	.thread_should_run	= ksoftirqd_should_run,</span><br><span class="line">	.thread_fn		= run_ksoftirqd,</span><br><span class="line">	.thread_comm		= <span class="string">&quot;ksoftirqd/%u&quot;</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="type">static</span> __init <span class="type">int</span> <span class="title function_">spawn_ksoftirqd</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	cpuhp_setup_state_nocalls(CPUHP_SOFTIRQ_DEAD, <span class="string">&quot;softirq:dead&quot;</span>, <span class="literal">NULL</span>,</span><br><span class="line">				  takeover_tasklets);</span><br><span class="line">	BUG_ON(smpboot_register_percpu_thread(&amp;softirq_threads));</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line">early_initcall(spawn_ksoftirqd);</span><br></pre></td></tr></table></figure>
+
+<p><code>wakeup_softirqd()</code>函数如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * we cannot loop indefinitely here to avoid userspace starvation,</span></span><br><span class="line"><span class="comment"> * but we also don&#x27;t want to introduce a worst case 1/HZ latency</span></span><br><span class="line"><span class="comment"> * to the pending events, so lets the scheduler to balance</span></span><br><span class="line"><span class="comment"> * the softirq load for us.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">wakeup_softirqd</span><span class="params">(<span class="type">void</span>)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">/* Interrupts are disabled: no need to stop preemption */</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">task_struct</span> *<span class="title">tsk</span> =</span> __this_cpu_read(ksoftirqd);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (tsk)</span><br><span class="line">		wake_up_process(tsk);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>内核线程函数为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">static</span> <span class="type">void</span> <span class="title function_">run_ksoftirqd</span><span class="params">(<span class="type">unsigned</span> <span class="type">int</span> cpu)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">// 关闭硬件中断</span></span><br><span class="line">	ksoftirqd_run_begin();</span><br><span class="line">	<span class="keyword">if</span> (local_softirq_pending()) &#123;</span><br><span class="line">		<span class="comment">/*</span></span><br><span class="line"><span class="comment">		 * We can safely run softirq on inline stack, as we are not deep</span></span><br><span class="line"><span class="comment">		 * in the task stack here.</span></span><br><span class="line"><span class="comment">		 */</span></span><br><span class="line">		<span class="comment">// 处理softirq</span></span><br><span class="line"> 		handle_softirqs(<span class="literal">true</span>);</span><br><span class="line">		ksoftirqd_run_end();</span><br><span class="line">		cond_resched();</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 重新打开硬件中断</span></span><br><span class="line">	ksoftirqd_run_end();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>softirq大致流程如下 [图源：<a target="_blank" rel="noopener" href="https://kernel.meizu.com/2016/09/02//linux-interrupt.html/">Linux Interrupt - 魅族内核团队</a>]<br><img src="/2025/09/13/Softirq-Tasklets-of-the-Linux-Kernel/softirq_pipeline.png" alt="softirq_pipeline"></p>
+<h2 id="3-Tasklets"><a href="#3-Tasklets" class="headerlink" title="3 Tasklets"></a>3 Tasklets</h2><h3 id="3-1-tasklet-trigger"><a href="#3-1-tasklet-trigger" class="headerlink" title="3.1 tasklet trigger"></a>3.1 tasklet trigger</h3><p>首先是<code>tasklet_schdule()</code> →<code>__tasklet_schedule()</code> →<code>__tasklet_schedule_common()</code> ，将<code>tasklet_struct</code>添加至<code>tasklet_vec</code>链表中，当<code>TASKLET_SOFTIRQ</code>执行时，遍历该链表，执行其中所有<code>tasklet_struct</code>的func。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// include/linux/interrupt.h</span></span><br><span class="line"><span class="type">static</span> <span class="keyword">inline</span> <span class="type">void</span> <span class="title function_">tasklet_schedule</span><span class="params">(<span class="keyword">struct</span> tasklet_struct *t)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">if</span> (!test_and_set_bit(TASKLET_STATE_SCHED, &amp;t-&gt;state))</span><br><span class="line">		__tasklet_schedule(t);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">|-&gt;</span><br><span class="line"><span class="comment">// kernel/softirq.c</span></span><br><span class="line"><span class="type">void</span> __tasklet_schedule(<span class="keyword">struct</span> tasklet_struct *t)</span><br><span class="line">&#123;</span><br><span class="line">	__tasklet_schedule_common(t, &amp;tasklet_vec,</span><br><span class="line">				  TASKLET_SOFTIRQ);</span><br><span class="line">&#125;</span><br><span class="line">EXPORT_SYMBOL(__tasklet_schedule);</span><br><span class="line"></span><br><span class="line">||-&gt;</span><br><span class="line"><span class="type">static</span> <span class="type">void</span> __tasklet_schedule_common(<span class="keyword">struct</span> tasklet_struct *t,</span><br><span class="line">				      <span class="keyword">struct</span> tasklet_head __percpu *headp,</span><br><span class="line">				      <span class="type">unsigned</span> <span class="type">int</span> softirq_nr)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">tasklet_head</span> *<span class="title">head</span>;</span></span><br><span class="line">	<span class="type">unsigned</span> <span class="type">long</span> flags;</span><br><span class="line"></span><br><span class="line">	local_irq_save(flags);</span><br><span class="line">	head = this_cpu_ptr(headp);</span><br><span class="line">	t-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">	*head-&gt;tail = t;</span><br><span class="line">	head-&gt;tail = &amp;(t-&gt;next);</span><br><span class="line">	raise_softirq_irqoff(softirq_nr);</span><br><span class="line">	local_irq_restore(flags);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最终还是走到<code>raise_softirq_irqoff()</code> 来设置softirq的pending bit。</p>
+<h3 id="3-2-init"><a href="#3-2-init" class="headerlink" title="3.2 init"></a>3.2 init</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> <span class="title function_">tasklet_init</span><span class="params">(<span class="keyword">struct</span> tasklet_struct *t,</span></span><br><span class="line"><span class="params">		  <span class="type">void</span> (*func)(<span class="type">unsigned</span> <span class="type">long</span>), <span class="type">unsigned</span> <span class="type">long</span> data)</span></span><br><span class="line">&#123;</span><br><span class="line">	t-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">	t-&gt;state = <span class="number">0</span>;</span><br><span class="line">	<span class="type">atomic_set</span>(&amp;t-&gt;count, <span class="number">0</span>);</span><br><span class="line">	t-&gt;func = func;</span><br><span class="line">	t-&gt;use_callback = <span class="literal">false</span>;</span><br><span class="line">	t-&gt;data = data;</span><br><span class="line">&#125;</span><br><span class="line">EXPORT_SYMBOL(tasklet_init);</span><br></pre></td></tr></table></figure>
+
+<p>其中<code>tasklet_struct</code> 字段含义如下：</p>
+<table>
+<thead>
+<tr>
+<th><strong>字段</strong></th>
+<th><strong>作用</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>next</code></td>
+<td>用于链接 tasklet 的链表结构（通常由调度器使用）</td>
+</tr>
+<tr>
+<td><code>state</code></td>
+<td>表示 tasklet 的状态，如是否正在运行或已调度</td>
+</tr>
+<tr>
+<td><code>count</code></td>
+<td>原子计数器，用于控制 tasklet 是否可执行（非零表示禁止执行）</td>
+</tr>
+<tr>
+<td><code>func</code></td>
+<td>实际执行的函数</td>
+</tr>
+<tr>
+<td><code>use_callback</code></td>
+<td>是否使用回调机制（通常为 false）</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>传递给 <code>func</code> 的参数</td>
+</tr>
+</tbody></table>
+<p>注：从上述可知，Softirq和Tasklets都是在软中断上下文中，不能进入睡眠。结合前篇work_queue的介绍：<br><a href="./The-workqueue-of-Linux-kernel.md">The workqueue of Linux kernel</a></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/08/03/The-workqueue-of-Linux-kernel/" rel="prev" title="The workqueue of Linux kernel">
+      <i class="fa fa-chevron-left"></i> The workqueue of Linux kernel
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-BG"><span class="nav-number">1.</span> <span class="nav-text">1 BG</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-Software-Interrupts"><span class="nav-number">2.</span> <span class="nav-text">2 Software Interrupts</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-init"><span class="nav-number">2.1.</span> <span class="nav-text">1 init</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-trigger"><span class="nav-number">2.2.</span> <span class="nav-text">2 trigger</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-ksoftirqd"><span class="nav-number">2.3.</span> <span class="nav-text">3 ksoftirqd</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-Tasklets"><span class="nav-number">3.</span> <span class="nav-text">3 Tasklets</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-tasklet-trigger"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 tasklet trigger</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-init"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 init</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">wang bi</p>
+  <div class="site-description" itemprop="description">你不必踌躇</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/wangbi0912@github.com" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;wangbi0912@github.com" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wangbi0912@163.com" title="E-Mail → mailto:wangbi0912@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">wang bi</span>
+</div>
+  <div class="powered-by">
+  </div>
+
+<!-- 网站运行时间的设置 -->
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime() {
+        var grt= new Date("03/01/2023 10:00:00"); //此处修改你的建站时间或者网站上线时间
+        now.setTime(now.getTime()+250);
+        days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+        hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+        seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+        document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+        document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒.";
+    }
+setInterval("createtime()",250);
+</script>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+</body>
+</html>
