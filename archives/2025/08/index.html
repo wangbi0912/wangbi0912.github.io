@@ -453,7 +453,7 @@ setInterval("createtime()",250);
   
 
   
-<!-- 火影忍者启动页 -->
+<!-- 火影忍者启动页 - 仅首次访问显示 -->
 <div id="splash-screen" style="
   position: fixed;
   top: 0;
@@ -464,28 +464,30 @@ setInterval("createtime()",250);
   background-size: cover;
   z-index: 9999;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   transition: opacity 0.8s ease;
-">
-  <div style="
-    text-align: center;
-    color: #fff;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
-  ">
-    <h1 style="font-size: 48px; margin-bottom: 20px; letter-spacing: 5px;">点击进入博客</h1>
-    <p style="font-size: 18px; opacity: 0.8;">Click to Enter</p>
-  </div>
-</div>
+"></div>
 
 <script>
-document.getElementById('splash-screen').addEventListener('click', function() {
-  this.style.opacity = '0';
-  setTimeout(function() {
-    document.getElementById('splash-screen').style.display = 'none';
-  }, 800);
-});
+(function() {
+  var shown = sessionStorage.getItem('splashShown');
+  if (!shown) {
+    var splash = document.getElementById('splash-screen');
+    if (splash) {
+      splash.addEventListener('click', function() {
+        this.style.opacity = '0';
+        setTimeout(function() {
+          document.getElementById('splash-screen').style.display = 'none';
+        }, 800);
+        sessionStorage.setItem('splashShown', 'true');
+      });
+    }
+  } else {
+    var splash = document.getElementById('splash-screen');
+    if (splash) {
+      splash.style.display = 'none';
+    }
+  }
+})();
 </script>
   
 </body>
