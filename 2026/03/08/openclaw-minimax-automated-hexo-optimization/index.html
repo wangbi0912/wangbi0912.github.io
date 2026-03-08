@@ -21,20 +21,23 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":true,"transition":{"post_block":"bounceUpIn","post_header":"slideDownIn","post_body":"bounceIn","coll_header":"slideLeftIn","sidebar":"bounceRightIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="使用互斥锁和条件变量实现读写锁">
+  <meta name="description" content="记录使用 OpenClaw AI 助手和 MiniMax 大模型自动化优化 Hexo 博客主题的全过程  背景作为一个技术博客，Hexo 的默认主题往往过于朴素。这次我使用 OpenClaw（集成了 MiniMax 大模型）来自动化完成博客界面的深度优化。 优化内容1. 主题配置优化 启用 Gemini 方案，界面更加现代化 开启 Dark Mode，支持夜间阅读 启用 Reading Prog">
 <meta property="og:type" content="article">
-<meta property="og:title" content="读写锁实现">
-<meta property="og:url" content="http://example.com/2022/05/08/%E8%AF%BB%E5%86%99%E9%94%81%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:title" content="OpenClaw + MiniMax 自动化优化 Hexo 博客界面">
+<meta property="og:url" content="http://example.com/2026/03/08/openclaw-minimax-automated-hexo-optimization/index.html">
 <meta property="og:site_name" content="Bevis Wang">
-<meta property="og:description" content="使用互斥锁和条件变量实现读写锁">
+<meta property="og:description" content="记录使用 OpenClaw AI 助手和 MiniMax 大模型自动化优化 Hexo 博客主题的全过程  背景作为一个技术博客，Hexo 的默认主题往往过于朴素。这次我使用 OpenClaw（集成了 MiniMax 大模型）来自动化完成博客界面的深度优化。 优化内容1. 主题配置优化 启用 Gemini 方案，界面更加现代化 开启 Dark Mode，支持夜间阅读 启用 Reading Prog">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-05-08T06:36:30.000Z">
-<meta property="article:modified_time" content="2022-07-10T06:58:00.000Z">
+<meta property="article:published_time" content="2026-03-08T08:50:00.000Z">
+<meta property="article:modified_time" content="2026-03-08T08:50:34.408Z">
 <meta property="article:author" content="wang bi">
-<meta property="article:tag" content="随笔">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="OpenClaw">
+<meta property="article:tag" content="博客优化">
+<meta property="article:tag" content="自动化">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2022/05/08/%E8%AF%BB%E5%86%99%E9%94%81%E5%AE%9E%E7%8E%B0/">
+<link rel="canonical" href="http://example.com/2026/03/08/openclaw-minimax-automated-hexo-optimization/">
 
 
 <script id="page-configurations">
@@ -47,7 +50,7 @@
   };
 </script>
 
-  <title>读写锁实现 | Bevis Wang</title>
+  <title>OpenClaw + MiniMax 自动化优化 Hexo 博客界面 | Bevis Wang</title>
   
 
 
@@ -192,7 +195,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/08/%E8%AF%BB%E5%86%99%E9%94%81%E5%AE%9E%E7%8E%B0/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2026/03/08/openclaw-minimax-automated-hexo-optimization/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="https://raw.githubusercontent.com/wangbi0912/wangbi0912.github.io/master/images/avatar.jpg">
@@ -205,7 +208,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          读写锁实现
+          OpenClaw + MiniMax 自动化优化 Hexo 博客界面
         </h1>
 
         <div class="post-meta">
@@ -214,16 +217,19 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2022-05-08 14:36:30" itemprop="dateCreated datePublished" datetime="2022-05-08T14:36:30+08:00">2022-05-08</time>
+              <time title="创建时间：2026-03-08 16:50:00 / 修改时间：16:50:34" itemprop="dateCreated datePublished" datetime="2026-03-08T16:50:00+08:00">2026-03-08</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-07-10 14:58:00" itemprop="dateModified" datetime="2022-07-10T14:58:00+08:00">2022-07-10</time>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
               </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/" itemprop="url" rel="index"><span itemprop="name">工具教程</span></a>
+                </span>
+            </span>
 
           
             <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
@@ -238,14 +244,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>928</span>
+              <span>782</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>1 分钟</span>
             </span>
 
         </div>
@@ -257,10 +263,48 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h3 id="使用互斥锁和条件变量实现读写锁"><a href="#使用互斥锁和条件变量实现读写锁" class="headerlink" title="使用互斥锁和条件变量实现读写锁"></a>使用互斥锁和条件变量实现读写锁</h3><span id="more"></span>
+        <blockquote>
+<p>记录使用 OpenClaw AI 助手和 MiniMax 大模型自动化优化 Hexo 博客主题的全过程</p>
+</blockquote>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>作为一个技术博客，Hexo 的默认主题往往过于朴素。这次我使用 OpenClaw（集成了 MiniMax 大模型）来自动化完成博客界面的深度优化。</p>
+<h2 id="优化内容"><a href="#优化内容" class="headerlink" title="优化内容"></a>优化内容</h2><h3 id="1-主题配置优化"><a href="#1-主题配置优化" class="headerlink" title="1. 主题配置优化"></a>1. 主题配置优化</h3><ul>
+<li>启用 <strong>Gemini</strong> 方案，界面更加现代化</li>
+<li>开启 <strong>Dark Mode</strong>，支持夜间阅读</li>
+<li>启用 <strong>Reading Progress Bar</strong>，实时显示阅读进度</li>
+<li>启用 <strong>Fancybox</strong>，图片点击可放大预览</li>
+<li>美化代码块：启用 <code>night</code> 主题 + Mac 风格复制按钮</li>
+<li>启用不蒜子访客统计</li>
+</ul>
+<h3 id="2-站点信息优化"><a href="#2-站点信息优化" class="headerlink" title="2. 站点信息优化"></a>2. 站点信息优化</h3><ul>
+<li>修改语言为 <code>zh-CN</code>，更好支持中文</li>
+<li>添加站点副标题「你不必踌躇」</li>
+<li>优化关键词和描述</li>
+</ul>
+<h3 id="3-页脚美化"><a href="#3-页脚美化" class="headerlink" title="3. 页脚美化"></a>3. 页脚美化</h3><ul>
+<li>添加入站时间显示</li>
+<li>心跳图标动画效果</li>
+</ul>
+<h2 id="技术细节"><a href="#技术细节" class="headerlink" title="技术细节"></a>技术细节</h2><h3 id="NexT-主题配置变更"><a href="#NexT-主题配置变更" class="headerlink" title="NexT 主题配置变更"></a>NexT 主题配置变更</h3><p>主要修改了 <code>themes/next/_config.yml</code> 文件：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 启用暗黑模式</span></span><br><span class="line"><span class="attr">darkmode:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 启用阅读进度条</span></span><br><span class="line"><span class="attr">reading_progress:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 代码块美化</span></span><br><span class="line"><span class="attr">codeblock:</span></span><br><span class="line">  <span class="attr">highlight_theme:</span> <span class="string">night</span></span><br><span class="line">  <span class="attr">copy_button:</span></span><br><span class="line">    <span class="attr">enable:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">style:</span> <span class="string">mac</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 启用图片灯箱</span></span><br><span class="line"><span class="attr">fancybox:</span> <span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 启用访客统计</span></span><br><span class="line"><span class="attr">busuanzi_count:</span></span><br><span class="line">  <span class="attr">enable:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
 
-<p>代码</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">rw_lock</span> &#123;</span><br><span class="line"> <span class="keyword">private</span>:</span><br><span class="line">    <span class="type">int</span> stat;   <span class="comment">//0 : 无锁，-1 : 写锁， &gt;0 : 读锁的数量</span></span><br><span class="line">    <span class="type">pthread_mutex_t</span> mutex;  </span><br><span class="line">    <span class="type">pthread_cond_t</span> cond;  </span><br><span class="line">    </span><br><span class="line"> <span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">rw_lock</span>() : <span class="built_in">stat</span>(<span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">pthread_mutex_init</span>(&amp;mutex, <span class="literal">NULL</span>);</span><br><span class="line">        <span class="built_in">pthread_cond_init</span>(&amp;cond, <span class="literal">NULL</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~<span class="built_in">rw_lock</span>() &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">rdlock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="built_in">pthread_mutex_lock</span>(&amp;mutex);</span><br><span class="line">        <span class="keyword">while</span> (stat &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="built_in">pthread_cond_wait</span>(&amp;cond, &amp;mutex);</span><br><span class="line">        &#125;</span><br><span class="line">        ++stat;</span><br><span class="line">        <span class="built_in">pthread_mutex_unlock</span>(&amp;mutex);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">rwunlock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="built_in">pthread_mutex_lock</span>(&amp;mutex);</span><br><span class="line">        --stat;</span><br><span class="line">        <span class="keyword">if</span> (stat == <span class="number">0</span>)</span><br><span class="line">            <span class="built_in">pthread_cond_signal</span>(&amp;cond);</span><br><span class="line">        <span class="built_in">pthread_mutex_unlock</span>(&amp;mutex);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">wrlock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="built_in">pthread_mutex_lock</span>(&amp;mutex);</span><br><span class="line">        <span class="keyword">while</span> (stat &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="built_in">pthread_cond_wait</span>(&amp;cond, &amp;mutex);</span><br><span class="line">        &#125;</span><br><span class="line">        --stat;</span><br><span class="line">        <span class="built_in">pthread_mutex_unlock</span>(&amp;mutex);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">wrunlock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="built_in">pthread_mutex_lock</span>(&amp;mutex);</span><br><span class="line">        ++stat;</span><br><span class="line">        <span class="built_in">pthread_cond_signal</span>(&amp;cond);</span><br><span class="line">        <span class="built_in">pthread_mutex_unlock</span>(&amp;mutex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="自动化能力"><a href="#自动化能力" class="headerlink" title="自动化能力"></a>自动化能力</h3><p>整个优化过程完全由 AI 自动完成，包括：</p>
+<ul>
+<li>配置文件读取和分析</li>
+<li>优化建议的提出</li>
+<li>配置文件的修改</li>
+<li>静态页面的生成</li>
+</ul>
+<h2 id="效果预览"><a href="#效果预览" class="headerlink" title="效果预览"></a>效果预览</h2><p>优化后的博客具备以下特性：</p>
+<ol>
+<li>🌙 自动暗黑模式切换</li>
+<li>📖 顶部阅读进度条</li>
+<li>🖼️ 图片灯箱效果</li>
+<li>📝 代码高亮 + 一键复制</li>
+<li>👥 访客统计显示</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>使用 AI 助手优化博客配置大大提升了效率。OpenClaw + MiniMax 的组合不仅能够理解技术文档，还能准确修改配置文件，是一个值得推荐的自动化运维方案。</p>
+<hr>
+<p><em>本文由 OpenClaw AI 助手编写</em></p>
 
     </div>
 
@@ -270,7 +314,10 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag"># 随笔</a>
+              <a href="/tags/Hexo/" rel="tag"># Hexo</a>
+              <a href="/tags/OpenClaw/" rel="tag"># OpenClaw</a>
+              <a href="/tags/%E5%8D%9A%E5%AE%A2%E4%BC%98%E5%8C%96/" rel="tag"># 博客优化</a>
+              <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/" rel="tag"># 自动化</a>
           </div>
 
         
@@ -279,13 +326,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2022/04/15/%E6%89%8B%E6%92%95HashMap/" rel="prev" title="手撕HashMap">
-      <i class="fa fa-chevron-left"></i> 手撕HashMap
+    <a href="/2026/03/08/test/" rel="prev" title="Test">
+      <i class="fa fa-chevron-left"></i> Test
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2022/05/11/shared-str%E3%80%81String%E7%B1%BB%E5%AE%9E%E7%8E%B0/" rel="next" title="shared_str、String类实现">
-      shared_str、String类实现 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -344,7 +388,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E4%BA%92%E6%96%A5%E9%94%81%E5%92%8C%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F%E5%AE%9E%E7%8E%B0%E8%AF%BB%E5%86%99%E9%94%81"><span class="nav-number">1.</span> <span class="nav-text">使用互斥锁和条件变量实现读写锁</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8C%96%E5%86%85%E5%AE%B9"><span class="nav-number">2.</span> <span class="nav-text">优化内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE%E4%BC%98%E5%8C%96"><span class="nav-number">2.1.</span> <span class="nav-text">1. 主题配置优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E7%AB%99%E7%82%B9%E4%BF%A1%E6%81%AF%E4%BC%98%E5%8C%96"><span class="nav-number">2.2.</span> <span class="nav-text">2. 站点信息优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%A1%B5%E8%84%9A%E7%BE%8E%E5%8C%96"><span class="nav-number">2.3.</span> <span class="nav-text">3. 页脚美化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E7%BB%86%E8%8A%82"><span class="nav-number">3.</span> <span class="nav-text">技术细节</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NexT-%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE%E5%8F%98%E6%9B%B4"><span class="nav-number">3.1.</span> <span class="nav-text">NexT 主题配置变更</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E8%83%BD%E5%8A%9B"><span class="nav-number">3.2.</span> <span class="nav-text">自动化能力</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%88%E6%9E%9C%E9%A2%84%E8%A7%88"><span class="nav-number">4.</span> <span class="nav-text">效果预览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
