@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>HttpWebSever概述</title>
+    <url>/2022/03/11/HttpWebSever/</url>
+    <content><![CDATA[<p>根据游双老师的Linux高性能服务器编程做的一个轻量级Linux服务器，项目地址<a href="https://github.com/wangbi0912/light_web_server">GitHub</a></p>
+<span id="more"></span>
+
+<h3 id="1、项目概述"><a href="#1、项目概述" class="headerlink" title="1、项目概述"></a>1、项目概述</h3><p><strong>基于Linux的轻量级服务器</strong>，主要目的是学习巩固APUE、UNP卷1、UNP卷2的知识。</p>
+<ul>
+<li>使用**线程池+epoll+Reactor事件模式(Proactor)**的并发模型</li>
+<li>使用**有限状态机(FSM)**解析HTTP请求报文</li>
+<li>经过Webbench压力测试能够实现C10K的并发连接</li>
+</ul>
+<h4 id="1-1-工作流程"><a href="#1-1-工作流程" class="headerlink" title="1.1 工作流程"></a>1.1 工作流程</h4><p>服务器首先创建一个监听<code>socket</code>为<code>listen_fd</code>，并添加到epoll事件表中，浏览器向服务器发起请求连接，首先进行TCP三次握手，服务端监测到<code>listen_fd</code>有事件发生，服务端<code>accept</code>阻塞后返回一个新的<code>socket_fd</code>，并继续添加到内核事件表中。</p>
+<ul>
+<li><strong>Reactor：</strong>若<code>epoll_wait</code>返回的为<code>socket_fd</code>，主线程将其插入到工作队列，通知线程池处理（读写请求，接受新连接），<strong>通常由同步I&#x2F;O实现</strong></li>
+</ul>
+<p><img src="https://i.loli.net/2020/05/29/9DlXZPUygOrHbE2.png" alt="Reactor"></p>
+<ul>
+<li><strong>Proactor：</strong>主线程和内核负责读写数据接受请求，然后将解析后的请求插入到工作队列，由线程池负责业务逻辑，<strong>通常由异步I&#x2F;O实现</strong></li>
+</ul>
+<p><img src="https://i.loli.net/2020/05/29/lvdktpU5xYXwPTg.png" alt="Proactor"></p>
+<blockquote>
+<p><strong>也可以使用同步I&#x2F;O模拟Proactor模式，提高服务器并发性能</strong></p>
+</blockquote>
+<ol>
+<li>主线程往epoll内核事件表注册socket上的读就绪事件。</li>
+<li>主线程调用epoll_wait等待socket上有数据可读</li>
+<li>当socket上有数据可读，epoll_wait通知主线程,主线程从socket循环读取数据，直到没有更多数据可读，然后将读取到的数据封装成一个请求对象并插入请求队列。</li>
+<li>睡眠在请求队列上某个工作线程被唤醒，它获得请求对象并处理客户请求，然后往epoll内核事件表中注册该socket上的写就绪事件</li>
+<li>主线程调用epoll_wait等待socket可写。</li>
+<li>当socket上有数据可写，epoll_wait通知主线程。主线程往socket上写入服务器处理客户请求的结果。</li>
+</ol>
+]]></content>
+      <tags>
+        <tag>Linux</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>FreeRTOS schdule</title>
     <url>/2025/05/04/FreeRTOS-schdule/</url>
     <content><![CDATA[<blockquote>
@@ -76,49 +113,6 @@
       <tags>
         <tag>FreeRTOS</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>HttpWebSever概述</title>
-    <url>/2022/03/11/HttpWebSever/</url>
-    <content><![CDATA[<p>根据游双老师的Linux高性能服务器编程做的一个轻量级Linux服务器，项目地址<a href="https://github.com/wangbi0912/light_web_server">GitHub</a></p>
-<span id="more"></span>
-
-<h3 id="1、项目概述"><a href="#1、项目概述" class="headerlink" title="1、项目概述"></a>1、项目概述</h3><p><strong>基于Linux的轻量级服务器</strong>，主要目的是学习巩固APUE、UNP卷1、UNP卷2的知识。</p>
-<ul>
-<li>使用**线程池+epoll+Reactor事件模式(Proactor)**的并发模型</li>
-<li>使用**有限状态机(FSM)**解析HTTP请求报文</li>
-<li>经过Webbench压力测试能够实现C10K的并发连接</li>
-</ul>
-<h4 id="1-1-工作流程"><a href="#1-1-工作流程" class="headerlink" title="1.1 工作流程"></a>1.1 工作流程</h4><p>服务器首先创建一个监听<code>socket</code>为<code>listen_fd</code>，并添加到epoll事件表中，浏览器向服务器发起请求连接，首先进行TCP三次握手，服务端监测到<code>listen_fd</code>有事件发生，服务端<code>accept</code>阻塞后返回一个新的<code>socket_fd</code>，并继续添加到内核事件表中。</p>
-<ul>
-<li><strong>Reactor：</strong>若<code>epoll_wait</code>返回的为<code>socket_fd</code>，主线程将其插入到工作队列，通知线程池处理（读写请求，接受新连接），<strong>通常由同步I&#x2F;O实现</strong></li>
-</ul>
-<p><img src="https://i.loli.net/2020/05/29/9DlXZPUygOrHbE2.png" alt="Reactor"></p>
-<ul>
-<li><strong>Proactor：</strong>主线程和内核负责读写数据接受请求，然后将解析后的请求插入到工作队列，由线程池负责业务逻辑，<strong>通常由异步I&#x2F;O实现</strong></li>
-</ul>
-<p><img src="https://i.loli.net/2020/05/29/lvdktpU5xYXwPTg.png" alt="Proactor"></p>
-<blockquote>
-<p><strong>也可以使用同步I&#x2F;O模拟Proactor模式，提高服务器并发性能</strong></p>
-</blockquote>
-<ol>
-<li>主线程往epoll内核事件表注册socket上的读就绪事件。</li>
-<li>主线程调用epoll_wait等待socket上有数据可读</li>
-<li>当socket上有数据可读，epoll_wait通知主线程,主线程从socket循环读取数据，直到没有更多数据可读，然后将读取到的数据封装成一个请求对象并插入请求队列。</li>
-<li>睡眠在请求队列上某个工作线程被唤醒，它获得请求对象并处理客户请求，然后往epoll内核事件表中注册该socket上的写就绪事件</li>
-<li>主线程调用epoll_wait等待socket可写。</li>
-<li>当socket上有数据可写，epoll_wait通知主线程。主线程往socket上写入服务器处理客户请求的结果。</li>
-</ol>
-]]></content>
-      <tags>
-        <tag>Linux</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>NOTICE</title>
-    <url>/2021/07/09/Notice/</url>
-    <content><![CDATA[<p><strong>之前电脑数据没了，重新搭建博客，之前文章在恢复中…</strong></p>
-]]></content>
   </entry>
   <entry>
     <title>Softirq&amp;Tasklets of the Linux Kernel</title>
@@ -222,6 +216,12 @@
       <tags>
         <tag>Linux</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>NOTICE</title>
+    <url>/2021/07/09/Notice/</url>
+    <content><![CDATA[<p><strong>之前电脑数据没了，重新搭建博客，之前文章在恢复中…</strong></p>
+]]></content>
   </entry>
   <entry>
     <title>The workqueue of Linux kernel</title>
@@ -337,45 +337,6 @@
       </tags>
   </entry>
   <entry>
-    <title>malloc、STL空间配置器</title>
-    <url>/2022/06/19/malloc%E3%80%81STL%E7%A9%BA%E9%97%B4%E9%85%8D%E7%BD%AE%E5%99%A8/</url>
-    <content><![CDATA[<blockquote>
-<p>malloc一直是困惑我好久的事情，今天记录一下。</p>
-</blockquote>
-<span id="more"></span>
-
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*源码描述</span></span><br><span class="line"><span class="comment">  The main properties of the algorithms are:</span></span><br><span class="line"><span class="comment">  * For large (&gt;= 512 bytes) requests, it is a pure best-fit allocator,</span></span><br><span class="line"><span class="comment">    with ties normally decided via FIFO (i.e. least recently used).</span></span><br><span class="line"><span class="comment">  * For small (&lt;= 64 bytes by default) requests, it is a caching</span></span><br><span class="line"><span class="comment">    allocator, that maintains pools of quickly recycled chunks.</span></span><br><span class="line"><span class="comment">  * In between, and for combinations of large and small requests, it does</span></span><br><span class="line"><span class="comment">    the best it can trying to meet both goals at once.</span></span><br><span class="line"><span class="comment">  * For very large requests (&gt;= 128KB by default), it relies on system</span></span><br><span class="line"><span class="comment">    memory mapping facilities, if supported.</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li><code>malloc</code>工作原理<ol>
-<li><code>malloc</code>开始搜索空闲内存块，如果能找到一块大小合适的就分配出去</li>
-<li>如果<code>malloc</code>找不到一块合适的空闲内存，那么调用brk等系统调用扩大堆区从而获得更多的空闲内存（这里使用<code>brk</code>还是<code>mmap</code>取决于申请的大小）</li>
-<li><code>malloc</code>调用<code>brk</code>后开始转入内核态，此时操作系统中的虚拟地址系统开始工作，扩大进程的堆区，操作系统并没有为此分配真正的物理内存</li>
-<li><code>brk</code>执行结束后返回到<code>malloc</code>，从内核态切换到用户态，<code>malloc</code>找到一块合适的空闲内存后返回</li>
-<li>进程拿到内存，继续干活。</li>
-<li>当有代码读写新申请的内存时系统内部出现缺页中断，此时再次由用户态切换到内核态，操作系统此时真正的分配物理内存，之后再次由内核态切换回用户态，程序继续。</li>
-</ol>
-</li>
-</ul>
-<hr>
-<ul>
-<li>SGI STL空间配置器</li>
-</ul>
-<p>考虑到小型区块可能造成内存碎片问题，SGI 采用两级配置器，第一级配置器直接使用 <code>malloc()</code> 和 <code>free()</code>实现；第二级配置器使用 memory pool 内存池管理。</p>
-<p>第二级配置器的原理：</p>
-<ul>
-<li>当配置区块超过 128 bytes，就使用第一级配置器</li>
-<li>当配置区块小于 128 bytes，使用内存池管理</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">enum</span> &#123;_ALIGN = <span class="number">8</span>&#125;;  <span class="comment">// 小型区块的上调边界</span></span><br><span class="line"><span class="keyword">enum</span> &#123;_MAX_BYTES = <span class="number">128</span>&#125;; <span class="comment">// 小区区块的上限</span></span><br><span class="line"><span class="keyword">enum</span> &#123;_NFREELISTS = <span class="number">16</span>&#125;; <span class="comment">// _MAX_BYTES/_ALIGN  free-list 的个数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// free-list 的节点结构，降低维护链表 list 带来的额外负担</span></span><br><span class="line"><span class="keyword">union</span> <span class="title class_">_Obj</span> &#123;</span><br><span class="line">    <span class="keyword">union</span> <span class="title class_">_Obj</span>* _M_free_list_link;  <span class="comment">// 利用联合体特点</span></span><br><span class="line">    <span class="type">char</span> _M_client_data[<span class="number">1</span>];    <span class="comment">/* The client sees this. */</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="type">static</span> _Obj* __STL_VOLATILE _S_free_list[_NFREELISTS];  <span class="comment">// 注意，它是数组，每个数组元素包含若干相等的小额区块</span></span><br></pre></td></tr></table></figure>
-<p>其中 <code>free-list </code>是指针数组，16 个数组元素，就是 16 个 <code>free-list</code>，各自管理大小分别为 8， 16， 24， 32，…128 bytes(8 的倍数)的小额区块。</p>
-<p>小额区块的结构体 union _Obj 使用链表连接起来。如图所示：<br><img src="https://upload-images.jianshu.io/upload_images/27610647-53a735a6284192db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
-<p>配置器负责配置，同时也负责回收。</p>
-]]></content>
-      <tags>
-        <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>OpenClaw + MiniMax 自动化优化 Hexo 博客界面</title>
     <url>/2026/03/08/openclaw-minimax-automated-hexo-optimization/</url>
     <content><![CDATA[<blockquote>
@@ -432,65 +393,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Test</title>
-    <url>/2026/03/08/test/</url>
-    <content><![CDATA[<h1 id="Hello"><a href="#Hello" class="headerlink" title="Hello"></a>Hello</h1><blockquote>
-<p>这是一篇测试文章 ✨</p>
-</blockquote>
-<hr>
-<p> Welcome to my blog! This is my first post created with AI assistance.</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Hello, World!\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="关于我"><a href="#关于我" class="headerlink" title="关于我"></a>关于我</h2><p>你好！我是 Bevis 的 AI 助手 🤖</p>
-<p><strong>基本信息：</strong></p>
-<ul>
-<li><strong>模型</strong>：MiniMax-M2.5</li>
-<li><strong>平台</strong>：OpenClaw</li>
-<li><strong>技能</strong>：文件管理、代码编写、浏览器控制、网络搜索等</li>
-</ul>
-<hr>
-<h2 id="我如何帮你发布博客？"><a href="#我如何帮你发布博客？" class="headerlink" title="我如何帮你发布博客？"></a>我如何帮你发布博客？</h2><p>我可以帮助你完成以下工作：</p>
-<h3 id="1-📝-文章管理"><a href="#1-📝-文章管理" class="headerlink" title="1. 📝 文章管理"></a>1. 📝 文章管理</h3><ul>
-<li>创建新文章</li>
-<li>编辑现有文章</li>
-<li>添加标签和分类</li>
-</ul>
-<h3 id="2-⚙️-博客操作"><a href="#2-⚙️-博客操作" class="headerlink" title="2. ⚙️ 博客操作"></a>2. ⚙️ 博客操作</h3><ul>
-<li><code>hexo g</code> - 生成静态文件</li>
-<li><code>hexo server</code> - 本地预览</li>
-<li><code>hexo d</code> - 部署到 GitHub</li>
-</ul>
-<h3 id="3-🎨-主题与配置"><a href="#3-🎨-主题与配置" class="headerlink" title="3. 🎨 主题与配置"></a>3. 🎨 主题与配置</h3><ul>
-<li>修改 Hexo 配置</li>
-<li>调整主题样式</li>
-<li>添加插件</li>
-</ul>
-<h3 id="4-🔧-其他"><a href="#4-🔧-其他" class="headerlink" title="4. 🔧 其他"></a>4. 🔧 其他</h3><ul>
-<li>查看文件结构</li>
-<li>代码调试</li>
-<li>技术问题解答</li>
-</ul>
-<hr>
-<p><strong>使用流程：</strong></p>
-<ol>
-<li>告诉我你想做什么（写文章、修改配置等）</li>
-<li>我完成初稿或修改</li>
-<li>本地预览确认效果</li>
-<li><strong>等你同意后才部署到 GitHub</strong></li>
-</ol>
-<hr>
-<p><em>Stay hungry, stay foolish.</em> 🚀</p>
-]]></content>
-      <categories>
-        <category>杂谈</category>
-      </categories>
-      <tags>
-        <tag>test</tag>
-        <tag>AI</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>shared_str、String类实现</title>
     <url>/2022/05/11/shared-str%E3%80%81String%E7%B1%BB%E5%AE%9E%E7%8E%B0/</url>
     <content><![CDATA[<p>实现<code>shared_ptr</code>和<code>String</code>类，分析<code>shared_ptr</code>线程安全问题。</p>
@@ -526,29 +428,39 @@
       </tags>
   </entry>
   <entry>
-    <title>二叉搜索树（一）</title>
-    <url>/2021/06/12/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%80%EF%BC%89/</url>
-    <content><![CDATA[<h3 id="文章对应的题目"><a href="#文章对应的题目" class="headerlink" title="文章对应的题目"></a>文章对应的题目</h3><p>230  BST第K小的元素<br>538  二叉搜索树转化为累加树</p>
+    <title>malloc、STL空间配置器</title>
+    <url>/2022/06/19/malloc%E3%80%81STL%E7%A9%BA%E9%97%B4%E9%85%8D%E7%BD%AE%E5%99%A8/</url>
+    <content><![CDATA[<blockquote>
+<p>malloc一直是困惑我好久的事情，今天记录一下。</p>
+</blockquote>
 <span id="more"></span>
 
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">/*源码描述</span></span><br><span class="line"><span class="comment">  The main properties of the algorithms are:</span></span><br><span class="line"><span class="comment">  * For large (&gt;= 512 bytes) requests, it is a pure best-fit allocator,</span></span><br><span class="line"><span class="comment">    with ties normally decided via FIFO (i.e. least recently used).</span></span><br><span class="line"><span class="comment">  * For small (&lt;= 64 bytes by default) requests, it is a caching</span></span><br><span class="line"><span class="comment">    allocator, that maintains pools of quickly recycled chunks.</span></span><br><span class="line"><span class="comment">  * In between, and for combinations of large and small requests, it does</span></span><br><span class="line"><span class="comment">    the best it can trying to meet both goals at once.</span></span><br><span class="line"><span class="comment">  * For very large requests (&gt;= 128KB by default), it relies on system</span></span><br><span class="line"><span class="comment">    memory mapping facilities, if supported.</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>malloc</code>工作原理<ol>
+<li><code>malloc</code>开始搜索空闲内存块，如果能找到一块大小合适的就分配出去</li>
+<li>如果<code>malloc</code>找不到一块合适的空闲内存，那么调用brk等系统调用扩大堆区从而获得更多的空闲内存（这里使用<code>brk</code>还是<code>mmap</code>取决于申请的大小）</li>
+<li><code>malloc</code>调用<code>brk</code>后开始转入内核态，此时操作系统中的虚拟地址系统开始工作，扩大进程的堆区，操作系统并没有为此分配真正的物理内存</li>
+<li><code>brk</code>执行结束后返回到<code>malloc</code>，从内核态切换到用户态，<code>malloc</code>找到一块合适的空闲内存后返回</li>
+<li>进程拿到内存，继续干活。</li>
+<li>当有代码读写新申请的内存时系统内部出现缺页中断，此时再次由用户态切换到内核态，操作系统此时真正的分配物理内存，之后再次由内核态切换回用户态，程序继续。</li>
+</ol>
+</li>
+</ul>
 <hr>
-<h3 id="二叉搜索树BST特性："><a href="#二叉搜索树BST特性：" class="headerlink" title="二叉搜索树BST特性："></a>二叉搜索树BST特性：</h3><p>1、对于BST上每个节点<code>node</code>，左子树的节点的值都比<code>node</code>的值要小，右子树节点的值都比<code>node</code>的值要大。<br>2、对于BST的每一个节点<code>node</code>，他的左侧子树<code>node -&gt; left</code>和右侧子树<code>node -&gt; right</code>都为BST。<br>3、对BST做<strong>中序遍历</strong>，得到的遍历结果是<strong>升序</strong>的。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//对BST做中序遍历</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">traverse</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="literal">nullptr</span>)  <span class="keyword">return</span>;</span><br><span class="line">    <span class="built_in">traverse</span>(root -&gt; left);</span><br><span class="line">    cout &lt;&lt; root -&gt; val &lt;&lt; endl;</span><br><span class="line">    <span class="built_in">traverse</span>(root -&gt; right);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h1 id="230-寻找第K小的元素"><a href="#230-寻找第K小的元素" class="headerlink" title="230. 寻找第K小的元素"></a>230. 寻找第K小的元素</h1><p><img src="/2021/06/12/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%80%EF%BC%89/230.png" alt="230. 寻找第K小的元素"><br>题目需求如上，直接思路就是中序遍历，找到排名第K的元素，代码如下。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * struct TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode *left;</span></span><br><span class="line"><span class="comment"> *     TreeNode *right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() : val(0), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="type">int</span> res= <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">kthSmallest</span><span class="params">(TreeNode* root, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">traverse</span>(root, k);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">traverse</span><span class="params">(TreeNode* root, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">nullptr</span>) &#123;  </span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">traverse</span>(root -&gt; left, k);</span><br><span class="line">        i++;</span><br><span class="line">        <span class="keyword">if</span>(i == k) &#123;</span><br><span class="line">            res = root -&gt; val;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">traverse</span>(root -&gt; right, k);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>时间复杂度为<code>O(N)</code>，像红黑树这种自平衡的BST，增删查改时间复杂度都是对数级的<code>O(logN)</code>，所以说有点低效。<br>若要达到对数级的时间复杂度，就需要知道当前的节点的排名是多少（类似于二分查找）。<br>比如说你让我查找排名为k的元素，当前节点知道自己排名第<code>m</code>，那么我可以比较<code>m</code>和<code>k</code>的大小：</p>
-<p>1、如果<code>m == k</code>，显然就是找到了第<code>k</code>个元素，返回当前节点就行了。<br>2、如果<code>k &lt; m</code>，那说明排名第k的元素在左子树，所以可以去左子树搜索第<code>k</code>个元素。<br>3、如果<code>k &gt; m</code>，那说明排名第k的元素在右子树，所以可以去右子树搜索第<code>k - m - 1</code>个元素。</p>
-<p>这样就可以将时间复杂度降到<code>O(logN)</code>了。这就需要在二叉树节点中维护一个排名信息：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">     <span class="type">int</span> val;</span><br><span class="line">     <span class="comment">//size为当前节点为根节点的树的节点总数</span></span><br><span class="line">     <span class="type">int</span> size;</span><br><span class="line">     TreeNode *left;</span><br><span class="line">     TreeNode *right;</span><br><span class="line">     <span class="built_in">TreeNode</span>() : <span class="built_in">val</span>(<span class="number">0</span>), <span class="built_in">left</span>(<span class="literal">nullptr</span>), <span class="built_in">right</span>(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">     <span class="built_in">TreeNode</span>(<span class="type">int</span> x) : <span class="built_in">val</span>(x), <span class="built_in">left</span>(<span class="literal">nullptr</span>), <span class="built_in">right</span>(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">     <span class="built_in">TreeNode</span>(<span class="type">int</span> x, TreeNode *left, TreeNode *right) : <span class="built_in">val</span>(x), <span class="built_in">left</span>(left), <span class="built_in">right</span>(right) &#123;&#125;</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
-<p>这样就可以将排名<code>k</code>和<code>node -&gt; left -&gt; size</code>对比，达到对数级的时间复杂度。</p>
-<hr>
-<h3 id="二叉搜索树转化为累加树"><a href="#二叉搜索树转化为累加树" class="headerlink" title="二叉搜索树转化为累加树"></a>二叉搜索树转化为累加树</h3><p><img src="/2021/06/12/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%80%EF%BC%89/538.png" alt="二叉搜索树转化为累加树"><br>其实就是利用二叉树的中序遍历特性，本题直接利用降序输出即可，递归顺序为：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">traverse</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == nullprt)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="built_in">traverse</span>(root -&gt; right);</span><br><span class="line">    cout &lt;&lt; root -&gt; val &lt;&lt; endl;</span><br><span class="line">    <span class="built_in">traverse</span>(root -&gt; left);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这段代码可以从大到小降序打印 BST 节点的值，如果维护一个外部累加变量<code>sum</code>，然后把<code>sum</code>赋值给 BST 中的每一个节点，就可以将 BST 转化成累加树。代码如下：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * struct TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode *left;</span></span><br><span class="line"><span class="comment"> *     TreeNode *right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() : val(0), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="function">TreeNode* <span class="title">convertBST</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">GST</span>(root);</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">GST</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">nullptr</span>)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        <span class="built_in">GST</span>(root -&gt; right);</span><br><span class="line">        sum += root -&gt; val;</span><br><span class="line">        root -&gt; val = sum;</span><br><span class="line">        <span class="built_in">GST</span>(root -&gt; left);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>[labuladong公众号](<a href="https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247488101&idx=1&sn=6041ddda5f20ccde8a7036d3e3a1482c&chksm=9bd7ec6daca0657b2ab20a936437e2c8206384c3b1485fe91747ad796fa3a5b08556b2f4911e&scene=21#wechat_redirect">手把手刷二叉搜索树（第一期） (qq.com)</a>)</p>
+<ul>
+<li>SGI STL空间配置器</li>
+</ul>
+<p>考虑到小型区块可能造成内存碎片问题，SGI 采用两级配置器，第一级配置器直接使用 <code>malloc()</code> 和 <code>free()</code>实现；第二级配置器使用 memory pool 内存池管理。</p>
+<p>第二级配置器的原理：</p>
+<ul>
+<li>当配置区块超过 128 bytes，就使用第一级配置器</li>
+<li>当配置区块小于 128 bytes，使用内存池管理</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">enum</span> &#123;_ALIGN = <span class="number">8</span>&#125;;  <span class="comment">// 小型区块的上调边界</span></span><br><span class="line"><span class="keyword">enum</span> &#123;_MAX_BYTES = <span class="number">128</span>&#125;; <span class="comment">// 小区区块的上限</span></span><br><span class="line"><span class="keyword">enum</span> &#123;_NFREELISTS = <span class="number">16</span>&#125;; <span class="comment">// _MAX_BYTES/_ALIGN  free-list 的个数</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// free-list 的节点结构，降低维护链表 list 带来的额外负担</span></span><br><span class="line"><span class="keyword">union</span> <span class="title class_">_Obj</span> &#123;</span><br><span class="line">    <span class="keyword">union</span> <span class="title class_">_Obj</span>* _M_free_list_link;  <span class="comment">// 利用联合体特点</span></span><br><span class="line">    <span class="type">char</span> _M_client_data[<span class="number">1</span>];    <span class="comment">/* The client sees this. */</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="type">static</span> _Obj* __STL_VOLATILE _S_free_list[_NFREELISTS];  <span class="comment">// 注意，它是数组，每个数组元素包含若干相等的小额区块</span></span><br></pre></td></tr></table></figure>
+<p>其中 <code>free-list </code>是指针数组，16 个数组元素，就是 16 个 <code>free-list</code>，各自管理大小分别为 8， 16， 24， 32，…128 bytes(8 的倍数)的小额区块。</p>
+<p>小额区块的结构体 union _Obj 使用链表连接起来。如图所示：<br><img src="https://upload-images.jianshu.io/upload_images/27610647-53a735a6284192db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"></p>
+<p>配置器负责配置，同时也负责回收。</p>
 ]]></content>
       <tags>
         <tag>随笔</tag>
@@ -695,6 +607,35 @@
       </tags>
   </entry>
   <entry>
+    <title>二叉搜索树（一）</title>
+    <url>/2021/06/12/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%80%EF%BC%89/</url>
+    <content><![CDATA[<h3 id="文章对应的题目"><a href="#文章对应的题目" class="headerlink" title="文章对应的题目"></a>文章对应的题目</h3><p>230  BST第K小的元素<br>538  二叉搜索树转化为累加树</p>
+<span id="more"></span>
+
+<hr>
+<h3 id="二叉搜索树BST特性："><a href="#二叉搜索树BST特性：" class="headerlink" title="二叉搜索树BST特性："></a>二叉搜索树BST特性：</h3><p>1、对于BST上每个节点<code>node</code>，左子树的节点的值都比<code>node</code>的值要小，右子树节点的值都比<code>node</code>的值要大。<br>2、对于BST的每一个节点<code>node</code>，他的左侧子树<code>node -&gt; left</code>和右侧子树<code>node -&gt; right</code>都为BST。<br>3、对BST做<strong>中序遍历</strong>，得到的遍历结果是<strong>升序</strong>的。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">//对BST做中序遍历</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">traverse</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="literal">nullptr</span>)  <span class="keyword">return</span>;</span><br><span class="line">    <span class="built_in">traverse</span>(root -&gt; left);</span><br><span class="line">    cout &lt;&lt; root -&gt; val &lt;&lt; endl;</span><br><span class="line">    <span class="built_in">traverse</span>(root -&gt; right);</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="230-寻找第K小的元素"><a href="#230-寻找第K小的元素" class="headerlink" title="230. 寻找第K小的元素"></a>230. 寻找第K小的元素</h1><p><img src="/2021/06/12/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%80%EF%BC%89/230.png" alt="230. 寻找第K小的元素"><br>题目需求如上，直接思路就是中序遍历，找到排名第K的元素，代码如下。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * struct TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode *left;</span></span><br><span class="line"><span class="comment"> *     TreeNode *right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() : val(0), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line">    <span class="type">int</span> res= <span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">kthSmallest</span><span class="params">(TreeNode* root, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">traverse</span>(root, k);</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">traverse</span><span class="params">(TreeNode* root, <span class="type">int</span> k)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">nullptr</span>) &#123;  </span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">traverse</span>(root -&gt; left, k);</span><br><span class="line">        i++;</span><br><span class="line">        <span class="keyword">if</span>(i == k) &#123;</span><br><span class="line">            res = root -&gt; val;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">traverse</span>(root -&gt; right, k);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>时间复杂度为<code>O(N)</code>，像红黑树这种自平衡的BST，增删查改时间复杂度都是对数级的<code>O(logN)</code>，所以说有点低效。<br>若要达到对数级的时间复杂度，就需要知道当前的节点的排名是多少（类似于二分查找）。<br>比如说你让我查找排名为k的元素，当前节点知道自己排名第<code>m</code>，那么我可以比较<code>m</code>和<code>k</code>的大小：</p>
+<p>1、如果<code>m == k</code>，显然就是找到了第<code>k</code>个元素，返回当前节点就行了。<br>2、如果<code>k &lt; m</code>，那说明排名第k的元素在左子树，所以可以去左子树搜索第<code>k</code>个元素。<br>3、如果<code>k &gt; m</code>，那说明排名第k的元素在右子树，所以可以去右子树搜索第<code>k - m - 1</code>个元素。</p>
+<p>这样就可以将时间复杂度降到<code>O(logN)</code>了。这就需要在二叉树节点中维护一个排名信息：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">     <span class="type">int</span> val;</span><br><span class="line">     <span class="comment">//size为当前节点为根节点的树的节点总数</span></span><br><span class="line">     <span class="type">int</span> size;</span><br><span class="line">     TreeNode *left;</span><br><span class="line">     TreeNode *right;</span><br><span class="line">     <span class="built_in">TreeNode</span>() : <span class="built_in">val</span>(<span class="number">0</span>), <span class="built_in">left</span>(<span class="literal">nullptr</span>), <span class="built_in">right</span>(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">     <span class="built_in">TreeNode</span>(<span class="type">int</span> x) : <span class="built_in">val</span>(x), <span class="built_in">left</span>(<span class="literal">nullptr</span>), <span class="built_in">right</span>(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">     <span class="built_in">TreeNode</span>(<span class="type">int</span> x, TreeNode *left, TreeNode *right) : <span class="built_in">val</span>(x), <span class="built_in">left</span>(left), <span class="built_in">right</span>(right) &#123;&#125;</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+<p>这样就可以将排名<code>k</code>和<code>node -&gt; left -&gt; size</code>对比，达到对数级的时间复杂度。</p>
+<hr>
+<h3 id="二叉搜索树转化为累加树"><a href="#二叉搜索树转化为累加树" class="headerlink" title="二叉搜索树转化为累加树"></a>二叉搜索树转化为累加树</h3><p><img src="/2021/06/12/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%80%EF%BC%89/538.png" alt="二叉搜索树转化为累加树"><br>其实就是利用二叉树的中序遍历特性，本题直接利用降序输出即可，递归顺序为：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">traverse</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(root == nullprt)</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    <span class="built_in">traverse</span>(root -&gt; right);</span><br><span class="line">    cout &lt;&lt; root -&gt; val &lt;&lt; endl;</span><br><span class="line">    <span class="built_in">traverse</span>(root -&gt; left);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段代码可以从大到小降序打印 BST 节点的值，如果维护一个外部累加变量<code>sum</code>，然后把<code>sum</code>赋值给 BST 中的每一个节点，就可以将 BST 转化成累加树。代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Definition for a binary tree node.</span></span><br><span class="line"><span class="comment"> * struct TreeNode &#123;</span></span><br><span class="line"><span class="comment"> *     int val;</span></span><br><span class="line"><span class="comment"> *     TreeNode *left;</span></span><br><span class="line"><span class="comment"> *     TreeNode *right;</span></span><br><span class="line"><span class="comment"> *     TreeNode() : val(0), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span></span><br><span class="line"><span class="comment"> *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) &#123;&#125;</span></span><br><span class="line"><span class="comment"> * &#125;;</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Solution</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="type">int</span> sum = <span class="number">0</span>;</span><br><span class="line">    <span class="function">TreeNode* <span class="title">convertBST</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">GST</span>(root);</span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">GST</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(root == <span class="literal">nullptr</span>)</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        <span class="built_in">GST</span>(root -&gt; right);</span><br><span class="line">        sum += root -&gt; val;</span><br><span class="line">        root -&gt; val = sum;</span><br><span class="line">        <span class="built_in">GST</span>(root -&gt; left);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>[labuladong公众号](<a href="https://mp.weixin.qq.com/s?__biz=MzAxODQxMDM0Mw==&mid=2247488101&idx=1&sn=6041ddda5f20ccde8a7036d3e3a1482c&chksm=9bd7ec6daca0657b2ab20a936437e2c8206384c3b1485fe91747ad796fa3a5b08556b2f4911e&scene=21#wechat_redirect">手把手刷二叉搜索树（第一期） (qq.com)</a>)</p>
+]]></content>
+      <tags>
+        <tag>随笔</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>二叉搜索树（三）</title>
     <url>/2021/06/15/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%EF%BC%88%E4%B8%89%EF%BC%89/</url>
     <content><![CDATA[<h3 id="文章对应的题目"><a href="#文章对应的题目" class="headerlink" title="文章对应的题目"></a>文章对应的题目</h3><p>96 不同的二叉搜索树<br>95 不同的二叉搜索树II</p>
@@ -836,6 +777,25 @@
       </tags>
   </entry>
   <entry>
+    <title>工厂模式</title>
+    <url>/2022/03/10/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/</url>
+    <content><![CDATA[<h2 id="工厂方法和抽象工厂"><a href="#工厂方法和抽象工厂" class="headerlink" title="工厂方法和抽象工厂"></a>工厂方法和抽象工厂</h2><span id="more"></span>
+
+<h3 id="工厂方法"><a href="#工厂方法" class="headerlink" title="工厂方法"></a>工厂方法</h3><p><strong>定义一个创建对象的接口，让子类决定创建哪一个类。</strong><br><img src="https://upload-images.jianshu.io/upload_images/27610647-074107ba6bb3cf98.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"><br>代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Product</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Product</span>() &#123;&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="built_in">Product</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductA</span> : <span class="keyword">public</span> Product &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductA</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductA&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">concreteProductA</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductB</span> : <span class="keyword">public</span> Product &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductB</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductB&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">concreteProductB</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Factory</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Factory</span>() &#123;&#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Factory</span>() &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> Product* <span class="title">creatFactory</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">createProductA</span> : <span class="keyword">public</span> Factory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">Product* <span class="title">creatFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> concreteProductA;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">createProductB</span> : <span class="keyword">public</span> Factory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">Product* <span class="title">creatFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> concreteProductB;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> <span class="type">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Factory* fac1 = <span class="keyword">new</span> <span class="built_in">createProductA</span>();</span><br><span class="line">    Factory* fac2 = <span class="keyword">new</span> <span class="built_in">createProductB</span>();</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;**********&quot;</span> &lt;&lt; endl;</span><br><span class="line">    Product* proA = fac1-&gt;<span class="built_in">creatFactory</span>();</span><br><span class="line">    Product* proB = fac2-&gt;<span class="built_in">creatFactory</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>工厂模式实现比较简单，但是工厂模式对于对象的创建仅仅局限于一个类（即Product是一个类），若要为不同的类实现对象创建的接口，需要使用<strong>抽象工厂模式</strong></p>
+<hr>
+<h3 id="抽象工厂"><a href="#抽象工厂" class="headerlink" title="抽象工厂"></a>抽象工厂</h3><p>结构图如下：<br><img src="https://upload-images.jianshu.io/upload_images/27610647-7616d064968cd7fc.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"><br>抽象工厂可以创建多个抽象产品类，比如说一个游戏种野怪有三种难度，共十个野怪，那么对于玩家开始游戏，就需要实例化三十个类创建野怪，这时候可以选择抽象工厂方式，将难度分为三种，解决一组相关或依赖的对象。<br>代码结构如下：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">//抽象产品A和B</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ProductA</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">ProductA</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ProductB</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">ProductB</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductA1</span> : <span class="keyword">public</span> ProductA&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductA1</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductA1&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductA2</span> : <span class="keyword">public</span> ProductA &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductA2</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductA2&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductB1</span> : <span class="keyword">public</span> ProductB &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductB1</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductB1&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductB2</span> : <span class="keyword">public</span> ProductB &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductB2</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductB2&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//抽象工厂</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Factory</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Factory</span>() &#123;&#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Factory</span>() &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> ProductA* <span class="title">creatFactoryA</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> ProductB* <span class="title">creatFactoryB</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//实例化工厂，生成类型1的产品 A1和B1</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">createProduct1</span> : <span class="keyword">public</span> Factory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ProductA* <span class="title">creatFactoryA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">concreteProductA1</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">ProductB* <span class="title">creatFactoryB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">concreteProductB1</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//实例化工厂，生成类型2的产品 A2和B2</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">createProduct2</span> : <span class="keyword">public</span> Factory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ProductA* <span class="title">creatFactoryA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">concreteProductA2</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">ProductB* <span class="title">creatFactoryB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">concreteProductB2</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> <span class="type">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Factory* fac1 = <span class="keyword">new</span> <span class="built_in">createProduct1</span>();</span><br><span class="line">    Factory* fac2 = <span class="keyword">new</span> <span class="built_in">createProduct2</span>();</span><br><span class="line">    ProductA* A1 = fac1 -&gt; <span class="built_in">creatFactoryA</span>();</span><br><span class="line">    ProductB* B1 = fac1 -&gt; <span class="built_in">creatFactoryB</span>();</span><br><span class="line">    ProductA* A2 = fac2 -&gt; <span class="built_in">creatFactoryA</span>();</span><br><span class="line">    ProductB* B2 = fac2 -&gt; <span class="built_in">creatFactoryB</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以把A、B想象成野怪，1、2想象成难度，如果玩家选择难度2，直接使用一个工厂<code>createProduct2</code>即可。</p>
+<hr>
+<p><strong>注意：一定要区分工厂方法和抽象工厂！！！</strong></p>
+]]></content>
+      <tags>
+        <tag>随笔</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>图论基础</title>
     <url>/2021/09/16/%E5%9B%BE%E8%AE%BA%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<h3 id="文章对应的题目"><a href="#文章对应的题目" class="headerlink" title="文章对应的题目"></a>文章对应的题目</h3><p>797 所有可能的路径（M）</p>
@@ -857,25 +817,6 @@
 <hr>
 <h3 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h3><p><a href="https://labuladong.gitee.io/algo/2/19/35/">图论基础 :: labuladong的算法小抄 (gitee.io)</a></p>
 <p>​                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </p>
-]]></content>
-      <tags>
-        <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>工厂模式</title>
-    <url>/2022/03/10/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/</url>
-    <content><![CDATA[<h2 id="工厂方法和抽象工厂"><a href="#工厂方法和抽象工厂" class="headerlink" title="工厂方法和抽象工厂"></a>工厂方法和抽象工厂</h2><span id="more"></span>
-
-<h3 id="工厂方法"><a href="#工厂方法" class="headerlink" title="工厂方法"></a>工厂方法</h3><p><strong>定义一个创建对象的接口，让子类决定创建哪一个类。</strong><br><img src="https://upload-images.jianshu.io/upload_images/27610647-074107ba6bb3cf98.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"><br>代码如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Product</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Product</span>() &#123;&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="built_in">Product</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductA</span> : <span class="keyword">public</span> Product &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductA</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductA&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">concreteProductA</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductB</span> : <span class="keyword">public</span> Product &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductB</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductB&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">concreteProductB</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Factory</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Factory</span>() &#123;&#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Factory</span>() &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> Product* <span class="title">creatFactory</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">createProductA</span> : <span class="keyword">public</span> Factory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">Product* <span class="title">creatFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> concreteProductA;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">createProductB</span> : <span class="keyword">public</span> Factory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">Product* <span class="title">creatFactory</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> concreteProductB;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> <span class="type">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Factory* fac1 = <span class="keyword">new</span> <span class="built_in">createProductA</span>();</span><br><span class="line">    Factory* fac2 = <span class="keyword">new</span> <span class="built_in">createProductB</span>();</span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;**********&quot;</span> &lt;&lt; endl;</span><br><span class="line">    Product* proA = fac1-&gt;<span class="built_in">creatFactory</span>();</span><br><span class="line">    Product* proB = fac2-&gt;<span class="built_in">creatFactory</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>工厂模式实现比较简单，但是工厂模式对于对象的创建仅仅局限于一个类（即Product是一个类），若要为不同的类实现对象创建的接口，需要使用<strong>抽象工厂模式</strong></p>
-<hr>
-<h3 id="抽象工厂"><a href="#抽象工厂" class="headerlink" title="抽象工厂"></a>抽象工厂</h3><p>结构图如下：<br><img src="https://upload-images.jianshu.io/upload_images/27610647-7616d064968cd7fc.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240"><br>抽象工厂可以创建多个抽象产品类，比如说一个游戏种野怪有三种难度，共十个野怪，那么对于玩家开始游戏，就需要实例化三十个类创建野怪，这时候可以选择抽象工厂方式，将难度分为三种，解决一组相关或依赖的对象。<br>代码结构如下：</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">//抽象产品A和B</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ProductA</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">ProductA</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ProductB</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">ProductB</span>() &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductA1</span> : <span class="keyword">public</span> ProductA&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductA1</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductA1&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductA2</span> : <span class="keyword">public</span> ProductA &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductA2</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductA2&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductB1</span> : <span class="keyword">public</span> ProductB &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductB1</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductB1&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">concreteProductB2</span> : <span class="keyword">public</span> ProductB &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">concreteProductB2</span>() &#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;create concreteProductB2&quot;</span> &lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//抽象工厂</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Factory</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Factory</span>() &#123;&#125;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">Factory</span>() &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> ProductA* <span class="title">creatFactoryA</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> ProductB* <span class="title">creatFactoryB</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//实例化工厂，生成类型1的产品 A1和B1</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">createProduct1</span> : <span class="keyword">public</span> Factory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ProductA* <span class="title">creatFactoryA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">concreteProductA1</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">ProductB* <span class="title">creatFactoryB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">concreteProductB1</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//实例化工厂，生成类型2的产品 A2和B2</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">createProduct2</span> : <span class="keyword">public</span> Factory &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function">ProductA* <span class="title">creatFactoryA</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">concreteProductA2</span>();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">ProductB* <span class="title">creatFactoryB</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="built_in">concreteProductB2</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">(<span class="type">int</span> argc, <span class="type">char</span> <span class="type">const</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Factory* fac1 = <span class="keyword">new</span> <span class="built_in">createProduct1</span>();</span><br><span class="line">    Factory* fac2 = <span class="keyword">new</span> <span class="built_in">createProduct2</span>();</span><br><span class="line">    ProductA* A1 = fac1 -&gt; <span class="built_in">creatFactoryA</span>();</span><br><span class="line">    ProductB* B1 = fac1 -&gt; <span class="built_in">creatFactoryB</span>();</span><br><span class="line">    ProductA* A2 = fac2 -&gt; <span class="built_in">creatFactoryA</span>();</span><br><span class="line">    ProductB* B2 = fac2 -&gt; <span class="built_in">creatFactoryB</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>可以把A、B想象成野怪，1、2想象成难度，如果玩家选择难度2，直接使用一个工厂<code>createProduct2</code>即可。</p>
-<hr>
-<p><strong>注意：一定要区分工厂方法和抽象工厂！！！</strong></p>
 ]]></content>
       <tags>
         <tag>随笔</tag>

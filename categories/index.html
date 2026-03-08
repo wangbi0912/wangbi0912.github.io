@@ -218,10 +218,10 @@
       <div class="post-body">
           <div class="category-all-page">
             <div class="category-all-title">
-              目前共计 2 个分类
+              目前共计 1 个分类
             </div>
             <div class="category-all">
-              <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/">工具教程</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E8%B0%88/">杂谈</a><span class="category-list-count">1</span></li></ul>
+              <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7%E6%95%99%E7%A8%8B/">工具教程</a><span class="category-list-count">1</span></li></ul>
             </div>
           </div>
         
@@ -291,7 +291,7 @@
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="wang bi"
-      src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bevis">
+      src="https://img.picui.cn/template/2025/01/15/6786a8a6d4c89.jpg">
   <p class="site-author-name" itemprop="name">wang bi</p>
   <div class="site-description" itemprop="description">技术笔记 | C/C++ | Linux | FreeRTOS</div>
 </div>
@@ -300,18 +300,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">1</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -454,7 +454,40 @@ setInterval("createtime()",250);
   
 
   
+<!-- 火影忍者启动页 -->
+<div id="splash-screen" style="
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://img.picui.cn/template/2025/01/15/6786a8a6d4c89.jpg') no-repeat center center;
+  background-size: cover;
+  z-index: 9999;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease;
+">
+  <div style="
+    text-align: center;
+    color: #fff;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+  ">
+    <h1 style="font-size: 48px; margin-bottom: 20px; letter-spacing: 5px;">点击进入博客</h1>
+    <p style="font-size: 18px; opacity: 0.8;">Click to Enter</p>
+  </div>
+</div>
 
+<script>
+document.getElementById('splash-screen').addEventListener('click', function() {
+  this.style.opacity = '0';
+  setTimeout(function() {
+    document.getElementById('splash-screen').style.display = 'none';
+  }, 800);
+});
+</script>
   
 </body>
 </html>

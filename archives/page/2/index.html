@@ -197,33 +197,13 @@
   <div class="post-block">
     <div class="posts-collapse">
       <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 24 篇日志。 继续努力。</span>
+        <span class="collection-header">嗯..! 目前共计 23 篇日志。 继续努力。</span>
       </div>
 
       
     <div class="collection-year">
       <span class="collection-header">2022</span>
     </div>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2022-04-06T20:22:14+08:00"
-              content="2022-04-06">
-          04-06
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2022/04/06/%E7%BC%93%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5-LRU%E3%80%81LFU/" itemprop="url">
-            <span itemprop="name">缓存淘汰策略-LRU、LFU</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
 
   <article itemscope itemtype="http://schema.org/Article">
     <header class="post-header">
@@ -408,6 +388,26 @@
     </header>
   </article>
 
+  <article itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <div class="post-meta">
+        <time itemprop="dateCreated"
+              datetime="2021-07-09T23:54:54+08:00"
+              content="2021-07-09">
+          07-09
+        </time>
+      </div>
+
+      <div class="post-title">
+          <a class="post-title-link" href="/2021/07/09/Notice/" itemprop="url">
+            <span itemprop="name">NOTICE</span>
+          </a>
+      </div>
+
+    </header>
+  </article>
+
 
     </div>
   </div>
@@ -476,7 +476,7 @@
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <img class="site-author-image" itemprop="image" alt="wang bi"
-      src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bevis">
+      src="https://img.picui.cn/template/2025/01/15/6786a8a6d4c89.jpg">
   <p class="site-author-name" itemprop="name">wang bi</p>
   <div class="site-description" itemprop="description">技术笔记 | C/C++ | Linux | FreeRTOS</div>
 </div>
@@ -485,18 +485,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">23</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">1</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -639,7 +639,40 @@ setInterval("createtime()",250);
   
 
   
+<!-- 火影忍者启动页 -->
+<div id="splash-screen" style="
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://img.picui.cn/template/2025/01/15/6786a8a6d4c89.jpg') no-repeat center center;
+  background-size: cover;
+  z-index: 9999;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease;
+">
+  <div style="
+    text-align: center;
+    color: #fff;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+  ">
+    <h1 style="font-size: 48px; margin-bottom: 20px; letter-spacing: 5px;">点击进入博客</h1>
+    <p style="font-size: 18px; opacity: 0.8;">Click to Enter</p>
+  </div>
+</div>
 
+<script>
+document.getElementById('splash-screen').addEventListener('click', function() {
+  this.style.opacity = '0';
+  setTimeout(function() {
+    document.getElementById('splash-screen').style.display = 'none';
+  }, 800);
+});
+</script>
   
 </body>
 </html>
