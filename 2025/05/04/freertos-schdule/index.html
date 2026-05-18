@@ -1,0 +1,313 @@
+<!doctype html><html lang=zh-CN><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><title>FreeRTOS schdule — Bevis Wang</title><meta name=description content="draft: false FreeRTOS schdule及系统节拍相关
+"><meta name=author content="Bevis Wang"><meta property="og:type" content="article"><meta property="og:title" content="FreeRTOS schdule"><meta property="og:description" content="draft: false FreeRTOS schdule及系统节拍相关
+"><meta property="og:url" content="https://wangbi0912.github.io/2025/05/04/freertos-schdule/"><meta property="og:site_name" content="Bevis Wang"><meta property="og:locale" content="zh-CN"><meta name=twitter:card content="summary"><meta name=twitter:title content="FreeRTOS schdule"><meta name=twitter:description content="draft: false FreeRTOS schdule及系统节拍相关
+"><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","headline":"FreeRTOS schdule","description":"draft: false FreeRTOS schdule及系统节拍相关\n","url":"https:\/\/wangbi0912.github.io\/2025\/05\/04\/freertos-schdule\/","author":{"@type":"Person","name":"Bevis Wang"},"datePublished":"2025-05-04","dateModified":"2025-05-04","wordCount":"4179"}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https:\/\/wangbi0912.github.io\/"},{"@type":"ListItem","position":2,"name":"FreeRTOS schdule","item":"https:\/\/wangbi0912.github.io\/2025\/05\/04\/freertos-schdule\/"}]}</script><link rel=icon type=image/svg+xml href=/favicon.svg><link rel=icon type=image/png href=/favicon.png><link rel=apple-touch-icon href=/apple-touch-icon.png><link rel=canonical href=https://wangbi0912.github.io/2025/05/04/freertos-schdule/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap"><style>:root{--color-bg:#FAF9F6;--color-text:#1A1A1A;--color-text-secondary:#6B6B6B;--color-accent:#D95D39;--color-accent-hover:#C04A2A;--color-border:#E5E5E5;--color-code-bg:#F3F3F3;--color-card-bg:#FFF;--color-overlay:rgba(250,249,246,0.85);--color-toc-active:#D95D39;--content-width:min(90vw,700px);--nav-height:60px;--toc-sidebar-w:240px;--font-serif:"Noto Serif SC","Playfair Display",Georgia,serif;--font-sans:"Noto Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;--font-mono:"JetBrains Mono","Fira Code","SF Mono",Consolas,monospace}:root.dark{--color-bg:#0F0F0F;--color-text:#EAEAEA;--color-text-secondary:#8A8A8A;--color-accent:#E89F80;--color-accent-hover:#F0BFA8;--color-border:#2A2A2A;--color-code-bg:#1A1A1A;--color-card-bg:#161616;--color-overlay:rgba(15,15,15,0.9);--color-toc-active:#E89F80}@media(prefers-color-scheme:dark){:root:not(.light){--color-bg:#0F0F0F;--color-text:#EAEAEA;--color-text-secondary:#8A8A8A;--color-accent:#E89F80;--color-accent-hover:#F0BFA8;--color-border:#2A2A2A;--color-code-bg:#1A1A1A;--color-card-bg:#161616;--color-overlay:rgba(15,15,15,0.9);--color-toc-active:#E89F80}}body{font-family:var(--font-sans);font-size:1.125rem;line-height:1.8;letter-spacing:.02em;color:var(--color-text);background:var(--color-bg);-webkit-font-smoothing:antialiased;margin:0;padding:0}.container{width:100%;max-width:var(--content-width);margin:0 auto;padding:0 1.5rem}</style><link rel=stylesheet href=/css/bundle.min.a51116c6b27a6b2ee5c994b1933c8f963a52b6e74565a475cf5fcf32d96c6009.css integrity="sha256-pREWxrJ6ay7lyZSxkzyPljpStudFZaR1z1/PMtlsYAk="></head><body><a href=#main-content class=sr-only style="position:absolute;top:0;left:0;z-index:999;padding:.5rem 1rem;background:var(--color-accent);color:#fff;border-radius:0 0 4px 0">Skip to main content</a><header class=nav id=nav><div class="container container--wide nav__inner"><a href=https://wangbi0912.github.io/ class="nav__brand no-underline">Bevis Wang
+</a><button class=menu-btn id=menu-btn aria-label=菜单 aria-expanded=false>
+&#9776;</button><nav><ul class=nav__menu id=nav-menu><li><a href=/ class=no-underline>首页</a></li><li><a href=/posts/ class=no-underline>文章</a></li><li><a href=/archives/ class=no-underline>归档</a></li><li><a href=/about/ class=no-underline>关于</a></li><li><a href=/tags/ class=no-underline>标签</a></li><li><a href=# id=search-trigger class=no-underline aria-label=搜索 title=搜索>&#x1F50D;</a></li><li><button class=theme-toggle id=theme-toggle aria-label=切换主题 title=切换主题>
+<span class=icon-sun aria-hidden=true>&#9728;</span>
+<span class=icon-moon aria-hidden=true>&#9789;</span></button></li></ul></nav></div></header><main id=main-content tabindex=-1><article><header class="post-header container"><nav aria-label=Breadcrumb style=font-size:var(--text-sm);color:var(--color-text-secondary);margin-bottom:var(--space-lg)><a href=https://wangbi0912.github.io/>首页</a>
+<span style="margin:0 .5rem">/</span>
+<a href=/posts/>Posts</a><span style="margin:0 .5rem">/</span>
+<span>FreeRTOS schdule</span></nav><h1 class=post-header__title>FreeRTOS schdule</h1><div class=post-header__meta><time datetime=2025-05-04>2025-05-04
+</time><span class=separator></span>
+<span>9 min read</span>
+<span class=separator></span>
+<span>4179 words</span>
+<a href=/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/ class=post-header__tag>嵌入式</a></div></header><div class="container content-grid content-grid--with-sidebar"><div class=post-content><h2 id=draft-false>draft: false</h2><blockquote><p>FreeRTOS schdule及系统节拍相关</p></blockquote><h2 id=1-bg>1 BG</h2><p>FreeRTOS默认使用systick作为系统节拍，一般设置为1ms一次，改系统节拍用于task调度等。在自己做的项目中，采用默认的systick作为FreeRTOS的系统节拍，且<strong>systick未配置为External Clock</strong>，仅能使用Processor Clock。</p><p>但是在多master的角度，cpu的main_clk和voltage调整是由一个特定的scp来做的，就会导致时钟切换和当前cpu收到notify是异步的。在两个节点之间，FreeRTOS整个工作都多多少少存在一些异常。例如：</p><ol><li>timestamp问题
+我自己所做工作对时间戳有比较高的要求，但当前cpu并不像A核或者像vdsp等有RTC的访问权限，只能隔一段时间从APCPU发送mailbox msg用以sync时间戳，然后通过systick用以本地更新。但在切换当前cpu的mainclk且还未收到通知时，实际clk与systick配置的差异导致时间戳更新的飞快，然后等APCPU sync时间戳，会产生较大的时间戳回退。</li><li>delay问题
+虽然<code>vTaskDelay()</code>函数强调了并不能提供一个精准的延时，但在task的具体业务，或者某个driver中，还是经常能被用到。同样的，当在切换当前cpu的mainclk且还未收到通知时，delay会出现较大的误差，导致业务流程产生问题。</li></ol><h2 id=2-tick中断设置>2 tick中断设置</h2><h3 id=21-中断源修改>2.1 中断源修改</h3><p><code>freertos/portable/GCC/ARM_CM7/r0p1/port.c</code>中的函数<code>vPortSetupTimerInterrupt</code></p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cm>/*
+</span></span></span><span class=line><span class=cl><span class=cm> * Setup the systick timer to generate the tick interrupts at the required
+</span></span></span><span class=line><span class=cl><span class=cm> * frequency.
+</span></span></span><span class=line><span class=cl><span class=cm> */</span>
+</span></span><span class=line><span class=cl><span class=nf>__attribute__</span><span class=p>(</span> <span class=p>(</span> <span class=n>weak</span> <span class=p>)</span> <span class=p>)</span> <span class=kt>void</span> <span class=nf>vPortSetupTimerInterrupt</span><span class=p>(</span> <span class=kt>void</span> <span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=cm>/* Calculate the constants required to configure the tick interrupt. */</span>
+</span></span><span class=line><span class=cl>    <span class=cp>#if ( configUSE_TICKLESS_IDLE == 1 )
+</span></span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>ulTimerCountsForOneTick</span> <span class=o>=</span> <span class=p>(</span> <span class=n>configSYSTICK_CLOCK_HZ</span> <span class=o>/</span> <span class=n>configTICK_RATE_HZ</span> <span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=n>xMaximumPossibleSuppressedTicks</span> <span class=o>=</span> <span class=n>portMAX_24_BIT_NUMBER</span> <span class=o>/</span> <span class=n>ulTimerCountsForOneTick</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>ulStoppedTimerCompensation</span> <span class=o>=</span> <span class=n>portMISSED_COUNTS_FACTOR</span> <span class=o>/</span> <span class=p>(</span> <span class=n>configCPU_CLOCK_HZ</span> <span class=o>/</span> <span class=n>configSYSTICK_CLOCK_HZ</span> <span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=cp>#endif </span><span class=cm>/* configUSE_TICKLESS_IDLE */</span><span class=cp>
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=cm>/* Stop and clear the SysTick. */</span>
+</span></span><span class=line><span class=cl>    <span class=n>portNVIC_SYSTICK_CTRL_REG</span> <span class=o>=</span> <span class=mi>0UL</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>portNVIC_SYSTICK_CURRENT_VALUE_REG</span> <span class=o>=</span> <span class=mi>0UL</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=cm>/* Configure SysTick to interrupt at the requested rate. */</span>
+</span></span><span class=line><span class=cl>    <span class=n>portNVIC_SYSTICK_LOAD_REG</span> <span class=o>=</span> <span class=p>(</span> <span class=n>configSYSTICK_CLOCK_HZ</span> <span class=o>/</span> <span class=n>configTICK_RATE_HZ</span> <span class=p>)</span> <span class=o>-</span> <span class=mi>1UL</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>portNVIC_SYSTICK_CTRL_REG</span> <span class=o>=</span> <span class=p>(</span> <span class=n>portNVIC_SYSTICK_CLK_BIT</span> <span class=o>|</span> <span class=n>portNVIC_SYSTICK_INT_BIT</span> <span class=o>|</span> <span class=n>portNVIC_SYSTICK_ENABLE_BIT</span> <span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>该函数的调用pipeLine为<code>vTaskStartScheduler()</code> → <code>xPortStartScheduler()</code> → <code>vPortSetupTimerInterrupt()</code>，作用是配置systick中断，<code>portNVIC_SYSTICK_LOAD_REG</code>配置count计数，<code>portNVIC_SYSTICK_CTRL_REG</code>是systick中断control寄存器，可以配置使用mainclk或外部时钟。
+<code>configUSE_TICKLESS_IDLE</code>宏用以开启<code>TICKLESS_MODE</code>，后续即配置Systick中断的频率。</p><p>同时，该函数被标记为weak，<code>__attribute__( ( weak ) )</code> ，表明该函数是可以被强符号函数覆盖掉。如果在使用场景中，运行 FreeRTOS的cpu的频率并非固定不变（存在dvfs等），实现同步重新配置systick寄存器难以实现或者比较复杂，可以尝试使用一个外部固定时钟源来确保系统运行的稳定。</p><p>下面两张图是使用外部timer来实现的vPortSetupTimerInterrupt ，汇编中能够看到该函数已经被覆盖。
+<img src=./external_timer_irq.png alt=ext_timer_interrupt_c>
+<img src=./ext_timer_irq_asm.png alt=ext_timer_interrupt_asm></p><h3 id=22-irq-handler修改>2.2 irq handler修改</h3><p>在Section 2.1重新设置了系统节拍的中断，需要同时修改当前中断的handler，使FreeRTOS能够正常调用</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>extern</span> <span class=kt>void</span> <span class=nf>xPortSysTickHandler</span><span class=p>(</span> <span class=kt>void</span> <span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>void</span> <span class=nf>TIMER_IRQHandler</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=n>TIMER</span> <span class=n>timer</span> <span class=o>=</span> <span class=p>{</span><span class=mi>0</span><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>timer</span><span class=p>.</span><span class=n>TimerNIntStatus_REG</span><span class=p>.</span><span class=n>value</span> <span class=o>=</span> <span class=nf>readw</span><span class=p>(</span><span class=n>TIMER_N_INT_STATUS_REG_ADDR</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>timer</span><span class=p>.</span><span class=n>TimersIntStatus_REG</span><span class=p>.</span><span class=n>value</span> <span class=o>=</span> <span class=nf>readw</span><span class=p>(</span><span class=n>TIMERS_INT_STATUS_REG_ADDR</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>	<span class=n>timer</span><span class=p>.</span><span class=n>TimersEOI_REG</span><span class=p>.</span><span class=n>value</span> <span class=o>=</span> <span class=nf>readw</span><span class=p>(</span><span class=n>TIMERS_EOI_REG_ADDR</span><span class=p>);</span> <span class=c1>// read clear above 2 reg bit
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nf>xPortSysTickHandler</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=n>g_irq_cnt</span><span class=o>++</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>在hw_timer进行常规的清理中断之后，调用<code>xPortSysTickHandler()</code></p><h2 id=3-xportsystickhandler>3 <code>xPortSysTickHandler()</code></h2><p>source code:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>void</span> <span class=nf>xPortSysTickHandler</span><span class=p>(</span> <span class=kt>void</span> <span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=cm>/* The SysTick runs at the lowest interrupt priority, so when this interrupt
+</span></span></span><span class=line><span class=cl><span class=cm>     * executes all interrupts must be unmasked.  There is therefore no need to
+</span></span></span><span class=line><span class=cl><span class=cm>     * save and then restore the interrupt mask value as its value is already
+</span></span></span><span class=line><span class=cl><span class=cm>     * known. */</span>
+</span></span><span class=line><span class=cl>    <span class=nf>portDISABLE_INTERRUPTS</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=cm>/* Increment the RTOS tick. */</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span><span class=p>(</span> <span class=nf>xTaskIncrementTick</span><span class=p>()</span> <span class=o>!=</span> <span class=n>pdFALSE</span> <span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=cm>/* A context switch is required.  Context switching is performed in
+</span></span></span><span class=line><span class=cl><span class=cm>             * the PendSV interrupt.  Pend the PendSV interrupt. */</span>
+</span></span><span class=line><span class=cl>            <span class=n>portNVIC_INT_CTRL_REG</span> <span class=o>=</span> <span class=n>portNVIC_PENDSVSET_BIT</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=nf>portENABLE_INTERRUPTS</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>首先是关闭中断，因为系统节拍中断的优先级通常设置的比较低，为了防止handler被打断。</p><p><code>xTaskIncrementTick()</code> 为系统节拍中断的<strong>核心函数</strong>，当其<code>ret==pdTRUE</code> 时，触发PendSV中断，进行task的上下文切换，该部分的详细流程<strong>待补充</strong>。</p><p>当<code>ret==pdFalse</code> 表示不需要进行切换，接下来分析<code>xTaskIncrementTick()</code></p><h3 id=31-xtaskincrementtick>3.1 <code>xTaskIncrementTick()</code></h3><h3></h3><ol><li><p><code>xTickCount</code></p><ul><li><p><code>uxSchedulerSuspended</code></p><p>首先是FreeRTOS中的静态变量<code>uxSchedulerSuspended</code> ，该变量在调用<code>vTaskSuspendAll()</code>时会自增1，表示调度器被挂起，调用<code>vTaskResumeAll()</code>函数时会自减1。该处仅讨论调度器未被挂起时的情况，即<code>uxSchedulerSuspended == ( UBaseType_t ) pdFALSE</code> 。</p></li><li><p><code>xTickCount</code>
+该val定义如下：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cp>#if( configUSE_16_BIT_TICKS == 1 )
+</span></span></span><span class=line><span class=cl>    <span class=k>typedef</span> <span class=kt>uint16_t</span> <span class=n>TickType_t</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=cp>#define portMAX_DELAY ( TickType_t ) 0xffff
+</span></span></span><span class=line><span class=cl><span class=cp>#else
+</span></span></span><span class=line><span class=cl>    <span class=k>typedef</span> <span class=kt>uint32_t</span> <span class=n>TickType_t</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=cp>#define portMAX_DELAY ( TickType_t ) 0xffffffffUL
+</span></span></span><span class=line><span class=cl><span class=cp>#endif
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>PRIVILEGED_DATA</span> <span class=k>static</span> <span class=k>volatile</span> <span class=n>TickType_t</span> <span class=n>xTickCount</span> <span class=o>=</span> <span class=p>(</span> <span class=n>TickType_t</span> <span class=p>)</span> <span class=n>configINITIAL_TICK_COUNT</span><span class=p>;</span>
+</span></span></code></pre></div></li></ul><p>可以看到在32位平台上，该变量默认位32位，最大值为<code>0xffffffffUL</code> ，在1ms一次tick的情况下，大约在1193h后tick就会溢出，溢出判断为<code>xConstTickCount == ( TickType_t ) 0U</code> 具体的处理在之后补充。</p></li><li><p>delay task处理</p><p>随后比较当前tick和<code>xNextTaskUnblockTime</code> ，FreeRTOS中维护了delay task list，即<code>pxDelayedTaskList</code> ，在task中调用延时函数（如<code>vTaskDelay()</code>）之后，会调用<code>prvAddCurrentTaskToDelayedList()</code> 将该task TCB中的list插入到delay task list（类似于Linux内核链表），<code>xNextTaskUnblockTime</code> 即为该list中，最早需要被唤醒的task。</p><p>如果该list非空，去除已经超时task的TCB，再进行一次判断确定超时之后，将该task从<code>pxDelayedTaskList</code> 中移除，同时将该task状态置为ready，插入ready list <code>pxReadyTasksLists</code> ，如果该task的优先级>当前正在运行的task优先级 且 开启抢占，将返回值置为<code>pdTRUE</code> 进行调度。</p></li><li><p>后续处理</p><p>时间片切片的处理，相同优先级task共享时间片；</p><p>Tick的钩子函数等</p></li><li><p>source code</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=n>BaseType_t</span> <span class=nf>xTaskIncrementTick</span><span class=p>(</span> <span class=kt>void</span> <span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>TCB_t</span> <span class=o>*</span> <span class=n>pxTCB</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>TickType_t</span> <span class=n>xItemValue</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>BaseType_t</span> <span class=n>xSwitchRequired</span> <span class=o>=</span> <span class=n>pdFALSE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=cm>/* Called by the portable layer each time a tick interrupt occurs.
+</span></span></span><span class=line><span class=cl><span class=cm>    * Increments the tick then checks to see if the new tick value will cause any
+</span></span></span><span class=line><span class=cl><span class=cm>    * tasks to be unblocked. */</span>
+</span></span><span class=line><span class=cl>    <span class=nf>traceTASK_INCREMENT_TICK</span><span class=p>(</span> <span class=n>xTickCount</span> <span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>if</span><span class=p>(</span> <span class=n>uxSchedulerSuspended</span> <span class=o>==</span> <span class=p>(</span> <span class=n>UBaseType_t</span> <span class=p>)</span> <span class=n>pdFALSE</span> <span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=cm>/* Minor optimisation.  The tick count cannot change in this
+</span></span></span><span class=line><span class=cl><span class=cm>        * block. */</span>
+</span></span><span class=line><span class=cl>        <span class=k>const</span> <span class=n>TickType_t</span> <span class=n>xConstTickCount</span> <span class=o>=</span> <span class=n>xTickCount</span> <span class=o>+</span> <span class=p>(</span> <span class=n>TickType_t</span> <span class=p>)</span> <span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=cm>/* Increment the RTOS tick, switching the delayed and overflowed
+</span></span></span><span class=line><span class=cl><span class=cm>        * delayed lists if it wraps to 0. */</span>
+</span></span><span class=line><span class=cl>        <span class=n>xTickCount</span> <span class=o>=</span> <span class=n>xConstTickCount</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>if</span><span class=p>(</span> <span class=n>xConstTickCount</span> <span class=o>==</span> <span class=p>(</span> <span class=n>TickType_t</span> <span class=p>)</span> <span class=mi>0U</span> <span class=p>)</span> <span class=cm>/*lint !e774 &#39;if&#39; does not always evaluate to false as it is looking for an overflow. */</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nf>taskSWITCH_DELAYED_LISTS</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=k>else</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=nf>mtCOVERAGE_TEST_MARKER</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=cm>/* See if this tick has made a timeout expire.  Tasks are stored in
+</span></span></span><span class=line><span class=cl><span class=cm>        * the  queue in the order of their wake time - meaning once one task
+</span></span></span><span class=line><span class=cl><span class=cm>        * has been found whose block time has not expired there is no need to
+</span></span></span><span class=line><span class=cl><span class=cm>        * look any further down the list. */</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span><span class=p>(</span> <span class=n>xConstTickCount</span> <span class=o>&gt;=</span> <span class=n>xNextTaskUnblockTime</span> <span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>for</span><span class=p>(</span> <span class=p>;</span> <span class=p>;</span> <span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span><span class=p>(</span> <span class=nf>listLIST_IS_EMPTY</span><span class=p>(</span> <span class=n>pxDelayedTaskList</span> <span class=p>)</span> <span class=o>!=</span> <span class=n>pdFALSE</span> <span class=p>)</span>
+</span></span><span class=line><span class=cl>                <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=cm>/* The delayed list is empty.  Set xNextTaskUnblockTime
+</span></span></span><span class=line><span class=cl><span class=cm>                    * to the maximum possible value so it is extremely
+</span></span></span><span class=line><span class=cl><span class=cm>                    * unlikely that the
+</span></span></span><span class=line><span class=cl><span class=cm>                    * if( xTickCount &gt;= xNextTaskUnblockTime ) test will pass
+</span></span></span><span class=line><span class=cl><span class=cm>                    * next time through. */</span>
+</span></span><span class=line><span class=cl>                    <span class=n>xNextTaskUnblockTime</span> <span class=o>=</span> <span class=n>portMAX_DELAY</span><span class=p>;</span> <span class=cm>/*lint !e961 MISRA exception as the casts are only redundant for some ports. */</span>
+</span></span><span class=line><span class=cl>                    <span class=k>break</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=k>else</span>
+</span></span><span class=line><span class=cl>                <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=cm>/* The delayed list is not empty, get the value of the
+</span></span></span><span class=line><span class=cl><span class=cm>                    * item at the head of the delayed list.  This is the time
+</span></span></span><span class=line><span class=cl><span class=cm>                    * at which the task at the head of the delayed list must
+</span></span></span><span class=line><span class=cl><span class=cm>                    * be removed from the Blocked state. */</span>
+</span></span><span class=line><span class=cl>                    <span class=n>pxTCB</span> <span class=o>=</span> <span class=nf>listGET_OWNER_OF_HEAD_ENTRY</span><span class=p>(</span> <span class=n>pxDelayedTaskList</span> <span class=p>);</span> <span class=cm>/*lint !e9079 void * is used as this macro is used with timers and co-routines too.  Alignment is known to be fine as the type of the pointer stored and retrieved is the same. */</span>
+</span></span><span class=line><span class=cl>                    <span class=n>xItemValue</span> <span class=o>=</span> <span class=nf>listGET_LIST_ITEM_VALUE</span><span class=p>(</span> <span class=o>&amp;</span><span class=p>(</span> <span class=n>pxTCB</span><span class=o>-&gt;</span><span class=n>xStateListItem</span> <span class=p>)</span> <span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>                    <span class=k>if</span><span class=p>(</span> <span class=n>xConstTickCount</span> <span class=o>&lt;</span> <span class=n>xItemValue</span> <span class=p>)</span>
+</span></span><span class=line><span class=cl>                    <span class=p>{</span>
+</span></span><span class=line><span class=cl>                        <span class=cm>/* It is not time to unblock this item yet, but the
+</span></span></span><span class=line><span class=cl><span class=cm>                        * item value is the time at which the task at the head
+</span></span></span><span class=line><span class=cl><span class=cm>                        * of the blocked list must be removed from the Blocked
+</span></span></span><span class=line><span class=cl><span class=cm>                        * state -  so record the item value in
+</span></span></span><span class=line><span class=cl><span class=cm>                        * xNextTaskUnblockTime. */</span>
+</span></span><span class=line><span class=cl>                        <span class=n>xNextTaskUnblockTime</span> <span class=o>=</span> <span class=n>xItemValue</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                        <span class=k>break</span><span class=p>;</span> <span class=cm>/*lint !e9011 Code structure here is deemed easier to understand with multiple breaks. */</span>
+</span></span><span class=line><span class=cl>                    <span class=p>}</span>
+</span></span><span class=line><span class=cl>                    <span class=k>else</span>
+</span></span><span class=line><span class=cl>                    <span class=p>{</span>
+</span></span><span class=line><span class=cl>                        <span class=nf>mtCOVERAGE_TEST_MARKER</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>                    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>                    <span class=cm>/* It is time to remove the item from the Blocked state. */</span>
+</span></span><span class=line><span class=cl>                    <span class=nf>listREMOVE_ITEM</span><span class=p>(</span> <span class=o>&amp;</span><span class=p>(</span> <span class=n>pxTCB</span><span class=o>-&gt;</span><span class=n>xStateListItem</span> <span class=p>)</span> <span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>                    <span class=cm>/* Is the task waiting on an event also?  If so remove
+</span></span></span><span class=line><span class=cl><span class=cm>                    * it from the event list. */</span>
+</span></span><span class=line><span class=cl>                    <span class=k>if</span><span class=p>(</span> <span class=nf>listLIST_ITEM_CONTAINER</span><span class=p>(</span> <span class=o>&amp;</span><span class=p>(</span> <span class=n>pxTCB</span><span class=o>-&gt;</span><span class=n>xEventListItem</span> <span class=p>)</span> <span class=p>)</span> <span class=o>!=</span> <span class=nb>NULL</span> <span class=p>)</span>
+</span></span><span class=line><span class=cl>                    <span class=p>{</span>
+</span></span><span class=line><span class=cl>                        <span class=nf>listREMOVE_ITEM</span><span class=p>(</span> <span class=o>&amp;</span><span class=p>(</span> <span class=n>pxTCB</span><span class=o>-&gt;</span><span class=n>xEventListItem</span> <span class=p>)</span> <span class=p>);</span>
+</span></span><span class=line><span class=cl>                    <span class=p>}</span>
+</span></span><span class=line><span class=cl>                    <span class=k>else</span>
+</span></span><span class=line><span class=cl>                    <span class=p>{</span>
+</span></span><span class=line><span class=cl>                        <span class=nf>mtCOVERAGE_TEST_MARKER</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>                    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>                    <span class=cm>/* Place the unblocked task into the appropriate ready
+</span></span></span><span class=line><span class=cl><span class=cm>                    * list. */</span>
+</span></span><span class=line><span class=cl>                    <span class=nf>prvAddTaskToReadyList</span><span class=p>(</span> <span class=n>pxTCB</span> <span class=p>);</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>                    <span class=cm>/* A task being unblocked cannot cause an immediate
+</span></span></span><span class=line><span class=cl><span class=cm>                    * context switch if preemption is turned off. */</span>
+</span></span><span class=line><span class=cl>                    <span class=cp>#if ( configUSE_PREEMPTION == 1 )
+</span></span></span><span class=line><span class=cl>                        <span class=p>{</span>
+</span></span><span class=line><span class=cl>                            <span class=cm>/* Preemption is on, but a context switch should
+</span></span></span><span class=line><span class=cl><span class=cm>                            * only be performed if the unblocked task has a
+</span></span></span><span class=line><span class=cl><span class=cm>                            * priority that is equal to or higher than the
+</span></span></span><span class=line><span class=cl><span class=cm>                            * currently executing task. */</span>
+</span></span><span class=line><span class=cl>                            <span class=k>if</span><span class=p>(</span> <span class=n>pxTCB</span><span class=o>-&gt;</span><span class=n>uxPriority</span> <span class=o>&gt;=</span> <span class=n>pxCurrentTCB</span><span class=o>-&gt;</span><span class=n>uxPriority</span> <span class=p>)</span>
+</span></span><span class=line><span class=cl>                            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                                <span class=n>xSwitchRequired</span> <span class=o>=</span> <span class=n>pdTRUE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                            <span class=p>}</span>
+</span></span><span class=line><span class=cl>                            <span class=k>else</span>
+</span></span><span class=line><span class=cl>                            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                                <span class=nf>mtCOVERAGE_TEST_MARKER</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>                            <span class=p>}</span>
+</span></span><span class=line><span class=cl>                        <span class=p>}</span>
+</span></span><span class=line><span class=cl>                    <span class=cp>#endif </span><span class=cm>/* configUSE_PREEMPTION */</span><span class=cp>
+</span></span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=cm>/* Tasks of equal priority to the currently running task will share
+</span></span></span><span class=line><span class=cl><span class=cm>        * processing time (time slice) if preemption is on, and the application
+</span></span></span><span class=line><span class=cl><span class=cm>        * writer has not explicitly turned time slicing off. */</span>
+</span></span><span class=line><span class=cl>        <span class=cp>#if ( ( configUSE_PREEMPTION == 1 ) &amp;&amp; ( configUSE_TIME_SLICING == 1 ) )
+</span></span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span><span class=p>(</span> <span class=nf>listCURRENT_LIST_LENGTH</span><span class=p>(</span> <span class=o>&amp;</span><span class=p>(</span> <span class=n>pxReadyTasksLists</span><span class=p>[</span> <span class=n>pxCurrentTCB</span><span class=o>-&gt;</span><span class=n>uxPriority</span> <span class=p>]</span> <span class=p>)</span> <span class=p>)</span> <span class=o>&gt;</span> <span class=p>(</span> <span class=n>UBaseType_t</span> <span class=p>)</span> <span class=mi>1</span> <span class=p>)</span>
+</span></span><span class=line><span class=cl>                <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=n>xSwitchRequired</span> <span class=o>=</span> <span class=n>pdTRUE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=k>else</span>
+</span></span><span class=line><span class=cl>                <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=nf>mtCOVERAGE_TEST_MARKER</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=cp>#endif </span><span class=cm>/* ( ( configUSE_PREEMPTION == 1 ) &amp;&amp; ( configUSE_TIME_SLICING == 1 ) ) */</span><span class=cp>
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=cp>#if ( configUSE_TICK_HOOK == 1 )
+</span></span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=cm>/* Guard against the tick hook being called when the pended tick
+</span></span></span><span class=line><span class=cl><span class=cm>                * count is being unwound (when the scheduler is being unlocked). */</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span><span class=p>(</span> <span class=n>xPendedTicks</span> <span class=o>==</span> <span class=p>(</span> <span class=n>TickType_t</span> <span class=p>)</span> <span class=mi>0</span> <span class=p>)</span>
+</span></span><span class=line><span class=cl>                <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=nf>vApplicationTickHook</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=k>else</span>
+</span></span><span class=line><span class=cl>                <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=nf>mtCOVERAGE_TEST_MARKER</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=cp>#endif </span><span class=cm>/* configUSE_TICK_HOOK */</span><span class=cp>
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=cp>#if ( configUSE_PREEMPTION == 1 )
+</span></span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=k>if</span><span class=p>(</span> <span class=n>xYieldPending</span> <span class=o>!=</span> <span class=n>pdFALSE</span> <span class=p>)</span>
+</span></span><span class=line><span class=cl>                <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=n>xSwitchRequired</span> <span class=o>=</span> <span class=n>pdTRUE</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=k>else</span>
+</span></span><span class=line><span class=cl>                <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=nf>mtCOVERAGE_TEST_MARKER</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>                <span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=cp>#endif </span><span class=cm>/* configUSE_PREEMPTION */</span><span class=cp>
+</span></span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>else</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=o>++</span><span class=n>xPendedTicks</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=cm>/* The tick hook gets called at regular intervals, even if the
+</span></span></span><span class=line><span class=cl><span class=cm>        * scheduler is locked. */</span>
+</span></span><span class=line><span class=cl>        <span class=cp>#if ( configUSE_TICK_HOOK == 1 )
+</span></span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=nf>vApplicationTickHook</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=cp>#endif
+</span></span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>xSwitchRequired</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div></li></ol><h2 id=4-freertos-tickcount溢出处理>4 FreeRTOS tickcount溢出处理</h2><p>上文提到了FreeRTOSS的<code>xTickCount</code> 类型是32bit的，按照1ms一次tick中断，大约在50天后就会溢出，FreeRTOS对tick cnt溢出做了处理。</p><p>FreeRTOS会创建两个delay相关的task：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=n>PRIVILEGED_DATA</span> <span class=k>static</span> <span class=n>List_t</span> <span class=o>*</span> <span class=k>volatile</span> <span class=n>pxDelayedTaskList</span><span class=p>;</span>              <span class=cm>/*&lt; Points to the delayed task list currently being used. */</span>
+</span></span><span class=line><span class=cl><span class=n>PRIVILEGED_DATA</span> <span class=k>static</span> <span class=n>List_t</span> <span class=o>*</span> <span class=k>volatile</span> <span class=n>pxOverflowDelayedTaskList</span><span class=p>;</span>      <span class=cm>/*&lt; Points to the delayed task list currently being used to hold tasks that have overflowed the current tick count. */</span>
+</span></span></code></pre></div><p><code>pxDelayedTaskList</code>中维护调用了延时接口的task，其中到期时间并不会溢出；如果到期时间已经发生溢出，将该task添加至<code>pxOverflowDelayedTaskList</code></p><p><img src=./delaytasklist.png alt=delay_task_list.png></p><p>下面是<code>xTaskIncrementTick()</code> 的溢出判断</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>if</span><span class=p>(</span> <span class=n>xConstTickCount</span> <span class=o>==</span> <span class=p>(</span> <span class=n>TickType_t</span> <span class=p>)</span> <span class=mi>0U</span> <span class=p>)</span> <span class=cm>/*lint !e774 &#39;if&#39; does not always evaluate to false as it is looking for an overflow. */</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nf>taskSWITCH_DELAYED_LISTS</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>else</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nf>mtCOVERAGE_TEST_MARKER</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>当<code>xConstTickCount==0</code> 时，即已经发生溢出，调用<code>taskSWITCH_DELAYED_LISTS();</code></p><p>该宏的具体实现如下：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cm>/* pxDelayedTaskList and pxOverflowDelayedTaskList are switched when the tick
+</span></span></span><span class=line><span class=cl><span class=cm> * count overflows. */</span>
+</span></span><span class=line><span class=cl><span class=cp>#define taskSWITCH_DELAYED_LISTS()                                                \
+</span></span></span><span class=line><span class=cl><span class=cp>    {                                                                             \
+</span></span></span><span class=line><span class=cl><span class=cp>        List_t * pxTemp;                                                          \
+</span></span></span><span class=line><span class=cl><span class=cp>                                                                                  \
+</span></span></span><span class=line><span class=cl><span class=cp>        </span><span class=cm>/* The delayed tasks list should be empty when the lists are switched. */</span><span class=cp> \
+</span></span></span><span class=line><span class=cl><span class=cp>        configASSERT( ( listLIST_IS_EMPTY( pxDelayedTaskList ) ) );               \
+</span></span></span><span class=line><span class=cl><span class=cp>                                                                                  \
+</span></span></span><span class=line><span class=cl><span class=cp>        pxTemp = pxDelayedTaskList;                                               \
+</span></span></span><span class=line><span class=cl><span class=cp>        pxDelayedTaskList = pxOverflowDelayedTaskList;                            \
+</span></span></span><span class=line><span class=cl><span class=cp>        pxOverflowDelayedTaskList = pxTemp;                                       \
+</span></span></span><span class=line><span class=cl><span class=cp>        xNumOfOverflows++;                                                        \
+</span></span></span><span class=line><span class=cl><span class=cp>        prvResetNextTaskUnblockTime();                                            \
+</span></span></span><span class=line><span class=cl><span class=cp>    }
+</span></span></span></code></pre></div><p>即当发生溢出后，将<code>pxOverflowDelayedTaskList</code> 和<code>pxDelayedTaskList</code> 进行置换，这样能够保证<code>vTaskDelay()</code> ，但我认为可以直接将<code>pxOverflowDelayedTaskList</code> 清空，因为在task调用延时函数时，已经对溢出做了判断，当前<code>pxDelayedTaskList</code> 不应有为被调起的task。</p><h2 id=5-apendix>5 Apendix</h2><p>上述问题的前提为无稳定的外部时钟源可选的无奈之举，如果Systick外部有稳定时钟源可选的话，就不存在上述问题，同时，上述对节拍器中断源的重新配置，会导致FreeRTOS原生的tick less mode无法使用（很难适配）。</p><p>若有稳定的systick外部时钟，下面是配置方式。</p><ol><li><p>首先是systick control寄存器描述：
+<img src=./systick_ctrl_reg.png alt=systick_ctrl_reg.png></p></li><li><p>仅需在<code>FreeRTOSConfig.h</code> 添加SysTick clock的参数即可，<code>vPortSetupTimerInterrupt</code> 函数中的宏定义<code>portNVIC_SYSTICK_CLK_BIT</code> 和<code>configSYSTICK_CLOCK_HZ</code> 也会随之修改，
+然后在FreeRTOS初始化Systick时，配置<code>SYST_CSR</code>寄存器。</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=cp>#define configSYSTICK_CLOCK_HZ                   32768
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nf>__attribute__</span><span class=p>(</span> <span class=p>(</span> <span class=n>weak</span> <span class=p>)</span> <span class=p>)</span> <span class=kt>void</span> <span class=nf>vPortSetupTimerInterrupt</span><span class=p>(</span> <span class=kt>void</span> <span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=cm>/* Calculate the constants required to configure the tick interrupt. */</span>
+</span></span><span class=line><span class=cl>    <span class=cp>#if ( configUSE_TICKLESS_IDLE == 1 )
+</span></span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>ulTimerCountsForOneTick</span> <span class=o>=</span> <span class=p>(</span> <span class=n>configSYSTICK_CLOCK_HZ</span> <span class=o>/</span> <span class=n>configTICK_RATE_HZ</span> <span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=n>xMaximumPossibleSuppressedTicks</span> <span class=o>=</span> <span class=n>portMAX_24_BIT_NUMBER</span> <span class=o>/</span> <span class=n>ulTimerCountsForOneTick</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>ulStoppedTimerCompensation</span> <span class=o>=</span> <span class=n>portMISSED_COUNTS_FACTOR</span> <span class=o>/</span> <span class=p>(</span> <span class=n>configCPU_CLOCK_HZ</span> <span class=o>/</span> <span class=n>configSYSTICK_CLOCK_HZ</span> <span class=p>);</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=cp>#endif </span><span class=cm>/* configUSE_TICKLESS_IDLE */</span><span class=cp>
+</span></span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=cm>/* Stop and clear the SysTick. */</span>
+</span></span><span class=line><span class=cl>    <span class=n>portNVIC_SYSTICK_CTRL_REG</span> <span class=o>=</span> <span class=mi>0UL</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>portNVIC_SYSTICK_CURRENT_VALUE_REG</span> <span class=o>=</span> <span class=mi>0UL</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=cm>/* Configure SysTick to interrupt at the requested rate. */</span>
+</span></span><span class=line><span class=cl>    <span class=n>portNVIC_SYSTICK_LOAD_REG</span> <span class=o>=</span> <span class=p>(</span> <span class=n>configSYSTICK_CLOCK_HZ</span> <span class=o>/</span> <span class=n>configTICK_RATE_HZ</span> <span class=p>)</span> <span class=o>-</span> <span class=mi>1UL</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>portNVIC_SYSTICK_CTRL_REG</span> <span class=o>=</span> <span class=p>(</span> <span class=n>portNVIC_SYSTICK_CLK_BIT</span> <span class=o>|</span> <span class=n>portNVIC_SYSTICK_INT_BIT</span> <span class=o>|</span> <span class=n>portNVIC_SYSTICK_ENABLE_BIT</span> <span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div></li></ol></div><aside class="toc toc--sidebar" aria-label="Table of Contents"><div class=toc__title>目录</div><nav id=TableOfContents><ul><li><a href=#draft-false>draft: false</a></li><li><a href=#1-bg>1 BG</a></li><li><a href=#2-tick中断设置>2 tick中断设置</a><ul><li><a href=#21-中断源修改>2.1 中断源修改</a></li><li><a href=#22-irq-handler修改>2.2 irq handler修改</a></li></ul></li><li><a href=#3-xportsystickhandler>3 <code>xPortSysTickHandler()</code></a><ul><li><a href=#31-xtaskincrementtick>3.1 <code>xTaskIncrementTick()</code></a></li><li></li></ul></li><li><a href=#4-freertos-tickcount溢出处理>4 FreeRTOS tickcount溢出处理</a></li><li><a href=#5-apendix>5 Apendix</a></li></ul></nav></aside><div class="toc toc--mobile container"><button class=toc__toggle aria-expanded=false>
+&#9776; 目录</button><div class=toc__content><nav id=TableOfContents><ul><li><a href=#draft-false>draft: false</a></li><li><a href=#1-bg>1 BG</a></li><li><a href=#2-tick中断设置>2 tick中断设置</a><ul><li><a href=#21-中断源修改>2.1 中断源修改</a></li><li><a href=#22-irq-handler修改>2.2 irq handler修改</a></li></ul></li><li><a href=#3-xportsystickhandler>3 <code>xPortSysTickHandler()</code></a><ul><li><a href=#31-xtaskincrementtick>3.1 <code>xTaskIncrementTick()</code></a></li><li></li></ul></li><li><a href=#4-freertos-tickcount溢出处理>4 FreeRTOS tickcount溢出处理</a></li><li><a href=#5-apendix>5 Apendix</a></li></ul></nav></div></div></div><aside class="toc toc--sidebar" aria-label="Table of Contents"><div class=toc__title>目录</div><nav id=TableOfContents><ul><li><a href=#draft-false>draft: false</a></li><li><a href=#1-bg>1 BG</a></li><li><a href=#2-tick中断设置>2 tick中断设置</a><ul><li><a href=#21-中断源修改>2.1 中断源修改</a></li><li><a href=#22-irq-handler修改>2.2 irq handler修改</a></li></ul></li><li><a href=#3-xportsystickhandler>3 <code>xPortSysTickHandler()</code></a><ul><li><a href=#31-xtaskincrementtick>3.1 <code>xTaskIncrementTick()</code></a></li><li></li></ul></li><li><a href=#4-freertos-tickcount溢出处理>4 FreeRTOS tickcount溢出处理</a></li><li><a href=#5-apendix>5 Apendix</a></li></ul></nav></aside><div class="toc toc--mobile container"><button class=toc__toggle aria-expanded=false>
+&#9776; 目录</button><div class=toc__content><nav id=TableOfContents><ul><li><a href=#draft-false>draft: false</a></li><li><a href=#1-bg>1 BG</a></li><li><a href=#2-tick中断设置>2 tick中断设置</a><ul><li><a href=#21-中断源修改>2.1 中断源修改</a></li><li><a href=#22-irq-handler修改>2.2 irq handler修改</a></li></ul></li><li><a href=#3-xportsystickhandler>3 <code>xPortSysTickHandler()</code></a><ul><li><a href=#31-xtaskincrementtick>3.1 <code>xTaskIncrementTick()</code></a></li><li></li></ul></li><li><a href=#4-freertos-tickcount溢出处理>4 FreeRTOS tickcount溢出处理</a></li><li><a href=#5-apendix>5 Apendix</a></li></ul></nav></div></div><div class="container container--wide"><div class=author-card><div><div class=author-card__name>Bevis Wang</div><div class=author-card__bio>GPU System Design & SoC Architecture</div></div></div><div class="comments container" id=comments><script src=https://giscus.app/client.js data-repo=wangbi0912/wangbi0912.github.io data-repo-id data-category=General data-category-id data-mapping=pathname data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN data-loading=lazy crossorigin=anonymous async></script></div></div></article></main><footer class=footer><div class="container footer__inner"><p>&copy; 2026 Bevis Wang.
+<a href=https://gohugo.io target=_blank rel=noopener>Powered by Hugo</a>.
+<a href=https://github.com/wangbi0912 target=_blank rel=noopener>GitHub</a>.</p></div></footer><div class=search-overlay id=search-overlay role=dialog aria-label=搜索><button class=search-overlay__close id=search-close aria-label=关闭>&#x2715;</button>
+<input type=text class=search-overlay__input id=search-input placeholder=输入关键词搜索... autocomplete=off><ul class=search-overlay__results id=search-results></ul></div><button id=back-to-top class=back-to-top aria-label=返回顶部>
+&#8593;
+</button>
+<script src=/js/main.min.48cb7531ec3813576eb3a7a05456bb5ce9429e1fa7d6c33210183ecab77130a2.js integrity="sha256-SMt1Mew4E1dus6egVFa7XOlCnh+n1sMyEBg+yrdxMKI=" defer></script><script src=/js/search.min.9ecb41d353b8cacdb40126b46ed269ed748f2b3d988beecc12405f1020cb4578.js integrity="sha256-nstB01O4ys20ASa0btJp7XSPKz2Yi+7MEkBfECDLRXg=" defer></script></body></html>

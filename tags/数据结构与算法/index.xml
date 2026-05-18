@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>数据结构与算法 on Bevis Wang</title><link>https://wangbi0912.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/</link><description>Recent content in 数据结构与算法 on Bevis Wang</description><generator>Hugo</generator><language>zh-CN</language><lastBuildDate>Wed, 06 Apr 2022 20:22:14 +0000</lastBuildDate><atom:link href="https://wangbi0912.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/index.xml" rel="self" type="application/rss+xml"/><item><title>缓存淘汰策略-LRU、LFU</title><link>https://wangbi0912.github.io/2022/04/06/%E7%BC%93%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5-lrulfu/</link><pubDate>Wed, 06 Apr 2022 20:22:14 +0000</pubDate><guid>https://wangbi0912.github.io/2022/04/06/%E7%BC%93%E5%AD%98%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5-lrulfu/</guid><description>&lt;h2 id="draft-false"&gt;draft: false&lt;/h2&gt;
+&lt;p&gt;LRU和LFU简单实现&lt;/p&gt;</description></item><item><title>手撕-KMP、堆排序、快排</title><link>https://wangbi0912.github.io/2022/03/26/%E6%89%8B%E6%92%95-kmp%E5%A0%86%E6%8E%92%E5%BA%8F%E5%BF%AB%E6%8E%92/</link><pubDate>Sat, 26 Mar 2022 15:42:33 +0000</pubDate><guid>https://wangbi0912.github.io/2022/03/26/%E6%89%8B%E6%92%95-kmp%E5%A0%86%E6%8E%92%E5%BA%8F%E5%BF%AB%E6%8E%92/</guid><description>&lt;h2 id="draft-false"&gt;draft: false&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;经典算法手撕&lt;/p&gt;
+&lt;/blockquote&gt;</description></item><item><title>常见背包归纳</title><link>https://wangbi0912.github.io/2021/11/28/%E5%B8%B8%E8%A7%81%E8%83%8C%E5%8C%85%E5%BD%92%E7%BA%B3/</link><pubDate>Sun, 28 Nov 2021 14:32:27 +0000</pubDate><guid>https://wangbi0912.github.io/2021/11/28/%E5%B8%B8%E8%A7%81%E8%83%8C%E5%8C%85%E5%BD%92%E7%BA%B3/</guid><description>&lt;h2 id="draft-false"&gt;draft: false&lt;/h2&gt;
+&lt;p&gt;基本的0-1背包、完全背包问题。&lt;/p&gt;</description></item><item><title>图论基础</title><link>https://wangbi0912.github.io/2021/09/16/%E5%9B%BE%E8%AE%BA%E5%9F%BA%E7%A1%80/</link><pubDate>Thu, 16 Sep 2021 11:04:23 +0000</pubDate><guid>https://wangbi0912.github.io/2021/09/16/%E5%9B%BE%E8%AE%BA%E5%9F%BA%E7%A1%80/</guid><description>&lt;h2 id="draft-false"&gt;draft: false&lt;/h2&gt;
+&lt;h3 id="文章对应的题目"&gt;文章对应的题目&lt;/h3&gt;
+&lt;p&gt;797 所有可能的路径（M）&lt;/p&gt;</description></item><item><title>回溯问题</title><link>https://wangbi0912.github.io/2021/08/10/%E5%9B%9E%E6%BA%AF%E9%97%AE%E9%A2%98/</link><pubDate>Tue, 10 Aug 2021 21:28:18 +0000</pubDate><guid>https://wangbi0912.github.io/2021/08/10/%E5%9B%9E%E6%BA%AF%E9%97%AE%E9%A2%98/</guid><description>&lt;h2 id="draft-false"&gt;draft: false&lt;/h2&gt;
+&lt;h3 id="文章对应的题目"&gt;文章对应的题目&lt;/h3&gt;
+&lt;p&gt;46 全排列（M）
+51 N皇后（H）&lt;/p&gt;</description></item><item><title>二叉搜索树（三）</title><link>https://wangbi0912.github.io/2021/06/15/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E4%B8%89/</link><pubDate>Tue, 15 Jun 2021 22:01:43 +0000</pubDate><guid>https://wangbi0912.github.io/2021/06/15/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E4%B8%89/</guid><description>&lt;h2 id="draft-false"&gt;draft: false&lt;/h2&gt;
+&lt;h3 id="文章对应的题目"&gt;文章对应的题目&lt;/h3&gt;
+&lt;p&gt;96 不同的二叉搜索树
+95 不同的二叉搜索树II&lt;/p&gt;</description></item><item><title>二叉搜索树（二）</title><link>https://wangbi0912.github.io/2021/06/14/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E4%BA%8C/</link><pubDate>Mon, 14 Jun 2021 21:53:37 +0000</pubDate><guid>https://wangbi0912.github.io/2021/06/14/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E4%BA%8C/</guid><description>&lt;h2 id="draft-false"&gt;draft: false&lt;/h2&gt;
+&lt;h3 id="文章对应的题目"&gt;文章对应的题目&lt;/h3&gt;
+&lt;p&gt;450 删除BST的节点（M）
+701 二叉搜索树的插入操作（M）
+700 二叉搜索树的搜索（E）
+98 验证二叉搜索树&lt;/p&gt;</description></item><item><title>二叉搜索树（一）</title><link>https://wangbi0912.github.io/2021/06/12/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E4%B8%80/</link><pubDate>Sat, 12 Jun 2021 10:35:47 +0000</pubDate><guid>https://wangbi0912.github.io/2021/06/12/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E4%B8%80/</guid><description>&lt;h2 id="draft-false"&gt;draft: false&lt;/h2&gt;
+&lt;h3 id="文章对应的题目"&gt;文章对应的题目&lt;/h3&gt;
+&lt;p&gt;230 BST第K小的元素
+538 二叉搜索树转化为累加树&lt;/p&gt;</description></item></channel></rss>

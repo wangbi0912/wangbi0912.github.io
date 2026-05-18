@@ -1,0 +1,118 @@
+<!doctype html><html lang=zh-CN><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><title>模版方法模式 — Bevis Wang</title><meta name=description content="draft: false 模版方法（Template Method）模式"><meta name=author content="Bevis Wang"><meta property="og:type" content="article"><meta property="og:title" content="模版方法模式"><meta property="og:description" content="draft: false 模版方法（Template Method）模式"><meta property="og:url" content="https://wangbi0912.github.io/2022/03/15/%E6%A8%A1%E7%89%88%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/"><meta property="og:site_name" content="Bevis Wang"><meta property="og:locale" content="zh-CN"><meta name=twitter:card content="summary"><meta name=twitter:title content="模版方法模式"><meta name=twitter:description content="draft: false 模版方法（Template Method）模式"><script type=application/ld+json>{"@context":"https://schema.org","@type":"Article","headline":"模版方法模式","description":"draft: false 模版方法（Template Method）模式","url":"https:\/\/wangbi0912.github.io\/2022\/03\/15\/%E6%A8%A1%E7%89%88%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F\/","author":{"@type":"Person","name":"Bevis Wang"},"datePublished":"2022-03-15","dateModified":"2022-03-15","wordCount":"558"}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":"https:\/\/wangbi0912.github.io\/"},{"@type":"ListItem","position":2,"name":"模版方法模式","item":"https:\/\/wangbi0912.github.io\/2022\/03\/15\/%E6%A8%A1%E7%89%88%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F\/"}]}</script><link rel=icon type=image/svg+xml href=/favicon.svg><link rel=icon type=image/png href=/favicon.png><link rel=apple-touch-icon href=/apple-touch-icon.png><link rel=canonical href=https://wangbi0912.github.io/2022/03/15/%E6%A8%A1%E7%89%88%E6%96%B9%E6%B3%95%E6%A8%A1%E5%BC%8F/><link rel=preconnect href=https://fonts.googleapis.com><link rel=preconnect href=https://fonts.gstatic.com crossorigin><link rel=stylesheet href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap"><style>:root{--color-bg:#FAF9F6;--color-text:#1A1A1A;--color-text-secondary:#6B6B6B;--color-accent:#D95D39;--color-accent-hover:#C04A2A;--color-border:#E5E5E5;--color-code-bg:#F3F3F3;--color-card-bg:#FFF;--color-overlay:rgba(250,249,246,0.85);--color-toc-active:#D95D39;--content-width:min(90vw,700px);--nav-height:60px;--toc-sidebar-w:240px;--font-serif:"Noto Serif SC","Playfair Display",Georgia,serif;--font-sans:"Noto Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;--font-mono:"JetBrains Mono","Fira Code","SF Mono",Consolas,monospace}:root.dark{--color-bg:#0F0F0F;--color-text:#EAEAEA;--color-text-secondary:#8A8A8A;--color-accent:#E89F80;--color-accent-hover:#F0BFA8;--color-border:#2A2A2A;--color-code-bg:#1A1A1A;--color-card-bg:#161616;--color-overlay:rgba(15,15,15,0.9);--color-toc-active:#E89F80}@media(prefers-color-scheme:dark){:root:not(.light){--color-bg:#0F0F0F;--color-text:#EAEAEA;--color-text-secondary:#8A8A8A;--color-accent:#E89F80;--color-accent-hover:#F0BFA8;--color-border:#2A2A2A;--color-code-bg:#1A1A1A;--color-card-bg:#161616;--color-overlay:rgba(15,15,15,0.9);--color-toc-active:#E89F80}}body{font-family:var(--font-sans);font-size:1.125rem;line-height:1.8;letter-spacing:.02em;color:var(--color-text);background:var(--color-bg);-webkit-font-smoothing:antialiased;margin:0;padding:0}.container{width:100%;max-width:var(--content-width);margin:0 auto;padding:0 1.5rem}</style><link rel=stylesheet href=/css/bundle.min.a51116c6b27a6b2ee5c994b1933c8f963a52b6e74565a475cf5fcf32d96c6009.css integrity="sha256-pREWxrJ6ay7lyZSxkzyPljpStudFZaR1z1/PMtlsYAk="></head><body><a href=#main-content class=sr-only style="position:absolute;top:0;left:0;z-index:999;padding:.5rem 1rem;background:var(--color-accent);color:#fff;border-radius:0 0 4px 0">Skip to main content</a><header class=nav id=nav><div class="container container--wide nav__inner"><a href=https://wangbi0912.github.io/ class="nav__brand no-underline">Bevis Wang
+</a><button class=menu-btn id=menu-btn aria-label=菜单 aria-expanded=false>
+&#9776;</button><nav><ul class=nav__menu id=nav-menu><li><a href=/ class=no-underline>首页</a></li><li><a href=/posts/ class=no-underline>文章</a></li><li><a href=/archives/ class=no-underline>归档</a></li><li><a href=/about/ class=no-underline>关于</a></li><li><a href=/tags/ class=no-underline>标签</a></li><li><a href=# id=search-trigger class=no-underline aria-label=搜索 title=搜索>&#x1F50D;</a></li><li><button class=theme-toggle id=theme-toggle aria-label=切换主题 title=切换主题>
+<span class=icon-sun aria-hidden=true>&#9728;</span>
+<span class=icon-moon aria-hidden=true>&#9789;</span></button></li></ul></nav></div></header><main id=main-content tabindex=-1><article><header class="post-header container"><nav aria-label=Breadcrumb style=font-size:var(--text-sm);color:var(--color-text-secondary);margin-bottom:var(--space-lg)><a href=https://wangbi0912.github.io/>首页</a>
+<span style="margin:0 .5rem">/</span>
+<a href=/posts/>Posts</a><span style="margin:0 .5rem">/</span>
+<span>模版方法模式</span></nav><h1 class=post-header__title>模版方法模式</h1><div class=post-header__meta><time datetime=2022-03-15>2022-03-15
+</time><span class=separator></span>
+<span>2 min read</span>
+<span class=separator></span>
+<span>558 words</span>
+<a href=/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/ class=post-header__tag>设计模式</a></div></header><div class="container content-grid content-grid--with-sidebar"><div class=post-content><h2 id=draft-false>draft: false</h2><hr><h4 id=模版方法template-method模式>模版方法（Template Method）模式</h4><p>在面向对象系统的设计中，对于某一个业务逻辑在不同的对象下实现细节不一样，但是逻辑框架相同，可以使用模版方法模式。</p><p>普通实现中，某一业务逻辑需要按照顺序执行<code>fun1</code>～<code>fun4</code>，其中<code>fun2</code>和<code>fun3</code>在对象A和B中实现不相同，代码逻辑如下：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>class</span> <span class=nc>Base</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>base</span><span class=p>(){};</span>
+</span></span><span class=line><span class=cl>  <span class=k>virtual</span> <span class=o>~</span><span class=n>base</span><span class=p>(){};</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>fun1</span><span class=p>(){};</span>
+</span></span><span class=line><span class=cl>  <span class=k>virtual</span> <span class=nf>fun2</span><span class=p>()</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>virtual</span> <span class=nf>fun3</span><span class=p>()</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>fun4</span><span class=p>(){};</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>A</span> <span class=o>:</span> <span class=k>public</span> <span class=n>Base</span><span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>A</span><span class=p>(){};</span>
+</span></span><span class=line><span class=cl>  <span class=o>~</span><span class=n>A</span><span class=p>(){};</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>fun2</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//实现细节
+</span></span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>fun3</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//实现细节
+</span></span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=c1>//业务逻辑
+</span></span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>run</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl>    <span class=n>fun1</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>fun2</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>fun3</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>fun4</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>B</span> <span class=o>:</span> <span class=k>public</span> <span class=n>Base</span><span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>B</span><span class=p>(){};</span>
+</span></span><span class=line><span class=cl>  <span class=o>~</span><span class=n>B</span><span class=p>(){};</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>fun2</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//不同的实现细节
+</span></span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>fun3</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//不同的实现细节
+</span></span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=c1>//业务逻辑
+</span></span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>run</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl>    <span class=n>fun1</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>fun2</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>fun3</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>fun4</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span></code></pre></div><p>这种实现方式破坏了<strong>依赖倒置原则（DIP）</strong>，即程序要依赖于抽象接口，而不是具体实现，所以高层（基类）应该提供接口用于不同的低层（子类）实现，控制权交给父类。</p><p>使用模版方法模式代码框架如下，有基类<code>Base</code>，负责业务逻辑框架的函数<code>void run()</code>：</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-c++ data-lang=c++><span class=line><span class=cl><span class=k>class</span> <span class=nc>Base</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>Base</span><span class=p>(){};</span>
+</span></span><span class=line><span class=cl>  <span class=k>virtual</span> <span class=o>~</span><span class=n>Base</span><span class=p>(){};</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>fun1</span><span class=p>()</span> <span class=p>{};</span>
+</span></span><span class=line><span class=cl>  <span class=k>virtual</span> <span class=kt>void</span> <span class=nf>fun2</span><span class=p>()</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>virtual</span> <span class=kt>void</span> <span class=nf>fun3</span><span class=p>()</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>fun4</span><span class=p>()</span> <span class=p>{};</span>
+</span></span><span class=line><span class=cl>  <span class=c1>//业务逻辑
+</span></span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>run</span><span class=p>(){</span>
+</span></span><span class=line><span class=cl>    <span class=n>fun1</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>fun2</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>fun3</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>    <span class=n>fun4</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>A</span> <span class=o>:</span> <span class=k>public</span> <span class=n>Base</span><span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>A</span><span class=p>(){};</span>
+</span></span><span class=line><span class=cl>  <span class=o>~</span><span class=n>A</span><span class=p>(){};</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>fun2</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//实现细节
+</span></span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>fun3</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//实现细节
+</span></span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>B</span> <span class=o>:</span> <span class=k>public</span> <span class=n>Base</span><span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=k>public</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>B</span><span class=p>(){};</span>
+</span></span><span class=line><span class=cl>  <span class=o>~</span><span class=n>B</span><span class=p>(){};</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>fun2</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//不同的实现细节
+</span></span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=kt>void</span> <span class=nf>fun3</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//不同的实现细节
+</span></span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>};</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>main</span><span class=p>(</span><span class=kt>int</span> <span class=n>argc</span><span class=p>,</span> <span class=kt>char</span><span class=o>*</span> <span class=n>argv</span><span class=p>[])</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>//实现1
+</span></span></span><span class=line><span class=cl>  <span class=n>Base</span><span class=o>*</span> <span class=n>obj1</span> <span class=o>=</span> <span class=k>new</span> <span class=n>A</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>obj1</span> <span class=o>-&gt;</span> <span class=n>run</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=c1>//实现2
+</span></span></span><span class=line><span class=cl>  <span class=n>Base</span><span class=o>*</span> <span class=n>obj2</span> <span class=o>=</span> <span class=k>new</span> <span class=n>B</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>obj2</span> <span class=o>-&gt;</span> <span class=n>run</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><p>这里对于不同的业务实现A和B，高层都提供了两个接口（虚函数），逻辑交给了高层，利用了多态性和晚绑定。</p><hr></div><aside class="toc toc--sidebar" aria-label="Table of Contents"><div class=toc__title>目录</div><nav id=TableOfContents><ul><li><a href=#draft-false>draft: false</a><ul><li></li></ul></li></ul></nav></aside><div class="toc toc--mobile container"><button class=toc__toggle aria-expanded=false>
+&#9776; 目录</button><div class=toc__content><nav id=TableOfContents><ul><li><a href=#draft-false>draft: false</a><ul><li></li></ul></li></ul></nav></div></div></div><aside class="toc toc--sidebar" aria-label="Table of Contents"><div class=toc__title>目录</div><nav id=TableOfContents><ul><li><a href=#draft-false>draft: false</a><ul><li></li></ul></li></ul></nav></aside><div class="toc toc--mobile container"><button class=toc__toggle aria-expanded=false>
+&#9776; 目录</button><div class=toc__content><nav id=TableOfContents><ul><li><a href=#draft-false>draft: false</a><ul><li></li></ul></li></ul></nav></div></div><div class="container container--wide"><div class=author-card><div><div class=author-card__name>Bevis Wang</div><div class=author-card__bio>GPU System Design & SoC Architecture</div></div></div><section class=related-posts><h2 class=related-posts__title>相关文章</h2><div class=related-posts__grid><article class=related-post-card><h3 class=related-post-card__title><a href=/2022/03/10/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/>工厂模式</a></h3><time class=related-post-card__date datetime=2022-03-10>2022-03-10</time></article></div></section><div class="comments container" id=comments><script src=https://giscus.app/client.js data-repo=wangbi0912/wangbi0912.github.io data-repo-id data-category=General data-category-id data-mapping=pathname data-strict=0 data-reactions-enabled=1 data-emit-metadata=0 data-input-position=bottom data-theme=preferred_color_scheme data-lang=zh-CN data-loading=lazy crossorigin=anonymous async></script></div></div></article></main><footer class=footer><div class="container footer__inner"><p>&copy; 2026 Bevis Wang.
+<a href=https://gohugo.io target=_blank rel=noopener>Powered by Hugo</a>.
+<a href=https://github.com/wangbi0912 target=_blank rel=noopener>GitHub</a>.</p></div></footer><div class=search-overlay id=search-overlay role=dialog aria-label=搜索><button class=search-overlay__close id=search-close aria-label=关闭>&#x2715;</button>
+<input type=text class=search-overlay__input id=search-input placeholder=输入关键词搜索... autocomplete=off><ul class=search-overlay__results id=search-results></ul></div><button id=back-to-top class=back-to-top aria-label=返回顶部>
+&#8593;
+</button>
+<script src=/js/main.min.48cb7531ec3813576eb3a7a05456bb5ce9429e1fa7d6c33210183ecab77130a2.js integrity="sha256-SMt1Mew4E1dus6egVFa7XOlCnh+n1sMyEBg+yrdxMKI=" defer></script><script src=/js/search.min.9ecb41d353b8cacdb40126b46ed269ed748f2b3d988beecc12405f1020cb4578.js integrity="sha256-nstB01O4ys20ASa0btJp7XSPKz2Yi+7MEkBfECDLRXg=" defer></script></body></html>
