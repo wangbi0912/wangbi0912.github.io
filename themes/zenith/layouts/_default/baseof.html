@@ -25,9 +25,10 @@
 {{ with .OutputFormats.Get "RSS" }}<link rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}" href="{{ .RelPermalink }}">{{ end }}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Serif+SC:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700&display=swap">
 {{ partial "critical-css.html" . }}
 <link rel="stylesheet" href="/css/bundle.min.a51116c6b27a6b2ee5c994b1933c8f963a52b6e74565a475cf5fcf32d96c6009.css" integrity="sha256-pREWxrJ6ay7lyZSxkzyPljpStudFZaR1z1/PMtlsYAk=">
+<link rel="stylesheet" href="/css/refine.css?v=20261021b">
 </head>
 <body>
 <a class="sr-only" href="#main-content">Skip to main content</a>
@@ -45,5 +46,6 @@
 {{ if and .IsPage (eq .Type "posts") }}<script src="https://giscus.app/client.js" data-repo="wangbi0912/wangbi0912.github.io" data-repo-id data-category="General" data-category-id data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" data-loading="lazy" crossorigin="anonymous" async></script>{{ end }}
 <script src="/js/main.min.48cb7531ec3813576eb3a7a05456bb5ce9429e1fa7d6c33210183ecab77130a2.js" integrity="sha256-SMt1Mew4E1dus6egVFa7XOlCnh+n1sMyEBg+yrdxMKI=" defer></script>
 <script src="/js/search.min.9ecb41d353b8cacdb40126b46ed269ed748f2b3d988beecc12405f1020cb4578.js" integrity="sha256-nstB01O4ys20ASa0btJp7XSPKz2Yi+7MEkBfECDLRXg=" defer></script>
+<script src="/js/refine.js?v=20261021b" defer></script>
 </body>
 </html>
