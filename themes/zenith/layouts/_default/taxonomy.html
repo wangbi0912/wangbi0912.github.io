@@ -1,0 +1,10 @@
+{{ define "main" }}
+<div class="container">
+  <header><h1>{{ .Title }}</h1></header>
+  {{ $pag := .Paginate (.Pages.ByDate.Reverse) }}
+  {{ range $pag.Pages }}
+    {{ partial "post-card.html" (dict "page" . "mode" "list") }}
+  {{ end }}
+  {{ partial "pagination.html" (dict "pag" $pag) }}
+</div>
+{{ end }}

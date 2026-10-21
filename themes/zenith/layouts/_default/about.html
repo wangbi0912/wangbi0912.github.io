@@ -1,0 +1,11 @@
+{{ define "main" }}
+<div class="container">
+  <div class="about-header">
+    <div>
+      <h1 class="about-header__name">{{ .Site.Params.author }}</h1>
+      <p class="about-header__bio">{{ .Params.bio | markdownify }}</p>
+    </div>
+  </div>
+  {{ .Content }}
+</div>
+{{ end }}

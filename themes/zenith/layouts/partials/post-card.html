@@ -1,0 +1,17 @@
+{{- $p := .page -}}
+{{- $mode := .mode | default "list" -}}
+<article class="post-card">
+  <h2{{ if eq $mode "home" }} class="post-card__title"{{ end }}><a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a></h2>
+  <div class="post-card__meta">
+    <time datetime="{{ dateFormat "2006-01-02" $p.Date }}">{{ dateFormat "2006-01-02" $p.Date }}</time>
+    <span class="separator"></span>
+    <span>{{ $p.ReadingTime }} min read</span>
+    {{ if eq $mode "home" }}{{ with $p.Params.tags }}<span class="separator"></span>
+    <span class="post-card__tags">{{ range . }}<a class="post-card__tag no-underline" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">{{ . }}</a>{{ end }}</span>{{ end }}{{ end }}
+  </div>
+  {{ if eq $mode "home" }}
+  <p class="post-card__excerpt">{{ ($p.Description | default ($p.Summary | plainify)) | truncate 70 }}</p>
+  {{ else }}
+  {{ with $p.Description }}<p class="post-card__excerpt">{{ . }}</p>{{ end }}
+  {{ end }}
+</article>

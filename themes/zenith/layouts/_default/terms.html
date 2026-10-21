@@ -1,0 +1,11 @@
+{{ define "main" }}
+<div class="container">
+  <header><h1>{{ .Title }}</h1></header>
+  <div class="tags-cloud">
+    {{ $tax := index .Site.Taxonomies .Data.Plural }}
+    {{ range $tax.Alphabetical }}
+    <a class="tag-pill no-underline" href="{{ .Page.RelPermalink }}">{{ .Page.Title }} <span class="count">{{ .Count }}</span></a>
+    {{ end }}
+  </div>
+</div>
+{{ end }}

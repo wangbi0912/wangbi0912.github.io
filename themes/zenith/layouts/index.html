@@ -1,0 +1,15 @@
+{{ define "main" }}
+<section class="hero container">
+  <h1 class="hero__title">{{ .Site.Title }}</h1>
+  <p class="hero__subtitle">{{ .Site.Params.description }}</p>
+  <div class="hero__scroll">↓</div>
+</section>
+<section class="post-list container" id="posts">
+  {{ $posts := where .Site.RegularPages "Section" "posts" }}
+  {{ $pag := .Paginate ($posts.ByDate.Reverse) }}
+  {{ range $pag.Pages }}
+    {{ partial "post-card.html" (dict "page" . "mode" "home") }}
+  {{ end }}
+  {{ partial "pagination.html" (dict "pag" $pag) }}
+</section>
+{{ end }}

@@ -1,0 +1,7 @@
+{{- $pag := .pag -}}
+{{ if gt $pag.TotalPages 1 }}
+<nav class="pagination" aria-label="Page navigation">
+  {{ if $pag.HasPrev }}<a class="pagination__btn" href="{{ $pag.Prev.URL }}">← 较新</a>{{ else }}<span class="pagination__btn pagination__btn--disabled">← 较新</span>{{ end }}
+  {{ if $pag.HasNext }}<a class="pagination__btn" href="{{ $pag.Next.URL }}">较旧 →</a>{{ else }}<span class="pagination__btn pagination__btn--disabled">较旧 →</span>{{ end }}
+</nav>
+{{ end }}

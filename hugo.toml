@@ -1,0 +1,80 @@
+baseURL = "https://wangbi0912.github.io/"
+title = "Bevis Wang"
+theme = "zenith"
+defaultContentLanguage = "zh-cn"
+summaryLength = 40
+hasCJKLanguage = true
+
+[languages]
+  [languages.zh-cn]
+    languageName = "中文"
+    locale = "zh-CN"
+    weight = 1
+
+[params]
+  description = "Blog on GPU system design, embedded systems, C/C++, Linux kernel, and SoC firmware engineering."
+  author = "Bevis Wang"
+  authorBio = "GPU System Design & SoC Architecture"
+  github = "https://github.com/wangbi0912"
+  giscusRepo = "wangbi0912/wangbi0912.github.io"
+
+[permalinks]
+  posts = "/:year/:month/:day/:slug/"
+
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
+  section = ["HTML", "RSS"]
+  taxonomy = ["HTML", "RSS"]
+  term = ["HTML", "RSS"]
+  page = ["HTML"]
+
+[outputFormats]
+  [outputFormats.JSON]
+    mediaType = "application/json"
+    baseName = "index"
+    isPlainText = true
+    notAlternative = true
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+  [markup.highlight]
+    noClasses = false
+    lineNos = false
+    style = "github"
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+
+[related]
+  threshold = 50
+  [[related.indices]]
+    name = "tags"
+    weight = 100
+
+[menus]
+  [[menus.main]]
+    name = "首页"
+    url = "/"
+    weight = 1
+  [[menus.main]]
+    name = "文章"
+    url = "/posts/"
+    weight = 2
+  [[menus.main]]
+    name = "归档"
+    url = "/archives/"
+    weight = 3
+  [[menus.main]]
+    name = "关于"
+    url = "/about/"
+    weight = 4
+  [[menus.main]]
+    name = "标签"
+    url = "/tags/"
+    weight = 5
+
+[taxonomies]
+  tag = "tags"
+  series = "series"

@@ -1,0 +1,53 @@
+{{ define "main" }}
+<article>
+  <header class="post-header container">
+    <nav aria-label="Breadcrumb">
+      <a href="{{ .Site.BaseURL }}">首页</a> <span>/</span> <a href="/posts/">Posts</a> <span>/</span> <span>{{ .Title }}</span>
+    </nav>
+    <h1 class="post-header__title">{{ .Title }}</h1>
+    <div class="post-header__meta">
+      <time datetime="{{ dateFormat "2006-01-02" .Date }}">{{ dateFormat "2006-01-02" .Date }}</time>
+      <span class="separator"></span>
+      <span>{{ .ReadingTime }} min read</span>
+      <span class="separator"></span>
+      <span>{{ .WordCount }} words</span>
+      {{ with .Params.tags }}{{ range . }}<a class="post-header__tag" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">{{ . }}</a>{{ end }}{{ end }}
+    </div>
+  </header>
+  <div class="container content-grid{{ if .TableOfContents }} content-grid--with-sidebar{{ end }}">
+    <div class="post-content">{{ .Content }}</div>
+    {{ if .TableOfContents }}
+    <aside class="toc toc--sidebar" aria-label="Table of Contents"><div class="toc__title">目录</div>{{ .TableOfContents }}</aside>
+    <div class="toc toc--mobile container"><button class="toc__toggle" aria-expanded="false">☰ 目录</button><div class="toc__content">{{ .TableOfContents }}</div></div>
+    {{ end }}
+  </div>
+  <div class="container container--wide">
+    <div class="author-card">
+      <div>
+        <div class="author-card__name">{{ .Site.Params.author }}</div>
+        <div class="author-card__bio">{{ .Site.Params.authorBio }}</div>
+      </div>
+    </div>
+    {{ $self := . }}
+    {{ $tag := index (.Params.tags | default slice) 0 }}
+    {{ $related := slice }}
+    {{ with $tag }}{{ $related = where (where $.Site.RegularPages "Section" "posts") "Params.tags" "intersect" (slice $tag) }}{{ end }}
+    {{ $related = where $related "Permalink" "!=" $self.Permalink }}
+    {{ $related = $related.ByDate.Reverse | first 3 }}
+    {{ with $related }}
+    <section class="related-posts">
+      <h2 class="related-posts__title">相关文章</h2>
+      <div class="related-posts__grid">
+        {{ range . }}
+        <article class="related-post-card">
+          <h3 class="related-post-card__title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+          <time class="related-post-card__date">{{ dateFormat "2006-01-02" .Date }}</time>
+        </article>
+        {{ end }}
+      </div>
+    </section>
+    {{ end }}
+    <div class="comments container" id="comments"></div>
+  </div>
+</article>
+{{ end }}

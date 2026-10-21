@@ -1,0 +1,16 @@
+<header class="nav" id="nav">
+  <div class="container container--wide nav__inner">
+    <a class="nav__brand no-underline" href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a>
+    <button class="menu-btn" id="menu-btn" aria-label="菜单">☰</button>
+    <nav>
+      <ul class="nav__menu" id="nav-menu">
+        {{ $current := .RelPermalink }}
+        {{ range .Site.Menus.main }}
+        <li><a class="no-underline{{ if or (eq $current .URL) (and (ne .URL "/") (hasPrefix $current .URL)) }} active{{ end }}" href="{{ .URL }}">{{ .Name }}</a></li>
+        {{ end }}
+        <li><a class="no-underline" href="#" id="search-trigger" aria-label="搜索">🔍</a></li>
+        <li><button class="theme-toggle" id="theme-toggle" aria-label="切换主题" title="切换主题"><span class="icon-sun">☀</span><span class="icon-moon">☽</span></button></li>
+      </ul>
+    </nav>
+  </div>
+</header>

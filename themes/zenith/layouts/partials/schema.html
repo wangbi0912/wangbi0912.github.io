@@ -1,0 +1,13 @@
+{{- $desc := (.Description | default (.Summary | plainify) | default .Site.Params.description) -}}
+{{- $siteURL := .Site.BaseURL | jsonify -}}
+{{- $author := .Site.Params.author | jsonify -}}
+<script type="application/ld+json">
+{{- if .IsPage }}
+{"@context":"https://schema.org","@type":"Article","headline":{{ .Title | jsonify }},"description":{{ $desc | jsonify }},"url":{{ .Permalink | jsonify }},"author":{"@type":"Person","name":{{ $author }}},"datePublished":"{{ dateFormat "2006-01-02" .Date }}","dateModified":"{{ dateFormat "2006-01-02" .Date }}","wordCount":"{{ .WordCount }}"}
+{{- else }}
+{"@context":"https://schema.org","@type":"WebSite","headline":{{ .Site.Title | jsonify }},"description":{{ .Site.Params.description | jsonify }},"url":{{ $siteURL }},"author":{"@type":"Person","name":{{ $author }}}}
+{{- end }}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"首页","item":{{ $siteURL }}}{{ if not .IsHome }},{"@type":"ListItem","position":2,"name":{{ .Title | jsonify }},"item":{{ .Permalink | jsonify }}}{{ end }}]}
+</script>
